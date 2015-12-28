@@ -1,0 +1,61 @@
+<html>
+<head>
+<link type="text/css" href="../css/ElectricVehicle.css" />
+<title>Are you ready to switch?</title>
+</head>
+
+<body>
+	<form id="ElectricVehicleCalculator">
+		<fieldset id="KeyAssupmptions">
+		</fieldset>
+		<fieldset id="ResultTableHolder">
+			<p class="message good">Total Financial Gain per Year after Switch: <span id="TotalProfit"></span></p>
+			<table>
+				<tr>
+					<th scope="col">&nbsp;</th>
+					<th scope="col">Current Car</th>
+					<th scope="col">Electric Car</th>
+				</tr>
+				<tr>
+					<th scope="row" class="totalHeader">setup cost</th>
+					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="f"></td>
+					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="totalHeader">finance cost</th>
+					<td class="total" data-js-method="totalFinanceCost" data-car-type="f"></td>
+					<td class="total" data-js-method="totalFinanceCost" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="totalHeader">fixed cost</th>
+					<td class="total" data-js-method="totalFixedCost" data-car-type="f"></td>
+					<td class="total" data-js-method="totalFixedCost" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="header">operating cost</th>
+					<td class="total" data-js-method="totalOperatingCost" data-car-type="f"></td>
+					<td class="total" data-js-method="totalOperatingCost" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="header">other cost</th>
+					<td class="total" data-js-method="totalOtherCost" data-car-type="f"></td>
+					<td class="total" data-js-method="totalOtherCost" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
+					<td class="total superTotal" data-js-method="totalCombined" data-car-type="f"></td>
+					<td class="total superTotal" data-js-method="totalCombined" data-car-type="e"></td>
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset id="OtherAssumptions">
+
+		</fieldset>
+
+
+	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="ElectricVehicleCalculator.js"></script>
+	
+</body>
+</html>
