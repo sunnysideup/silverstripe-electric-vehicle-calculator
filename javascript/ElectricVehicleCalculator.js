@@ -12,13 +12,24 @@ Number.prototype.formatMoney = function(c, d, t){
 
 Number.prototype.formatPercentage = function(){
 	var n = this;
+	return n + "%";
 };
+
+Number.prototype.formatNumber = function() {
+	var n = this;
+	return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
 
 jQuery(document).ready(
 	function(){
 		EVCalculator.init();
+		EVCalculatorTableInteraction.init();
 	}
 );
+
+
 
 var EVCalculator = {
 
@@ -100,7 +111,7 @@ var EVCalculator = {
 	costOfPetrolPerLitreLabel:                    "Cost of Petrol per Litre",
 	costOfElectricityPerKwHLabel:                 "Cost of Electricity per KwH",
 	fuelEfficiencyCVLabel:                        "Fuel Efficiency KM per Litre of Petrol",
-	fuelEfficiencyEVLabel:                        "Fuel Efficiency KM per Litre of KwH",
+	fuelEfficiencyEVLabel:                        "Fuel Efficiency KM per KwH",
 	insuranceBaseCostLabel:                       "Insurance Base Cost",
 	insuranceCostPerThousandLabel:                "Insurance Cost per $1000 of Car Value",
 	numberOfTyresPerFortyThousandKmLabel:         "Number of Tyres needed per 40,000km",
@@ -340,7 +351,7 @@ var EVCalculator = {
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" onkeyup=\"EVCalculator.setMyValue('"+key+"', this)\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -350,10 +361,18 @@ var EVCalculator = {
 
 	getValueFromDefaultsOrSession: function(key){
 		var value = EVCalculator[key];
-		var format = EVCalculator[keyAssumptionKeys][key];
-		switch(expression) {
+		return this.formatValue(key, value)
+	},
+
+	formatValue: function(key, value) {
+		var format = EVCalculator["keyAssumptionKeys"][key];
+		if (typeof format == 'undefined') {
+			format = EVCalculator["otherAssumptionKeys"][key];
+		}
+		value = parseFloat(value);
+		switch(format) {
 			case "number":
-				value = value;
+				value = value.formatNumber();
 				break;
 			case "percentage":
 				value = value.formatPercentage();
@@ -361,7 +380,7 @@ var EVCalculator = {
 			default:
 				value = value.formatMoney();
 		}		
-		return ;
+		return value;
 	},
 
 	setValue: function(key){
@@ -371,9 +390,36 @@ var EVCalculator = {
 		value = parseFloat(value.replace(/\$|,/g, ''))
 		EVCalculator[key] = value;
 		EVCalculator.populateResultTable();
+	},
+
+	setMyValue: function(key, item){
+		var value = item.value;
+		value = parseFloat(value.replace(/\$|,/g, ''));
+		value = this.formatValue(key, value);
+		item.value = value;
 	}
 	
 
 }
 
 
+
+var EVCalculatorTableInteraction = {
+
+	init: function(){
+		jQuery("table").on(
+			"click",
+			"tr.summary th a.expandRows",
+			function(){
+				jQuery(this).toggleClass("show");
+				var parentTR = jQuery(this).parents("tr");
+				jQuery(parentTR).nextUntil("tr.summary").each(
+					function(i, el) {
+						jQuery(el).toggle();
+					}
+				);
+			}
+		);
+	}
+
+}

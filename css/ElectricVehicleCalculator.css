@@ -2,6 +2,7 @@
 body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 90%;}
 * {font-weight: 400;}
 strong {font-weight: 700;}
+a {border-bottom: 1px solid #ccc; text-decoration: none; color: black;}
 form {width: 100%; max-width: 500px; margin-left: auto; margin-right: auto;}
 fieldset {border: none; padding: 0.5em 0; outline: none;}
 .fieldHolder { padding: 1em 0; clear: both;}
@@ -23,12 +24,15 @@ label {
 label strong {font-weight: 400;}
 label span.desc {display: block; color: #ccc;}
 
-table {width: 100%;}
-td {padding: 0.5em;}
-th {text-align: left; font-weight: 400; font-weight: normal;}
-th[scope='col'] {text-align: right;}
+table {width: 100%; font-size: 0.9em;}
+tr.detail {display: none;}
+td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;}
+th {padding: 0.9em 0 0.5em 0; vertical-align: top; 
+text-align: left; font-weight: 400; font-weight: normal;}
+th[scope='col'] {text-align: right; border-bottom: 1px solid #ccc;}
+tr.detail th, tr.detail td {color: #999; padding-top: 0;}
 td {text-align: right;}
 th.superTotalHeader, td.superTotal {border-top: 1px solid #ccc; font-weight: 700;}
 
-#TotalProfit {font-weight: 700; color: green;}
+#TotalProfit {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right;}
 #TotalProfit.loss {color: red;}

@@ -15,47 +15,47 @@
 			<h2>results</h2>
 			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit"></span></p>
 			<table>
-				<tr>
+				<tr class="header summary">
 					<th scope="col">&nbsp;</th>
 					<th scope="col">Current Car</th>
 					<th scope="col">Electric Car</th>
 				</tr>
-				<tr>
-					<th scope="row" class="totalHeader">setup cost</th>
+				<tr class="summary">
+					<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup cost</a></th>
 					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="f"></td>
 					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="e"></td>
 				</tr>
-				<tr>
-					<th scope="row" class="totalHeader">finance cost</th>
+				<tr class="summary">
+					<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance cost</a></th>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="e"></td>
 				</tr>
-				<tr>
+				<tr class="detail">
 					<th scope="row" class="detailHeader">value at the start of the year</th>
 					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="f"></td>
 					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="e"></td>
 				</tr>
-				<tr>
+				<tr class="detail">
 					<th scope="row" class="detailHeader">value at the end of the year</th>
 					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="f"></td>
 					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="e"></td>
 				</tr>
-				<tr>
-					<th scope="row" class="totalHeader">fixed cost</th>
+				<tr class="summary">
+					<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed cost</a></th>
 					<td class="total" data-js-method="totalFixedCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalFixedCost" data-car-type="e"></td>
 				</tr>
-				<tr>
-					<th scope="row" class="header">operating cost</th>
+				<tr class="summary">
+					<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating cost</a></th>
 					<td class="total" data-js-method="totalOperatingCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalOperatingCost" data-car-type="e"></td>
 				</tr>
-				<tr>
-					<th scope="row" class="header">other cost</th>
+				<tr class="summary">
+					<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other cost</a></th>
 					<td class="total" data-js-method="totalOtherCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalOtherCost" data-car-type="e"></td>
 				</tr>
-				<tr>
+				<tr class="superSummary summary">
 					<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
 					<td class="total superTotal" data-js-method="totalCombined" data-car-type="f"></td>
 					<td class="total superTotal" data-js-method="totalCombined" data-car-type="e"></td>
