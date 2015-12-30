@@ -10,6 +10,10 @@ Number.prototype.formatMoney = function(c, d, t){
 	return s + "$" + (j ? i.substr(0, j) + t : "") +  i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+Number.prototype.formatPercentage = function(){
+	var n = this;
+};
+
 jQuery(document).ready(
 	function(){
 		EVCalculator.init();
@@ -83,7 +87,7 @@ var EVCalculator = {
 	/* key assumptions Labels */
 	CVValueLabel:                                 "Current Car Value",
 	kmDrivenPerYearLabel:                         "Kilometers Driven Per Year",
-	daysWithContinuousTripsOver100KmLabel:        "Big Trip Days Per Year (more than 150km per day)",
+	daysWithContinuousTripsOver100KmLabel:        "Big Trip Days Per Year",
 	subsidyPaymentFixedLabel:                     "Fixed Subsidy for E-Vehicle",
 	subsidyPaymentPerKMLabel:                     "Kilometer Subsidy for E-Vehicle",
 
@@ -113,7 +117,7 @@ var EVCalculator = {
 	/* key assumptions Descs */
 	CVValueDesc:                                 "",
 	kmDrivenPerYearDesc:                         "",
-	daysWithContinuousTripsOver100KmDesc:        "",
+	daysWithContinuousTripsOver100KmDesc:        "more than 150km per day",
 	subsidyPaymentFixedDesc:                     "",
 	subsidyPaymentPerKMDesc:                     "",
 
@@ -227,7 +231,7 @@ var EVCalculator = {
 
 	resellValueAtEndOfYear: function(carType){
 		var startOfYearValue = this.valueStartOfTheYear(carType);
-		return startOfYearValue * (startOfYearValue * this.depreciationRatePerYear)
+		return startOfYearValue - (startOfYearValue * (this.depreciationRatePerYear/100));
 	},
 
 	/* totals */
@@ -260,7 +264,7 @@ var EVCalculator = {
 	},
 	
 	totalCombined: function(carType) {
-		return this.totalUpFrontPayment(carType) + this.totalFinanceCost(carType) + this.totalFixedCost(carType) + this.totalOperatingCost(carType) + this.totalOtherCost(carType);
+		return parseFloat(this.totalUpFrontPayment(carType)) + parseFloat(this.totalFinanceCost(carType)) + parseFloat(this.totalFixedCost(carType)) + parseFloat(this.totalOperatingCost(carType)) + parseFloat(this.totalOtherCost(carType));
 	},
 
 	totalProfit: function(){
@@ -276,13 +280,13 @@ var EVCalculator = {
 
 	buildKeyAssumptionForm: function() {
 		jQuery("#KeyAssupmptions").html(
-			this.createFormFieldsFromList(this.keyAssumptionKeys)
+			"<h2>key assumptions</h2>"+this.createFormFieldsFromList(this.keyAssumptionKeys)
 		);
 	},
 	
 	buildOtherAssumptionsForm: function() {
 		jQuery("#OtherAssumptions").html(
-			this.createFormFieldsFromList(this.otherAssumptionKeys)
+			"<h2>more assumptions</h2>"+this.createFormFieldsFromList(this.otherAssumptionKeys)
 		);
 	},
 	
@@ -297,7 +301,7 @@ var EVCalculator = {
 					if(typeof numberValue === "number") {
 						var formattedValue = numberValue.formatMoney();
 						//console.debug(method + "..." + carType + "..." + value + "..." + formattedValue);
-						jQuery(el).text(formattedValue).css("border", "1px solid green");
+						jQuery(el).text(formattedValue);
 					}
 					else {
 						//console.debug(method + "..." + carType + "..." + value + "... error");
@@ -311,7 +315,7 @@ var EVCalculator = {
 		if(typeof numberValue === "number") {
 			var formattedValue = numberValue.formatMoney();
 			//console.debug(method + "..." + carType + "..." + value + "..." + formattedValue);
-			jQuery("#TotalProfit").text(formattedValue).css("border", "1px solid green");
+			jQuery("#TotalProfit").text(formattedValue);
 		}
 		else {
 			//console.debug(method + "..." + carType + "..." + value + "... error");
@@ -333,9 +337,11 @@ var EVCalculator = {
 				var value = EVCalculator.getValueFromDefaultsOrSession(key);
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
-				html += "<div id=\""+holderID+"\">";
-				html += "\t<label for=\""+ fieldID + "\">"+label+"<span>"+desc+"</span></label>";
-				html += "\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" />";
+				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
+				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
+				html += "\t<div class=\"middleColumn\">";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" />";
+				html += "\t</div>";
 				html += "</div>";
 			}
 		}
@@ -343,12 +349,26 @@ var EVCalculator = {
 	},
 
 	getValueFromDefaultsOrSession: function(key){
-		return EVCalculator[key];
+		var value = EVCalculator[key];
+		var format = EVCalculator[keyAssumptionKeys][key];
+		switch(expression) {
+			case "number":
+				value = value;
+				break;
+			case "percentage":
+				value = value.formatPercentage();
+				break;
+			default:
+				value = value.formatMoney();
+		}		
+		return ;
 	},
 
 	setValue: function(key){
 		var fieldID = key + "Field";
 		var value = jQuery("#"+fieldID).val();
+		//remove comma and $ ...
+		value = parseFloat(value.replace(/\$|,/g, ''))
 		EVCalculator[key] = value;
 		EVCalculator.populateResultTable();
 	}

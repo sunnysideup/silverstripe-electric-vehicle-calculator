@@ -1,15 +1,19 @@
+<!DOCTYPE html>
 <html>
 <head>
-<link type="text/css" href="../css/ElectricVehicle.css" />
-<title>Are you ready to switch?</title>
+	<meta charset="UTF-8">
+	<link type="text/css" href="css/ElectricVehicleCalculator.css" rel="stylesheet" />
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	<title>Are you ready to switch?</title>
 </head>
 
 <body>
 	<form id="ElectricVehicleCalculator">
-		<fieldset id="KeyAssupmptions">
-		</fieldset>
+		<p class="message good">Please choose the appropriate values below:</p>
+		<fieldset id="KeyAssupmptions"></fieldset>
 		<fieldset id="ResultTableHolder">
-			<p class="message good">Total Financial Gain per Year after Switch: <span id="TotalProfit"></span></p>
+			<h2>results</h2>
+			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit"></span></p>
 			<table>
 				<tr>
 					<th scope="col">&nbsp;</th>
@@ -25,6 +29,16 @@
 					<th scope="row" class="totalHeader">finance cost</th>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="detailHeader">value at the start of the year</th>
+					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="f"></td>
+					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="e"></td>
+				</tr>
+				<tr>
+					<th scope="row" class="detailHeader">value at the end of the year</th>
+					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="f"></td>
+					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="e"></td>
 				</tr>
 				<tr>
 					<th scope="row" class="totalHeader">fixed cost</th>
@@ -55,7 +69,7 @@
 
 	</form>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="ElectricVehicleCalculator.js"></script>
+	<script src="javascript/ElectricVehicleCalculator.js"></script>
 	
 </body>
 </html>
