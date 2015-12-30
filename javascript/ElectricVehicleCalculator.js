@@ -351,7 +351,7 @@ var EVCalculator = {
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" onkeyup=\"EVCalculator.setMyValue('"+key+"', this)\" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVCalculator.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVCalculator.setMyValue('"+key+"', this)\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}

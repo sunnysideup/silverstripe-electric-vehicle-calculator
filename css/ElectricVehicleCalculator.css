@@ -36,3 +36,6 @@ th.superTotalHeader, td.superTotal {border-top: 1px solid #ccc; font-weight: 700
 
 #TotalProfit {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right;}
 #TotalProfit.loss {color: red;}
+
+table a {}
+table a.show {display: block;}
