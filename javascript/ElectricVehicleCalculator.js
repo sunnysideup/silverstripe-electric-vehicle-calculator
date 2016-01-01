@@ -19,7 +19,7 @@ var EVC = {
 	
 	yearsFromNow: 0,
 
-	isSwitchYear: true,
+	yearsAfterSwitch: 0,
 
 	kmDrivenPerYear: 0,
 
@@ -34,19 +34,19 @@ var EVC = {
 
 var EVCfx = function(
 	yearsFromNow,
-	isSwitchYear,
+	yearsAfterSwitch,
 	kmDrivenPerYear
 ) {
 
 	yearsFromNow = yearsFromNow == undefined ? 0 : yearsFromNow;
 
-	isSwitchYear = isSwitchYear == undefined ? true : isSwitchYear;
+	yearsAfterSwitch = yearsAfterSwitch == undefined ? 0 : yearsAfterSwitch;
 
 	kmDrivenPerYear = kmDrivenPerYear == undefined ? EVC.DefaultData.kmDrivenPerYear : kmDrivenPerYear;
 	
 	/* calculations */
 	this.setupCost = function(carType){
-		if(isSwitchYear) {
+		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
 				return EVC.DefaultData.setupChargeStation;
 			}
@@ -59,6 +59,14 @@ var EVCfx = function(
 		}
 	};
 
+	this.originalPrice = function(carType) {
+		var originalValue = this.valueStartOfTheYear(carType);
+		for(i = yearsAfterSwitch; i > 0; i--) {
+			originalValue = originalValue / (1-(EVC.DefaultData.depreciationRatePerYear / 100));
+		}
+		return originalValue;
+	}
+
 	this.valueStartOfTheYear =  function(carType){
 		if(carType == "e") {
 			return (EVC.DefaultData.CVValue * (EVC.DefaultData.upgradeCostToGoElectric / 100));
@@ -68,7 +76,11 @@ var EVCfx = function(
 		}
 	};
 
-	this.financeCost = function(carType){
+	this.principalRepayment = function(carType){
+		return this.originalPrice(carType) * (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
+	};
+
+	this.interest = function(carType){
 		if(carType == "e") {
 			//console.debug("A" + this.valueStartOfTheYear(carType));
 			//console.debug("B" + EVC.DefaultData.financingCostInPercentage);
@@ -76,7 +88,7 @@ var EVCfx = function(
 			return this.valueStartOfTheYear(carType) * (EVC.DefaultData.financingCostInPercentage / 100);
 		}
 		else {
-			return 0;
+			return this.valueStartOfTheYear(carType) * (EVC.DefaultData.financingCostInPercentage / 100);
 		}
 	};
 
@@ -154,7 +166,7 @@ var EVCfx = function(
 	};
 
 	this.totalFinanceCost = function(carType) {
-		return this.financeCost(carType);
+		return this.interest(carType) + this.principalRepayment(carType);
 	};
 
 	this.totalFixedCost = function(carType) {
@@ -228,7 +240,19 @@ EVC.HTMLInteraction = {
 					var value = EVC.myData[method](carType);
 					var numberValue = parseFloat(value);
 					if(typeof numberValue === "number") {
-						var formattedValue = numberValue.formatMoney();
+						format = EVC.DataDescription["alternativeFormatsForFxs"][method];
+						if (typeof format == 'undefined') {
+							var formattedValue = numberValue.formatMoney();
+						}
+						else if(format == "number") {
+							var formattedValue = numberValue.formatNumber();
+						}	
+						else if(format == "percentage") {
+							var formattedValue = numberValue.formatPercentage();
+						}
+						else {
+							var formattedValue = numberValue;
+						}
 						//console.debug(method + "..." + carType + "..." + value + "..." + formattedValue);
 						jQuery(el).text(formattedValue);
 					}
@@ -363,26 +387,31 @@ EVC.DataDescription = {
 	},
 
 	otherAssumptionKeys: {
-		"upgradeCostToGoElectric":           "percentage",
-		"setupChargeStation":                "currency",
-		"financingCostInPercentage":         "percentage",
-		"saleCostForCarInPercentage":        "percentage",
-		"costOfPetrolPerLitre":              "currency",
-		"costOfElectricityPerKwH":           "currency",
-		"fuelEfficiencyCV":                  "number",
-		"fuelEfficiencyEV":                  "number",
-		"insuranceBaseCost":                 "currency",
-		"insuranceCostPerThousand":          "currency",
-		"numberOfTyresPerFortyThousandKm":   "number",
-		"tyreCostCV":                        "currency",
-		"tyreCostEV":                        "currency",
-		"licenseWOFCostCVPerYear":           "currency",
-		"licenseWOFCostEVPerYear":           "currency",
-		"maintenanceCVPerTenThousandKm":     "currency",
-		"maintenanceEVPerTenThousandKm":     "currency",
-		"depreciationRatePerYear":           "percentage",
-		"costPerDayRentalCar":               "currency",
-		"kilometresPerDayForLongTrips":      "number"
+		"upgradeCostToGoElectric":              "percentage",
+		"setupChargeStation":                   "currency",
+		"financingCostInPercentage":            "percentage",
+		"principalRepaymentsPerYearPercentage": "percentage",
+		"saleCostForCarInPercentage":           "percentage",
+		"costOfPetrolPerLitre":                 "currency",
+		"costOfElectricityPerKwH":              "currency",
+		"fuelEfficiencyCV":                     "number",
+		"fuelEfficiencyEV":                     "number",
+		"insuranceBaseCost":                    "currency",
+		"insuranceCostPerThousand":             "currency",
+		"numberOfTyresPerFortyThousandKm":      "number",
+		"tyreCostCV":                           "currency",
+		"tyreCostEV":                           "currency",
+		"licenseWOFCostCVPerYear":              "currency",
+		"licenseWOFCostEVPerYear":              "currency",
+		"maintenanceCVPerTenThousandKm":        "currency",
+		"maintenanceEVPerTenThousandKm":        "currency",
+		"depreciationRatePerYear":              "percentage",
+		"costPerDayRentalCar":                  "currency",
+		"kilometresPerDayForLongTrips":         "number"
+	},
+
+	alternativeFormatsForFxs: {
+		"actualAnnualKms": "number"
 	}
 };
 
@@ -400,6 +429,7 @@ EVC.DefaultData = {
 	upgradeCostToGoElectric:               150,
 	setupChargeStation:                    300,
 	financingCostInPercentage:              10,
+	principalRepaymentsPerYearPercentage:   15,
 	saleCostForCarInPercentage:             12,
 	costOfPetrolPerLitre:                 2.00,
 	costOfElectricityPerKwH:              0.20,
@@ -429,6 +459,7 @@ EVC.DefaultData = {
 	upgradeCostToGoElectricLabel:                 "Upgrade Cost to go Electrical (percentage)",
 	setupChargeStationLabel:                      "Infrastructure Set Up Cost",
 	financingCostInPercentageLabel:               "Finance Cost In Percentage",
+	principalRepaymentsPerYearPercentageLabel:    "Principal repayments per year, as percentage of original total",
 	saleCostForCarInPercentageLabel:              "Sale Cost in Percentage",
 	costOfPetrolPerLitreLabel:                    "Cost of Petrol per Litre",
 	costOfElectricityPerKwHLabel:                 "Cost of Electricity per KwH",
@@ -458,6 +489,7 @@ EVC.DefaultData = {
 	upgradeCostToGoElectricDesc:                 "",
 	setupChargeStationDesc:                      "",
 	financingCostInPercentageDesc:               "",
+	principalRepaymentsPerYearPercentageDesc:    "",
 	saleCostForCarInPercentageDesc:              "",
 	costOfPetrolPerLitreDesc:                    "",
 	costOfElectricityPerKwHDesc:                 "",

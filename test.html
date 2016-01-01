@@ -22,13 +22,23 @@
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup cost</a></th>
-					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="f"></td>
-					<td class="total" data-js-method="totalUpFrontPayment" data-car-type="e"></td>
+					<td class="total" data-js-method="setupCost" data-car-type="f"></td>
+					<td class="total" data-js-method="setupCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">set up of infrastructure</th>
+					<td class="detail" data-js-method="setupCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="setupCost" data-car-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance cost</a></th>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalFinanceCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">original price</th>
+					<td class="detail" data-js-method="originalPrice" data-car-type="f"></td>
+					<td class="detail" data-js-method="originalPrice" data-car-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">value at the start of the year</th>
@@ -40,20 +50,60 @@
 					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="f"></td>
 					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="e"></td>
 				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">principal repayments</th>
+					<td class="detail" data-js-method="principalRepayment" data-car-type="f"></td>
+					<td class="detail" data-js-method="principalRepayment" data-car-type="e"></td>
+				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed cost</a></th>
 					<td class="total" data-js-method="totalFixedCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalFixedCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">insurance cost</th>
+					<td class="detail" data-js-method="insuranceCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="insuranceCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">licensing and WOF cost</th>
+					<td class="detail" data-js-method="licensingAndWOFCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="licensingAndWOFCost" data-car-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating cost</a></th>
 					<td class="total" data-js-method="totalOperatingCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalOperatingCost" data-car-type="e"></td>
 				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">actual KMs driven</th>
+					<td class="detail" data-js-method="actualAnnualKms" data-car-type="f"></td>
+					<td class="detail" data-js-method="actualAnnualKms" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">fuel cost</th>
+					<td class="detail" data-js-method="fuelCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="fuelCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">maintenance cost</th>
+					<td class="detail" data-js-method="maintenanceCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="maintenanceCost" data-car-type="e"></td>
+				</tr>
 				<tr class="summary">
 					<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other cost</a></th>
 					<td class="total" data-js-method="totalOtherCost" data-car-type="f"></td>
 					<td class="total" data-js-method="totalOtherCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">car rental cost</th>
+					<td class="detail" data-js-method="carRentalCost" data-car-type="f"></td>
+					<td class="detail" data-js-method="carRentalCost" data-car-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">subsidies and personal contributions</th>
+					<td class="detail" data-js-method="subsidy" data-car-type="f"></td>
+					<td class="detail" data-js-method="subsidy" data-car-type="e"></td>
 				</tr>
 				<tr class="superSummary summary">
 					<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
