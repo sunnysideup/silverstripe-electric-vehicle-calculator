@@ -3,7 +3,7 @@
 	"type": "silverstripe-module",
 	"description": "Silverstripe module that works out when it makes financial sense to switch to an electric vehicle",
 	"homepage": "https://github.com/sunnysideup/silverstripe-electric-vehicle-calculator",
-	"keywords":  "silverstripe", "EV", "electric", "vehicle", "environment", "clean", "javascript"],
+	"keywords":  ["silverstripe", "EV", "electric", "vehicle", "environment", "clean", "javascript"],
 	"license": "Not available for public use yet",
 	"authors":[
 		{
