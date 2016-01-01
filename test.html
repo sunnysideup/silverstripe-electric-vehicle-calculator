@@ -9,11 +9,15 @@
 
 <body>
 	<form id="ElectricVehicleCalculator">
-		<p class="message good">Please choose the appropriate values below:</p>
+		<h1>Bye bye oil?</h1>
+		<p class="message good">
+			The calculator below works out how much you safe if you were to traded-in your gasoline driven car for an electric vehicle today.
+			Please choose the appropriate values below and explore the results:
+		</p>
 		<fieldset id="KeyAssupmptions"></fieldset>
 		<fieldset id="ResultTableHolder">
 			<h2>results</h2>
-			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit"></span></p>
+			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
 			<table>
 				<tr class="header summary">
 					<th scope="col">&nbsp;</th>
@@ -22,101 +26,142 @@
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup cost</a></th>
-					<td class="total" data-js-method="setupCost" data-car-type="f"></td>
-					<td class="total" data-js-method="setupCost" data-car-type="e"></td>
+					<td class="total" data-fx="totalUpFrontPayment" data-type="f"></td>
+					<td class="total" data-fx="totalUpFrontPayment" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">set up of infrastructure</th>
-					<td class="detail" data-js-method="setupCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="setupCost" data-car-type="e"></td>
+					<td class="detail" data-fx="setupCost" data-type="f"></td>
+					<td class="detail" data-fx="setupCost" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">sale price</th>
+					<td class="detail" data-fx="salePrice" data-type="f"></td>
+					<td class="detail" data-fx="salePrice" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">purchase price</th>
+					<td class="detail" data-fx="purchasePrice" data-type="f"></td>
+					<td class="detail" data-fx="purchasePrice" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">cost of swap</th>
+					<td class="detail" data-fx="costOfSwap" data-type="f"></td>
+					<td class="detail" data-fx="costOfSwap" data-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance cost</a></th>
-					<td class="total" data-js-method="totalFinanceCost" data-car-type="f"></td>
-					<td class="total" data-js-method="totalFinanceCost" data-car-type="e"></td>
+					<td class="total" data-fx="totalFinanceCost" data-type="f"></td>
+					<td class="total" data-fx="totalFinanceCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">original price</th>
-					<td class="detail" data-js-method="originalPrice" data-car-type="f"></td>
-					<td class="detail" data-js-method="originalPrice" data-car-type="e"></td>
+					<td class="detail" data-fx="originalPrice" data-type="f"></td>
+					<td class="detail" data-fx="originalPrice" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">value at the start of the year</th>
-					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="f"></td>
-					<td class="detail" data-js-method="valueStartOfTheYear" data-car-type="e"></td>
+					<td class="detail" data-fx="valueStartOfTheYear" data-type="f"></td>
+					<td class="detail" data-fx="valueStartOfTheYear" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">value at the end of the year</th>
-					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="f"></td>
-					<td class="detail" data-js-method="resellValueAtEndOfYear" data-car-type="e"></td>
+					<td class="detail" data-fx="resellValueAtEndOfYear" data-type="f"></td>
+					<td class="detail" data-fx="resellValueAtEndOfYear" data-type="e"></td>
 				</tr>
 				<tr class="detail">
-					<th scope="row" class="detailHeader">principal repayments</th>
-					<td class="detail" data-js-method="principalRepayment" data-car-type="f"></td>
-					<td class="detail" data-js-method="principalRepayment" data-car-type="e"></td>
+					<th scope="row" class="detailHeader">interest</th>
+					<td class="detail" data-fx="interest" data-type="f"></td>
+					<td class="detail" data-fx="interest" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">loan repayments</th>
+					<td class="detail" data-fx="principalRepayment" data-type="f"></td>
+					<td class="detail" data-fx="principalRepayment" data-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed cost</a></th>
-					<td class="total" data-js-method="totalFixedCost" data-car-type="f"></td>
-					<td class="total" data-js-method="totalFixedCost" data-car-type="e"></td>
+					<td class="total" data-fx="totalFixedCost" data-type="f"></td>
+					<td class="total" data-fx="totalFixedCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">insurance cost</th>
-					<td class="detail" data-js-method="insuranceCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="insuranceCost" data-car-type="e"></td>
+					<td class="detail" data-fx="insuranceCost" data-type="f"></td>
+					<td class="detail" data-fx="insuranceCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">licensing and WOF cost</th>
-					<td class="detail" data-js-method="licensingAndWOFCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="licensingAndWOFCost" data-car-type="e"></td>
+					<td class="detail" data-fx="licensingAndWOFCost" data-type="f"></td>
+					<td class="detail" data-fx="licensingAndWOFCost" data-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating cost</a></th>
-					<td class="total" data-js-method="totalOperatingCost" data-car-type="f"></td>
-					<td class="total" data-js-method="totalOperatingCost" data-car-type="e"></td>
+					<td class="total" data-fx="totalOperatingCost" data-type="f"></td>
+					<td class="total" data-fx="totalOperatingCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">actual KMs driven</th>
-					<td class="detail" data-js-method="actualAnnualKms" data-car-type="f"></td>
-					<td class="detail" data-js-method="actualAnnualKms" data-car-type="e"></td>
+					<td class="detail" data-fx="actualAnnualKms" data-type="f"></td>
+					<td class="detail" data-fx="actualAnnualKms" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">average kms per day</th>
+					<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="f"></td>
+					<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">fuel cost</th>
-					<td class="detail" data-js-method="fuelCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="fuelCost" data-car-type="e"></td>
+					<td class="detail" data-fx="fuelCost" data-type="f"></td>
+					<td class="detail" data-fx="fuelCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
-					<th scope="row" class="detailHeader">maintenance cost</th>
-					<td class="detail" data-js-method="maintenanceCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="maintenanceCost" data-car-type="e"></td>
+					<th scope="row" class="detailHeader">service cost</th>
+					<td class="detail" data-fx="maintenanceCost" data-type="f"></td>
+					<td class="detail" data-fx="maintenanceCost" data-type="e"></td>
+				</tr>
+				<tr class="detail">
+					<th scope="row" class="detailHeader">tyre cost</th>
+					<td class="detail" data-fx="tyreCost" data-type="f"></td>
+					<td class="detail" data-fx="tyreCost" data-type="e"></td>
 				</tr>
 				<tr class="summary">
 					<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other cost</a></th>
-					<td class="total" data-js-method="totalOtherCost" data-car-type="f"></td>
-					<td class="total" data-js-method="totalOtherCost" data-car-type="e"></td>
+					<td class="total" data-fx="totalOtherCost" data-type="f"></td>
+					<td class="total" data-fx="totalOtherCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">car rental cost</th>
-					<td class="detail" data-js-method="carRentalCost" data-car-type="f"></td>
-					<td class="detail" data-js-method="carRentalCost" data-car-type="e"></td>
+					<td class="detail" data-fx="carRentalCost" data-type="f"></td>
+					<td class="detail" data-fx="carRentalCost" data-type="e"></td>
 				</tr>
 				<tr class="detail">
 					<th scope="row" class="detailHeader">subsidies and personal contributions</th>
-					<td class="detail" data-js-method="subsidy" data-car-type="f"></td>
-					<td class="detail" data-js-method="subsidy" data-car-type="e"></td>
+					<td class="detail" data-fx="subsidy" data-type="f"></td>
+					<td class="detail" data-fx="subsidy" data-type="e"></td>
 				</tr>
 				<tr class="superSummary summary">
 					<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
-					<td class="total superTotal" data-js-method="totalCombined" data-car-type="f"></td>
-					<td class="total superTotal" data-js-method="totalCombined" data-car-type="e"></td>
+					<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
+					<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
 				</tr>
 			</table>
 		</fieldset>
+		
+		<fieldset id="scenarios">
+			<h2>more scenarios</h2>
+			<p>Three year result: <span class="calcVal" data-fx="theeYearProfit"</p>
+			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"</p>
+			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"</p>
+			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"</p>
+		</fieldset>
+		
 		<fieldset id="OtherAssumptions">
 
 		</fieldset>
-
-
+		<h2>Send results to a friend</h2>
+		<p>...</p>
+		<h2>Purchase your electric vehicle today</h2>
+		<p>...</p>
 	</form>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="javascript/ElectricVehicleCalculator.js"></script>
