@@ -5,151 +5,176 @@
 	<link type="text/css" href="css/ElectricVehicleCalculator.css" rel="stylesheet" />
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 	<title>Are you ready to switch?</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
 	<form id="ElectricVehicleCalculator">
 		<p style="background-color: red; color: white;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
-		<h1>Bye bye oil?</h1>
+		<h1>How much will I save?</h1>
 		<p class="message good">
-			The calculator below works out how much you safe if you were to traded-in your gasoline driven car for an electric vehicle today.
-			Please choose the appropriate values below and explore the results:
+			The calculator below works out how much you save if you were to traded-in your gasoline driven car for an electric vehicle today.
+			Please enter the values (in blue) below to find out if you are ready to be part of a better world:
 		</p>
 		<fieldset id="KeyAssupmptions"></fieldset>
 		<fieldset id="ResultTableHolder">
 			<h2>results</h2>
 			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
 			<table>
-				<tr class="header summary">
-					<th scope="col">&nbsp;</th>
-					<th scope="col">Current Car</th>
-					<th scope="col">Electric Car</th>
-				</tr>
-				<tr class="summary">
-					<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup cost</a></th>
-					<td class="total" data-fx="totalUpFrontPayment" data-type="f"></td>
-					<td class="total" data-fx="totalUpFrontPayment" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">set up of infrastructure</th>
-					<td class="detail" data-fx="setupCost" data-type="f"></td>
-					<td class="detail" data-fx="setupCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">sale price</th>
-					<td class="detail" data-fx="salePrice" data-type="f"></td>
-					<td class="detail" data-fx="salePrice" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">purchase price</th>
-					<td class="detail" data-fx="purchasePrice" data-type="f"></td>
-					<td class="detail" data-fx="purchasePrice" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">cost of swap</th>
-					<td class="detail" data-fx="costOfSwap" data-type="f"></td>
-					<td class="detail" data-fx="costOfSwap" data-type="e"></td>
-				</tr>
-				<tr class="summary">
-					<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance cost</a></th>
-					<td class="total" data-fx="totalFinanceCost" data-type="f"></td>
-					<td class="total" data-fx="totalFinanceCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">original price</th>
-					<td class="detail" data-fx="originalPrice" data-type="f"></td>
-					<td class="detail" data-fx="originalPrice" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">value at the start of the year</th>
-					<td class="detail" data-fx="valueStartOfTheYear" data-type="f"></td>
-					<td class="detail" data-fx="valueStartOfTheYear" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">value at the end of the year</th>
-					<td class="detail" data-fx="resellValueAtEndOfYear" data-type="f"></td>
-					<td class="detail" data-fx="resellValueAtEndOfYear" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">interest</th>
-					<td class="detail" data-fx="interest" data-type="f"></td>
-					<td class="detail" data-fx="interest" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">loan repayments</th>
-					<td class="detail" data-fx="principalRepayment" data-type="f"></td>
-					<td class="detail" data-fx="principalRepayment" data-type="e"></td>
-				</tr>
-				<tr class="summary">
-					<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed cost</a></th>
-					<td class="total" data-fx="totalFixedCost" data-type="f"></td>
-					<td class="total" data-fx="totalFixedCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">insurance cost</th>
-					<td class="detail" data-fx="insuranceCost" data-type="f"></td>
-					<td class="detail" data-fx="insuranceCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">licensing and WOF cost</th>
-					<td class="detail" data-fx="licensingAndWOFCost" data-type="f"></td>
-					<td class="detail" data-fx="licensingAndWOFCost" data-type="e"></td>
-				</tr>
-				<tr class="summary">
-					<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating cost</a></th>
-					<td class="total" data-fx="totalOperatingCost" data-type="f"></td>
-					<td class="total" data-fx="totalOperatingCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">actual KMs driven</th>
-					<td class="detail" data-fx="actualAnnualKms" data-type="f"></td>
-					<td class="detail" data-fx="actualAnnualKms" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">average kms per day</th>
-					<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="f"></td>
-					<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">fuel cost</th>
-					<td class="detail" data-fx="fuelCost" data-type="f"></td>
-					<td class="detail" data-fx="fuelCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">service cost</th>
-					<td class="detail" data-fx="maintenanceCost" data-type="f"></td>
-					<td class="detail" data-fx="maintenanceCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">tyre cost</th>
-					<td class="detail" data-fx="tyreCost" data-type="f"></td>
-					<td class="detail" data-fx="tyreCost" data-type="e"></td>
-				</tr>
-				<tr class="summary">
-					<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other cost</a></th>
-					<td class="total" data-fx="totalOtherCost" data-type="f"></td>
-					<td class="total" data-fx="totalOtherCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">car rental cost</th>
-					<td class="detail" data-fx="carRentalCost" data-type="f"></td>
-					<td class="detail" data-fx="carRentalCost" data-type="e"></td>
-				</tr>
-				<tr class="detail">
-					<th scope="row" class="detailHeader">subsidies and personal contributions</th>
-					<td class="detail" data-fx="subsidy" data-type="f"></td>
-					<td class="detail" data-fx="subsidy" data-type="e"></td>
-				</tr>
-				<tr class="superSummary summary">
-					<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
-					<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
-					<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
-				</tr>
+				<thead>
+					<tr class="header summary">
+						<th scope="col">&nbsp;</th>
+						<th scope="col">Current Car</th>
+						<th scope="col">Electric Car</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="summary">
+						<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup</a></th>
+						<td class="total" data-fx="totalUpFrontPayment" data-type="f"></td>
+						<td class="total" data-fx="totalUpFrontPayment" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">set up of infrastructure</th>
+						<td class="detail" data-fx="setupCost" data-type="f"></td>
+						<td class="detail" data-fx="setupCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">sale price</th>
+						<td class="detail" data-fx="salePrice" data-type="f"></td>
+						<td class="detail" data-fx="salePrice" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">purchase price</th>
+						<td class="detail" data-fx="purchasePrice" data-type="f"></td>
+						<td class="detail" data-fx="purchasePrice" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">cost of swap</th>
+						<td class="detail" data-fx="costOfSwap" data-type="f"></td>
+						<td class="detail" data-fx="costOfSwap" data-type="e"></td>
+					</tr>
+					<tr class="summary">
+						<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance</a></th>
+						<td class="total" data-fx="totalFinanceCost" data-type="f"></td>
+						<td class="total" data-fx="totalFinanceCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">original price</th>
+						<td class="detail" data-fx="originalPrice" data-type="f"></td>
+						<td class="detail" data-fx="originalPrice" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">value at the start of the year</th>
+						<td class="detail" data-fx="valueStartOfTheYear" data-type="f"></td>
+						<td class="detail" data-fx="valueStartOfTheYear" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">value at the end of the year</th>
+						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="f"></td>
+						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">loan at start of the year</th>
+						<td class="detail" data-fx="amountBorrowedAtStartOfTheYear" data-type="f"></td>
+						<td class="detail" data-fx="amountBorrowedAtStartOfTheYear" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">interest</th>
+						<td class="detail" data-fx="interest" data-type="f"></td>
+						<td class="detail" data-fx="interest" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">loan repayments</th>
+						<td class="detail" data-fx="principalRepayment" data-type="f"></td>
+						<td class="detail" data-fx="principalRepayment" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">loan at the end of the year</th>
+						<td class="detail" data-fx="amountBorrowedAtEndOfTheYear" data-type="f"></td>
+						<td class="detail" data-fx="amountBorrowedAtEndOfTheYear" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">cash left after end-of-year car sale</th>
+						<td class="detail" data-fx="cashLeftAfterSellingCar" data-type="f"></td>
+						<td class="detail" data-fx="cashLeftAfterSellingCar" data-type="e"></td>
+					</tr>
+					<tr class="summary">
+						<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed</a></th>
+						<td class="total" data-fx="totalFixedCost" data-type="f"></td>
+						<td class="total" data-fx="totalFixedCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">insurance</th>
+						<td class="detail" data-fx="insuranceCost" data-type="f"></td>
+						<td class="detail" data-fx="insuranceCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">licensing and WOF</th>
+						<td class="detail" data-fx="licensingAndWOFCost" data-type="f"></td>
+						<td class="detail" data-fx="licensingAndWOFCost" data-type="e"></td>
+					</tr>
+					<tr class="summary">
+						<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating</a></th>
+						<td class="total" data-fx="totalOperatingCost" data-type="f"></td>
+						<td class="total" data-fx="totalOperatingCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">actual KMs driven</th>
+						<td class="detail" data-fx="actualAnnualKms" data-type="f"></td>
+						<td class="detail" data-fx="actualAnnualKms" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">average kms per day</th>
+						<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="f"></td>
+						<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">fuel</th>
+						<td class="detail" data-fx="fuelCost" data-type="f"></td>
+						<td class="detail" data-fx="fuelCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">maintenance and service</th>
+						<td class="detail" data-fx="maintenanceCost" data-type="f"></td>
+						<td class="detail" data-fx="maintenanceCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">tyres</th>
+						<td class="detail" data-fx="tyreCost" data-type="f"></td>
+						<td class="detail" data-fx="tyreCost" data-type="e"></td>
+					</tr>
+					<tr class="summary">
+						<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other</a></th>
+						<td class="total" data-fx="totalOtherCost" data-type="f"></td>
+						<td class="total" data-fx="totalOtherCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">car rental</th>
+						<td class="detail" data-fx="carRentalCost" data-type="f"></td>
+						<td class="detail" data-fx="carRentalCost" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">subsidies</th>
+						<td class="detail" data-fx="subsidy" data-type="f"></td>
+						<td class="detail" data-fx="subsidy" data-type="e"></td>
+					</tr>
+					<tr class="detail">
+						<th scope="row" class="detailHeader">personal contribution</th>
+						<td class="detail" data-fx="personalContribution" data-type="f"></td>
+						<td class="detail" data-fx="personalContribution" data-type="e"></td>
+					</tr>
+					<tr class="superSummary summary">
+						<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
+						<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
+						<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
+					</tr>
+				</tbody>
 			</table>
 		</fieldset>
 		
 		<fieldset id="scenarios">
-			<h2>more scenarios</h2>
+			<h2>more results</h2>
 			<p>Three year result: <span class="calcVal" data-fx="theeYearProfit"</p>
 			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"</p>
 			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"</p>

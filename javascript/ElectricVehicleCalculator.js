@@ -38,12 +38,28 @@ var EVCfx = function(
 	kmDrivenPerYear
 ) {
 
+
 	yearsFromNow = yearsFromNow == undefined ? 0 : yearsFromNow;
 
 	yearsAfterSwitch = yearsAfterSwitch == undefined ? 0 : yearsAfterSwitch;
 
 	kmDrivenPerYear = kmDrivenPerYear == undefined ? EVC.DefaultData.kmDrivenPerYear : kmDrivenPerYear;
+
+	/* getters and setters */
+
 	
+	this.updateYearsFromNow = function(newValue){
+		yearsFromNow = newValue;
+	};
+	
+	this.updateYearsAfterSwitch = function(newValue){
+		yearsAfterSwitch = newValue;
+	};
+	
+	this.updateKmDrivenPerYear = function(newValue){
+		kmDrivenPerYear = newValue;
+	};
+
 	/* calculations */
 	this.setupCost = function(carType){
 		if(yearsAfterSwitch == 0) {
@@ -114,6 +130,21 @@ var EVCfx = function(
 		}	
 	};
 
+	this.amountBorrowedAtStartOfTheYear = function(carType){
+		if(carType == "e") {
+			var loan = (this.purchasePrice(carType) - (this.salePrice("f") - EVC.DefaultData.amountOfCurrentCarAsLoan)) - (yearsAfterSwitch * this.standardPrincipalRepaymentPerYear(carType));
+		}
+		else {
+			var loan = EVC.DefaultData.amountOfCurrentCarAsLoan - (yearsAfterSwitch * this.standardPrincipalRepaymentPerYear(carType));
+		}
+		return loan < 0 ? 0 : loan;
+	};
+
+	this.amountBorrowedAtEndOfTheYear = function(carType){
+		var loan = this.amountBorrowedAtStartOfTheYear(carType) - this.standardPrincipalRepaymentPerYear(carType);
+		return loan < 0 ? 0 : loan;
+	};
+
 	this.valueStartOfTheYear =  function(carType){
 		var CVValue = EVC.DefaultData.CVValueToday;
 		for(var i = yearsFromNow; i > 0; i--) {
@@ -131,20 +162,42 @@ var EVCfx = function(
 		}
 	};
 
+	this.valueAtTheEndOfTheYear = function(carType){
+		var startOfYearValue = this.valueStartOfTheYear(carType);
+		return startOfYearValue - (startOfYearValue * (EVC.DefaultData.depreciationRatePerYear/100));
+	};
+
+	this.standardPrincipalRepaymentPerYear = function(carType){
+		var loanRepaymentsPerYear = this.originalPrice(carType) * (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
+		return loanRepaymentsPerYear;
+	}
+	
 	this.principalRepayment = function(carType){
-		return this.originalPrice(carType) * (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
+		var loanRepaymentsPerYear = this.standardPrincipalRepaymentPerYear(carType);
+		var maxAmountToPay = this.amountBorrowedAtStartOfTheYear(carType);
+		if(maxAmountToPay > loanRepaymentsPerYear) {
+			return loanRepaymentsPerYear;
+		}
+		else {
+			return maxAmountToPay;
+		}
+	};
+
+	this.cashLeftAfterSellingCar = function(carType){
+		var salePrice = this.valueAtTheEndOfTheYear(carType) - this.amountBorrowedAtEndOfTheYear(carType);
+		return salePrice - ((EVC.DefaultData.saleCostForCarInPercentage / 100) * salePrice);
 	};
 
 	this.interest = function(carType){
-		if(carType == "e") {
-			//console.debug("A" + this.valueStartOfTheYear(carType));
-			//console.debug("B" + EVC.DefaultData.financingCostInPercentage);
-			//console.debug("C" + EVC.DefaultData.financingCostInPercentage / 100);
-			return this.valueStartOfTheYear(carType) * (EVC.DefaultData.financingCostInPercentage / 100);
+		var interest = 0;
+		var dailyInterest = (EVC.DefaultData.financingCostInPercentage / 100) / 365;
+		for(var i = 1; i < 366; i++) {
+			var valueOfTheDay = (this.amountBorrowedAtStartOfTheYear(carType) - ((this.principalRepayment(carType) / 365) * i));
+			if(valueOfTheDay > 0) {
+				interest += valueOfTheDay * dailyInterest;
+			}
 		}
-		else {
-			return this.valueStartOfTheYear(carType) * (EVC.DefaultData.financingCostInPercentage / 100);
-		}
+		return interest;
 	};
 
 	this.insuranceCost = function(carType){
@@ -197,7 +250,7 @@ var EVCfx = function(
 	};
 	
 	this.tyreCost = function(carType) {
-		var tyresNeeded = (this.actualAnnualKms(carType)  / 40000) * EVC.DefaultData.numberOfTyresPerFortyThousandKm;
+		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.DefaultData.averageKmsPerTyre;
 		if(carType == "e") {
 			return tyresNeeded * EVC.DefaultData.tyreCostEV;
 		}
@@ -217,22 +270,30 @@ var EVCfx = function(
 
 	this.subsidy = function(carType){
 		if(carType == "e") {
-			return -1 * (EVC.DefaultData.subsidyPaymentFixed + (EVC.DefaultData.subsidyPaymentPerKM * this.actualAnnualKms(carType)));
+			var fixedSubsidy = 0;
+			if(yearsAfterSwitch == 0) {
+				var fixedSubsidy = EVC.DefaultData.subsidyPaymentFixed;
+			}
+			return -1 * (fixedSubsidy + (EVC.DefaultData.subsidyPaymentPerKM * this.actualAnnualKms(carType)));
 		}
 		else {
 			return 0;
 		}
 	}
 
-	this.resellValueAtEndOfYear = function(carType){
-		var startOfYearValue = this.valueStartOfTheYear(carType);
-		return startOfYearValue - (startOfYearValue * (EVC.DefaultData.depreciationRatePerYear/100));
-	};
+	this.personalContribution = function(carType){
+		if(carType == "e") {
+			return -1 * (EVC.DefaultData.personalContributionFixed + (EVC.DefaultData.personalContributionPerKM * this.actualAnnualKms(carType)));
+		}
+		else {
+			return 0;
+		}
+	}
 
 	/* totals */
 
 	this.totalUpFrontPayment = function(carType) {
-		return this.setupCost(carType) + this.costOfSwap(carType);
+		return this.setupCost(carType);
 	};
 
 	this.totalFinanceCost = function(carType) {
@@ -251,7 +312,8 @@ var EVCfx = function(
 		if(carType == "e") {
 			var rentalCost = this.carRentalCost(carType);
 			var subsidyInput = this.subsidy(carType);
-			return rentalCost + subsidyInput;
+			var personalContribution = this.personalContribution(carType);
+			return rentalCost + subsidyInput + personalContribution;
 		}
 		else {
 			return 0;
@@ -313,6 +375,7 @@ EVC.HTMLInteraction = {
 		this.populateResultTable();
 		this.populateCalculations();
 		this.setupShowAndHideResultRows();
+		this.selectFirstInput();
 	},
 
 	clear: function(){
@@ -324,13 +387,13 @@ EVC.HTMLInteraction = {
 
 	buildKeyAssumptionForm: function() {
 		jQuery("#KeyAssupmptions").html(
-			"<h2>key assumptions</h2>"+this.createFormFieldsFromList(EVC.DataDescription.keyAssumptionKeys)
+			"<h2>"+EVC.DefaultData.keyAssumptions+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.keyAssumptionKeys)
 		);
 	},
 	
 	buildOtherAssumptionsForm: function() {
 		jQuery("#OtherAssumptions").html(
-			"<h2>all assumptions</h2>"+this.createFormFieldsFromList(EVC.DataDescription.otherAssumptionKeys)
+			"<h2>"+EVC.DefaultData.allAssumptions+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.otherAssumptionKeys)
 		);
 	},
 	
@@ -410,6 +473,16 @@ EVC.HTMLInteraction = {
 		);
 	},
 
+	selectFirstInput: function(){
+		//we have to wait until HTML is registered...
+		window.setTimeout(
+			function(){
+				jQuery("#CVValueTodayField").focus();
+			},
+			300
+		);
+	},
+
 	createFormFieldsFromList: function(list) {
 		var html = "";
 		for (var key in list) {
@@ -469,7 +542,15 @@ EVC.HTMLInteraction = {
 		//remove comma and $ ...
 		value = parseFloat(value.replace(/\$|,/g, ''))
 		EVC.DefaultData[key] = value;
+		//special exception ..
+		if(key == "kmDrivenPerYear") {
+			EVC.kmDrivenPerYear = value;
+			EVC.myData.updateKmDrivenPerYear(value);
+		}
+		//update HTML
 		this.populateResultTable();
+		this.populateCalculations();
+		
 	},
 
 	setMyValue: function(key, item){
@@ -543,7 +624,7 @@ EVC.DataDescription = {
 		"fuelEfficiencyEV":                     "number",
 		"insuranceBaseCost":                    "currency",
 		"insuranceCostPerThousand":             "currency",
-		"numberOfTyresPerFortyThousandKm":      "number",
+		"averageKmsPerTyre":                    "number",
 		"tyreCostCV":                           "currency",
 		"tyreCostEV":                           "currency",
 		"licenseWOFCostCVPerYear":              "currency",
@@ -553,8 +634,10 @@ EVC.DataDescription = {
 		"depreciationRatePerYear":              "percentage",
 		"costPerDayRentalCar":                  "currency",
 		"kilometresPerDayForLongTrips":         "number",
-		"subsidyPaymentFixed":               "currency",
-		"subsidyPaymentPerKM":               "currency"
+		"subsidyPaymentFixed":                  "currency",
+		"subsidyPaymentPerKM":                  "currency",
+		"personalContributionFixed":            "currency",
+		"personalContributionPerKM":            "currency"
 	},
 
 	alternativeFormatsForFxs: {
@@ -567,24 +650,25 @@ EVC.DataDescription = {
 EVC.DefaultData = {
 
 	/* key assumptions */
-	CVValueToday:                        10000,
-	kmDrivenPerYear:                     20000,
-	daysWithContinuousTripsOver100Km:       10,
+	CVValueToday:                            0,
+	kmDrivenPerYear:                         0,
+	daysWithContinuousTripsOver100Km:        0,
 
 	/* other assumptions */
+	amountOfCurrentCarAsLoan:                0,
 	upgradeCostToGoElectric:               150,
 	EVValueImprovementPerYearPercentage:     5,
 	setupChargeStation:                    300,
 	saleCostForCarInPercentage:             12,
 	financingCostInPercentage:              10,
-	principalRepaymentsPerYearPercentage:   15,
+	principalRepaymentsPerYearPercentage:   30,
 	costOfPetrolPerLitre:                 2.00,
 	costOfElectricityPerKwH:              0.20,
 	fuelEfficiencyCV:                       12,
 	fuelEfficiencyEV:                        5,
 	insuranceBaseCost:                     200,
 	insuranceCostPerThousand:               50,
-	numberOfTyresPerFortyThousandKm:         4,
+	averageKmsPerTyre:                   40000,
 	tyreCostCV:                            100,
 	tyreCostEV:                            150,
 	licenseWOFCostCVPerYear:               250,
@@ -594,39 +678,45 @@ EVC.DefaultData = {
 	depreciationRatePerYear:                27,
 	costPerDayRentalCar:                    70,
 	kilometresPerDayForLongTrips:          300,
-	subsidyPaymentFixed:                  1000,
-	subsidyPaymentPerKM:                  0.05,	
+	subsidyPaymentFixed:                     0,
+	subsidyPaymentPerKM:                  0.00,
+	personalContributionFixed:               0,
+	personalContributionPerKM:               0,
 
 	/* key assumptions Labels */
 	CVValueTodayLabel:                            "Current Car Value",
-	kmDrivenPerYearLabel:                         "Kilometers Driven Per Year",
+	kmDrivenPerYearLabel:                         "Kilometers Driven per Year",
 	daysWithContinuousTripsOver100KmLabel:        "Big Trip Days Per Year",
 
 	/* other assumptions */
-	upgradeCostToGoElectricLabel:                 "Upgrade Cost to go Electrical (percentage)",
-	EVValueImprovementPerYearPercentageLabel:     "Value improvement per year in percentages for electric vehicles",
-	setupChargeStationLabel:                      "Infrastructure Set Up Cost",
-	saleCostForCarInPercentageLabel:              "Sale Cost in Percentage",
-	financingCostInPercentageLabel:               "Finance Cost In Percentage",
-	principalRepaymentsPerYearPercentageLabel:    "Principal repayments per year, as percentage of original total",
-	costOfPetrolPerLitreLabel:                    "Cost of Petrol per Litre",
-	costOfElectricityPerKwHLabel:                 "Cost of Electricity per KwH",
-	fuelEfficiencyCVLabel:                        "Fuel Efficiency KM per Litre of Petrol",
-	fuelEfficiencyEVLabel:                        "Fuel Efficiency KM per KwH",
-	insuranceBaseCostLabel:                       "Insurance Base Cost",
-	insuranceCostPerThousandLabel:                "Insurance Cost per $1000 of Car Value",
-	numberOfTyresPerFortyThousandKmLabel:         "Number of Tyres needed per 40,000km",
-	tyreCostCVLabel:                              "Tyre Cost for Current Car",
-	tyreCostEVLabel:                              "Tyre Cost for Electric Car",
-	licenseWOFCostCVPerYearLabel:                 "License and WOF cost per year for current car",
-	licenseWOFCostEVPerYearLabel:                 "License and WOF cost per year for electric car",
-	maintenanceCVPerTenThousandKmLabel:           "Maintenance cost per 10,000 current car",
-	maintenanceEVPerTenThousandKmLabel:           "Maintenance cost per 10,000 electric car",
-	depreciationRatePerYearLabel:                 "car depreciation rate per year",
-	costPerDayRentalCarLabel:                     "cost per day day for rental car",
-	kilometresPerDayForLongTripsLabel:            "Kilometers per day for Trips",
-	subsidyPaymentFixedLabel:                     "Fixed Subsidy for E-Vehicle",
-	subsidyPaymentPerKMLabel:                     "Kilometer Subsidy for E-Vehicle",
+	amountOfCurrentCarAsLoanLabel:                "Borrowed Amount for Current Car",
+	upgradeCostToGoElectricLabel:                 "Premium for Electrical Car",
+	EVValueImprovementPerYearPercentageLabel:     "Relative Value Improvement per Year for Electric Cars",
+	setupChargeStationLabel:                      "Infrastructure Set Up",
+	saleCostForCarInPercentageLabel:              "Sale / Purchase Cost",
+	financingCostInPercentageLabel:               "Interest Rate",
+	principalRepaymentsPerYearPercentageLabel:    "Principal Repayments per Year",
+	costOfPetrolPerLitreLabel:                    "Petrol per Litre",
+	costOfElectricityPerKwHLabel:                 "Electricity per KwH",
+	fuelEfficiencyCVLabel:                        "Current Car: KMs per Litre of Petrol",
+	fuelEfficiencyEVLabel:                        "Electric Car: KMs per KwH",
+	insuranceBaseCostLabel:                       "Insurance Base Price",
+	insuranceCostPerThousandLabel:                "Insurance per $1000 Car Value",
+	averageKmsPerTyreLabel:                       "Average KMs per Tyre",
+	tyreCostCVLabel:                              "Current Car: one Tyre",
+	tyreCostEVLabel:                              "Electric Car: one Tyre",
+	licenseWOFCostCVPerYearLabel:                 "Current Car: License and WOF per year",
+	licenseWOFCostEVPerYearLabel:                 "Electric Car: License and WOF per year",
+	maintenanceCVPerTenThousandKmLabel:           "Current Car: Service per 10,000kms",
+	maintenanceEVPerTenThousandKmLabel:           "Electric Car: Service per 10,000kms",
+	depreciationRatePerYearLabel:                 "Depreciation rate per year",
+	costPerDayRentalCarLabel:                     "Cost per Day for Rental Car",
+	kilometresPerDayForLongTripsLabel:            "KMs per Day for Long Trips",
+	subsidyPaymentFixedLabel:                     "Electric Car: Fixed Subsidy",
+	subsidyPaymentPerKMLabel:                     "Electric Car: Kilometer Subsidy",
+	personalContributionFixedLabel:               "Electric Car: Personal Contribution per Year",
+	personalContributionPerKMLabel:               "Electric Car: Personal Contribution per KM",
+	
 	
 	/* key assumptions Descs */
 	CVValueTodayDesc:                            "",
@@ -634,6 +724,7 @@ EVC.DefaultData = {
 	daysWithContinuousTripsOver100KmDesc:        "more than 150km per day",
 
 	/* other assumptions */
+	amountOfCurrentCarAsLoanDesc:                "",
 	upgradeCostToGoElectricDesc:                 "",
 	EVValueImprovementPerYearPercentageDec:      "",
 	setupChargeStationDesc:                      "",
@@ -646,7 +737,7 @@ EVC.DefaultData = {
 	fuelEfficiencyEVDesc:                        "",
 	insuranceBaseCostDesc:                       "",
 	insuranceCostPerThousandDesc:                "",
-	numberOfTyresPerFortyThousandKmDesc:         "",
+	averageKmsPerTyreDesc:                       "",
 	tyreCostCVDesc:                              "",
 	tyreCostEVDesc:                              "",
 	licenseWOFCostCVPerYearDesc:                 "",
@@ -658,7 +749,12 @@ EVC.DefaultData = {
 	costPerDayRentalCarDesc:                     "",
 	kilometresPerDayForLongTripsDesc:            "",
 	subsidyPaymentFixedDesc:                     "",
-	subsidyPaymentPerKMDesc:                     ""
+	subsidyPaymentPerKMDesc:                     "",
+	personalContributionFixedDesc:               "",
+	personalContributionPerKMDesc:               "",
+
+	keyAssumptions:         "your current situation",
+	allAssumptions:                "all assumptions",
 };
 
 
@@ -666,7 +762,7 @@ EVC.DefaultData = {
 
 Number.prototype.formatMoney = function(c, d, t){
 	var n = this, 
-	c = isNaN(c = Math.abs(c)) ? 0 : c, 
+	c = isNaN(c = Math.abs(c)) ? (Math.abs(n) < 5  && n != 0? 2 : 0) : c,
 	d = d == undefined ? "." : d, 
 	t = t == undefined ? "," : t, 
 	s = n < 0 ? "-" : "", 

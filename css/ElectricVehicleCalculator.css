@@ -1,42 +1,69 @@
+@media screen and (min-width: 0px) {
+	/* general */
+	body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 0.9em;}
+	* {font-weight: 400;}
+	strong {font-weight: 700;}
+	a {border-bottom: 1px solid #ccc; text-decoration: none; color: black;}
+	a:hover {color: orange;}
+	p {margin-bottom: 1.7em;}
+	
+	/* form */
+	form {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto;}
+	fieldset {border: none; padding: 0.5em 0; outline: none;}
+	fieldset * {text-transform: lowercase;}
+	.fieldHolder { padding: 1em 0; clear: both;}
+	label, input {font-size: 15px;}
+	input {
+		width: 100%;
+		background-color: transparent;
+		border: none;
+		text-align: right;
+		color: blue;
+		border-bottom: 1px solid #ccc;
+		font-size: 21px;
+	}
+	
+	.middleColumn {margin-top: 0.3em;}
+	label strong {font-weight: 400;}
+	label span.desc {display: none; color: orange;}
 
-body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 90%;}
-* {font-weight: 400;}
-strong {font-weight: 700;}
-a {border-bottom: 1px solid #ccc; text-decoration: none; color: black;}
-form {width: 100%; max-width: 500px; margin-left: auto; margin-right: auto;}
-fieldset {border: none; padding: 0.5em 0; outline: none;}
-fieldset * {text-transform: lowercase;}
-.fieldHolder { padding: 1em 0; clear: both;}
-input {
-	width: 100px;
-	background-color: transparent;
-	border: none;
-	text-align: right;
-	color: blue;
-	border-bottom: 1px solid #ccc;
+	/* results */
+	table {width: 100%; }
+
+	tr.detail {display: none;}
+	tr.detail th, tr.detail td {color: #999; padding-top: 0; border-bottom: 1px solid #ddd;}
+
+	td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;text-align: right;}
+	th {padding: 0.9em 0 0.5em 0; vertical-align: top; text-align: left; font-weight: 400; font-weight: normal;}
+	th[scope='col'] {text-align: right; border-bottom: 1px solid #ccc;}
+	table tr th a.show {display: block;}
+	th.superTotalHeader, td.superTotal {border-top: 1px solid #ccc; font-weight: 700;}
+
+	/* calcVals */
+	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
+	.calcVal .negativeNumber {color: red;}
+
 }
-.middleColumn {float: right; width: 100px;}
-label {
-	width: -webkit-calc(100% - 100px);
-	width: -moz-calc(100% - 100px);
-	width: calc(100% - 100px);
-	float: left;
+
+
+@media screen and (min-width: 480px) {
+	.middleColumn {width: 100px; margin-top: 0; float: right;}
+	label {
+		width: -webkit-calc(100% - 100px);
+		width: -moz-calc(100% - 100px);
+		width: calc(100% - 100px);
+		float: left;
+	}
+	input {
+		width: 100px;
+		text-align: right;
+		font-size: 100%;
+	}
+	#KeyAssupmptions input {font-size: 21px;}
+	tr.detail th, tr.detail td {border-bottom: 1px solid transparent;}
+	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
 }
-label strong {font-weight: 400;}
-label span.desc {display: none; color: #ccc;}
+@media screen and (min-width: 1100px) {
 
-table {width: 100%; font-size: 0.9em;}
-tr.detail {display: none;}
-td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;}
-th {padding: 0.9em 0 0.5em 0; vertical-align: top; 
-text-align: left; font-weight: 400; font-weight: normal;}
-th[scope='col'] {text-align: right; border-bottom: 1px solid #ccc;}
-tr.detail th, tr.detail td {color: #999; padding-top: 0;}
-td {text-align: right;}
-th.superTotalHeader, td.superTotal {border-top: 1px solid #ccc; font-weight: 700;}
 
-.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right;}
-.calcVal .negativeNumber {color: red;}
-
-table a {}
-table a.show {display: block;}
+}
