@@ -17,21 +17,21 @@
 </head>
 
 <body>
+	<div id="EVCWrapper">
+	<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
+	<div id="ContentHolder">$Content</div> 
 	<form id="ElectricVehicleCalculator">
-		<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
-		<h1>How much will I save?</h1>
-		<p class="message good">
-			The calculator below works out how much you save if you were to traded-in your gasoline driven car for an electric vehicle today.
-			Please enter the values below (in blue) to find out if you are ready to be part of a cleaner world:
-		</p>
 		<fieldset id="KeyAssupmptions"></fieldset>
+
+		<p class="message good">Total Savings First Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+		<p class="message good">Total Savings First Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
+
+		<hr />
 
 		<fieldset id="PlayAroundAssumptions"></fieldset>
 		
 		<fieldset id="ResultTableHolder">
-			<h2>results</h2>
-			<p class="message good">Total Savings First Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
-			<p class="message good">Total Savings First Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
+			<h2>detailed results</h2>
 			<table>
 				<thead>
 					<tr class="header summary">
@@ -40,6 +40,13 @@
 						<th scope="col">Electric Car</th>
 					</tr>
 				</thead>
+				<tfoot>
+					<tr class="superSummary summary">
+						<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
+						<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
+						<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
+					</tr>
+				</tfoot>
 				<tbody>
 					<tr class="summary">
 						<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup</a></th>
@@ -186,11 +193,6 @@
 						<td class="detail" data-fx="personalContribution" data-type="f"></td>
 						<td class="detail" data-fx="personalContribution" data-type="e"></td>
 					</tr>
-					<tr class="superSummary summary">
-						<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
-						<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
-						<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
-					</tr>
 				</tbody>
 			</table>
 		</fieldset>
@@ -200,9 +202,9 @@
 
 		<fieldset id="Scenarios">
 			<h2>more results</h2>
-			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"</p>
-			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"</p>
-			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"</p>
+			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"></span></p>
+			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"></span></p>
+			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"></span></p>
 		</fieldset>
 
 		<fieldset id="OtherAssumptions">
@@ -229,6 +231,7 @@
 		</p>
 
 	</form>
+	</div>
 
 	<script src="javascript/ElectricVehicleCalculator.js"></script>
 

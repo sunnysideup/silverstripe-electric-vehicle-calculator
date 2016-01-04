@@ -595,7 +595,7 @@ EVC.HTMLInteraction = {
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
+				html += "\t\t<input type=\"number\" pattern=\"\\d*\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -886,7 +886,7 @@ EVC.DefaultData = {
 	saleCostForCarInPercentage:              7,
 	purchaseCostForCarInPercentage:          3,
 	financingCostInPercentage:              10,
-	principalRepaymentsPerYearPercentage:   30,
+	principalRepaymentsPerYearPercentage:   10,
 	costOfPetrolPerLitre:                 2.00,
 	costOfElectricityPerKwH:              0.20,
 	fuelEfficiencyCV:                       12,
