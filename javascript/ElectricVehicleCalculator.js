@@ -454,6 +454,7 @@ EVC.HTMLInteraction = {
 		this.populateCalculations();
 		this.populateLinks();
 		this.setupShowAndHideResultRows();
+		this.makeMobileInputNumeric();
 		this.selectFirstInput();
 	},
 
@@ -568,6 +569,9 @@ EVC.HTMLInteraction = {
 		);
 	},
 
+	makeMobileInputNumeric: function(){
+	},
+
 	selectFirstInput: function(){
 		//we have to wait until HTML is registered...
 		window.setTimeout(
@@ -595,7 +599,7 @@ EVC.HTMLInteraction = {
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"number\" pattern=\"\\d*\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
