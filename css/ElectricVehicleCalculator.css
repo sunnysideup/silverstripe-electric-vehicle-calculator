@@ -10,7 +10,7 @@
 	/* form */
 	form {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto;}
 	fieldset {border: none; padding: 0.5em 0; outline: none;}
-	fieldset * {text-transform: lowercase;}
+	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both;}
 	label, input {font-size: 15px;}
 	input {
@@ -31,7 +31,8 @@
 	table {width: 100%; }
 
 	tr.detail {display: none;}
-	tr.detail th, tr.detail td {color: #999; padding-top: 0; border-bottom: 1px solid #ddd;}
+	tr.detail th, tr.detail td {color: #999; padding-top: 0; border-bottom: 1px solid #ddd; font-size: 0.9em}
+	tr.detail.excludedFromTotal th, tr.detail.excludedFromTotal td {color: orange;}
 
 	td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;text-align: right;}
 	th {padding: 0.9em 0 0.5em 0; vertical-align: top; text-align: left; font-weight: 400; font-weight: normal;}
