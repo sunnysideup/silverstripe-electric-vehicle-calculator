@@ -640,7 +640,7 @@ EVC.HTMLInteraction = {
 		//remove comma and $ ...
 		value = parseFloat(value.replace(/\$|,/g, ''));
 		//send to server
-		if(EVC.baseLink) {
+		if(EVC.workableLinks()) {
 			jQuery.ajax({
 				method: "GET",
 				url: EVC.saveLink(),

@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html>
+<!--[if !IE]><!-->
+<html lang="$ContentLocale">
+<!--<![endif]-->
 <head>
-	<meta charset="UTF-8">
-	<link type="text/css" href="css/ElectricVehicleCalculator.css" rel="stylesheet" />
+	<% base_tag %>
+	<title><% if $MetaTitle %>$MetaTitle<% else %>$Title<% end_if %> &raquo; $SiteConfig.Title</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	$MetaTags(false)
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="shortcut icon" href="$ThemeDir/images/favicon.ico" />
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
-	<title>Are you ready to switch?</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
@@ -14,12 +22,16 @@
 		<h1>How much will I save?</h1>
 		<p class="message good">
 			The calculator below works out how much you save if you were to traded-in your gasoline driven car for an electric vehicle today.
-			Please enter the values (in blue) below to find out if you are ready to be part of a better world:
+			Please enter the values below (in blue) to find out if you are ready to be part of a cleaner world:
 		</p>
 		<fieldset id="KeyAssupmptions"></fieldset>
+
+		<fieldset id="PlayAroundAssumptions"></fieldset>
+		
 		<fieldset id="ResultTableHolder">
 			<h2>results</h2>
-			<p class="message good">Total Savings per Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+			<p class="message good">Total Savings First Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+			<p class="message good">Total Savings First Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
 			<table>
 				<thead>
 					<tr class="header summary">
@@ -184,14 +196,10 @@
 		</fieldset>
 
 
-		<fieldset id="PlayAroundAssumptions">
-
-		</fieldset>
 
 
 		<fieldset id="Scenarios">
 			<h2>more results</h2>
-			<p>Three year result: <span class="calcVal" data-fx="theeYearProfit"</p>
 			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"</p>
 			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"</p>
 			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"</p>
@@ -211,7 +219,7 @@
 
 		<h2>load data</h2>
 		<p>
-			<a href="./test.html" id="#ResetLink">reset all settings</a>
+			<a href="{$Link}reset/" id="#ResetLink">reset all settings</a>
 		</p>
 
 		<h2>feedback</h2>
@@ -222,7 +230,6 @@
 
 	</form>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="javascript/ElectricVehicleCalculator.js"></script>
 
 </body>

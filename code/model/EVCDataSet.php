@@ -9,7 +9,7 @@ class EVCDataSet extends DataObject {
 	 *
 	 * @return EVCDataSet
 	 */ 
-	public static find_or_create($code = null, $forceCreation = false) {
+	public static function find_or_create($code = null, $forceCreation = false) {
 		$obj = null;
 		if($code) {
 			Convert::raw2sql($code);
@@ -17,8 +17,8 @@ class EVCDataSet extends DataObject {
 		}
 		if(!$obj) {
 			if($forceCreation) {
-				EVCDataSet::create();
-				$id = $this->evcDataSet->write();
+				$obj = EVCDataSet::create();
+				$id = $obj->write();
 			}
 		}
 		return $obj;
@@ -41,13 +41,18 @@ class EVCDataSet extends DataObject {
 		$this->write();
 	}
 
+	/**
+	 * @return string | null
+	 */ 
 	public function returnValuesAsJS(){
 		$array = unserialize($this->Data);
 		$json = "";
-		foreach($array as $key => $value) {
-			$json .= "\nEVC.DefaultData.".$key." = ".$value.";";
+		if(is_array($array) && count($array)) {
+			foreach($array as $key => $value) {
+				$json .= "\nEVC.DefaultData.".$key." = ".$value.";";
+			}
+			return $json;
 		}
-		return $json;
 	}
 	
 	function onBeforeWrite(){
@@ -61,6 +66,7 @@ class EVCDataSet extends DataObject {
 	}
 
 	private function getIPAddress(){
+		$ip = null;
 		if (isset($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		}
