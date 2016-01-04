@@ -659,13 +659,13 @@ EVC.HTMLInteraction = {
 		//special exception ..
 		if(key == "kmDrivenPerYear" || key == "yearsFromNow" || key == "yearsAfterSwitch") {
 			if(key == "kmDrivenPerYear") {
-				EVC.myData.updateKmDrivenPerYear(key, value);
+				EVC.myData.updateKmDrivenPerYear(value);
 			}
 			else if(key == "yearsFromNow") {
-				EVC.myData.updateYearsFromNow(key, value);
+				EVC.myData.updateYearsFromNow(value);
 			}
-				EVC.myData.updateYearsAfterSwitch(key, value);
-ww			else if(key == ""){
+			else if(key == "yearsAfterSwitch"){
+				EVC.myData.updateYearsAfterSwitch(value);
 			}
 		}
 		//update HTML
@@ -719,7 +719,7 @@ EVC.scenarios = {
 	},
 
 	inThreeYearsTime: function(){
-		var year1 = new EVCfx(3, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear) - 5000);
+		var year1 = new EVCfx(3, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear));
 		//return year1.debug();
 		return year1.totalProfit();
 	}

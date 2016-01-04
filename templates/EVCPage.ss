@@ -3,14 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<link type="text/css" href="css/ElectricVehicleCalculator.css" rel="stylesheet" />
-	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
 	<title>Are you ready to switch?</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
 	<form id="ElectricVehicleCalculator">
-		<p style="background-color: red; color: white;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
+		<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
 		<h1>How much will I save?</h1>
 		<p class="message good">
 			The calculator below works out how much you save if you were to traded-in your gasoline driven car for an electric vehicle today.
