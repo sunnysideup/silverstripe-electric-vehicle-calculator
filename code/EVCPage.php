@@ -18,8 +18,13 @@ class EVCPage_Controller extends Page_Controller {
 	protected $evcDataSet = null;
 
 	function index(){
-		$this->evcDataSet = EVCDataSet::find_or_create("", true);
-		return $this->redirect($this->Link("show/".$this->evcDataSet->Code."/"));
+		$code = Session::get("EVCLastCode");
+		$this->evcDataSet = EVCDataSet::find_or_create($code, true);
+		if(!$code) {
+			$code = $this->evcDataSet->Code;
+			Session::set("EVCLastCode", $code);
+		}
+		return $this->redirect($this->Link("show/".$code."/"));
 	}
 
 	function show($request){
@@ -39,7 +44,7 @@ class EVCPage_Controller extends Page_Controller {
 	/**
 	 * ajax method ...
 	 *
-	 */ 
+	 */
 	function save($request){
 		$code = $request->param("ID");
 		$this->evcDataSet = EVCDataSet::find_or_create($code, true);

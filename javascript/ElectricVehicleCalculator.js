@@ -3,7 +3,7 @@
  *
  *
  *
- */ 
+ */
 
 
 
@@ -16,30 +16,61 @@ jQuery(document).ready(
 var EVC = {
 
 	myData: {},
-	
-	yearsFromNow: 0,
 
-	yearsAfterSwitch: 0,
+	kmDrivenPerYear: -1,
 
-	kmDrivenPerYear: 0,
+	yearsFromNow: -1,
+
+	yearsAfterSwitch: -1,
 
 	serverKey: "",
-	
+
 	baseLink: "",
-	
-	saveLink: function(){return this.baseLink+"save/"+serverKey+"/";},
 
-	showLink: function(){return this.baseLink+"show/"+serverKey+"/";},
+	workableLinks: function(){
+		if(this.baseLink && this.serverKey) {
+			return true;
+		}
+		return false;
+	},
 
-	shareLink: function(){return this.baseLink+"retrieve/"+serverKey+"/";},,
+	saveLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"save/"+this.serverKey+"/";
+		}
+		return "";
+	},
+
+	showLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"show/"+this.serverKey+"/";
+		}
+		return "";
+	},
+
+	shareLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"retrieve/"+this.serverKey+"/";
+		}
+		return "";
+	},
+
+	resetLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"reset/";
+		}
+		return "";
+	},
 
 	init: function() {
-		var kmDrivenPerYearTempVar = this.kmDrivenPerYear == 0 ? EVC.DefaultData.kmDrivenPerYear : this.kmDrivenPerYear;
-		this.myData = new EVCfx(this.yearsFromNow, this.yearsAfterSwitch, kmDrivenPerYearTempVar);
+		var kmDrivenPerYearTempVar = this.kmDrivenPerYear == -1 ? EVC.DefaultData.kmDrivenPerYear : this.kmDrivenPerYear;
+		var yearsFromNowTempVar = this.yearsFromNow == -1 ? EVC.DefaultData.yearsFromNow : this.yearsFromNow;
+		var yearsAfterSwitchTempVar = this.yearsAfterSwitch == -1 ? EVC.DefaultData.yearsAfterSwitch : this.yearsAfterSwitch;
+		this.myData = new EVCfx(yearsFromNowTempVar, yearsAfterSwitchTempVar, kmDrivenPerYearTempVar);
 		//now we have the data, we can show it ...
 		EVC.HTMLInteraction.init();
 	}
-	
+
 };
 
 var EVCfx = function(
@@ -48,26 +79,23 @@ var EVCfx = function(
 	kmDrivenPerYear
 ) {
 
-
-	yearsFromNow = yearsFromNow == undefined ? 0 : yearsFromNow;
-
-	yearsAfterSwitch = yearsAfterSwitch == undefined ? 0 : yearsAfterSwitch;
-
 	kmDrivenPerYear = kmDrivenPerYear == undefined ? EVC.DefaultData.kmDrivenPerYear : kmDrivenPerYear;
 
-	/* getters and setters */
+	yearsFromNow = yearsFromNow == undefined ? EVC.DefaultData.yearsFromNow : yearsFromNow;
 
-	
+	yearsAfterSwitch = yearsAfterSwitch == undefined ? EVC.DefaultData.yearsAfterSwitch : yearsAfterSwitch;
+
+	this.updateKmDrivenPerYear = function(newValue){
+		kmDrivenPerYear = newValue;
+	};
+
+	/* getters and setters */
 	this.updateYearsFromNow = function(newValue){
 		yearsFromNow = newValue;
 	};
-	
+
 	this.updateYearsAfterSwitch = function(newValue){
 		yearsAfterSwitch = newValue;
-	};
-	
-	this.updateKmDrivenPerYear = function(newValue){
-		kmDrivenPerYear = newValue;
 	};
 
 	/* calculations */
@@ -129,7 +157,7 @@ var EVCfx = function(
 	this.costOfSwap = function(carType) {
 		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
-				return (this.valueStartOfTheYear("f") - this.salePrice("f")) + this.purchasePrice("e") - this.valueStartOfTheYear("e"); 
+				return (this.valueStartOfTheYear("f") - this.salePrice("f")) + this.purchasePrice("e") - this.valueStartOfTheYear("e");
 			}
 			else {
 				return 0;
@@ -137,7 +165,7 @@ var EVCfx = function(
 		}
 		else {
 			return 0;
-		}	
+		}
 	};
 
 	this.amountBorrowedAtStartOfTheYear = function(carType){
@@ -167,13 +195,13 @@ var EVCfx = function(
 
 	this.valueStartOfTheYear =  function(carType){
 		var rateCV = this.depreciationRate("f");
-		
+
 		//value today
 		var value = EVC.DefaultData.CVValueToday;
-		//what will that value be in the future ... 
+		//what will that value be in the future ...
 		for(var i = yearsFromNow; i > 0; i--) {
 			value = value - (value * (rateCV / 100));
-		}		
+		}
 		if(carType == "e") {
 			//to do: which one should come first... value improvement or upgrade cost?
 			//the e value improvements in the future ...
@@ -189,7 +217,7 @@ var EVCfx = function(
 			}
 		}
 		var rate = this.depreciationRate(carType);
-		//depreciate for years after switch 
+		//depreciate for years after switch
 		for(var i = yearsAfterSwitch; i > 0; i--) {
 			value = value - (value * (rate / 100));
 		}
@@ -205,7 +233,7 @@ var EVCfx = function(
 		var loanRepaymentsPerYear = this.originalPrice(carType) * (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
 		return loanRepaymentsPerYear;
 	}
-	
+
 	this.principalRepayment = function(carType){
 		var loanRepaymentsPerYear = this.standardPrincipalRepaymentPerYear(carType);
 		var maxAmountToPay = this.amountBorrowedAtStartOfTheYear(carType);
@@ -282,7 +310,7 @@ var EVCfx = function(
 			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.DefaultData.maintenanceCVPerTenThousandKm;
 		}
 	};
-	
+
 	this.tyreCost = function(carType) {
 		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.DefaultData.averageKmsPerTyre;
 		if(carType == "e") {
@@ -368,7 +396,7 @@ var EVCfx = function(
 			return 0;
 		}
 	};
-	
+
 	this.totalCombined = function(carType) {
 		return parseFloat(this.totalUpFrontPayment(carType)) + parseFloat(this.totalFinanceCost(carType)) + parseFloat(this.totalFixedCost(carType)) + parseFloat(this.totalOperatingCost(carType)) + parseFloat(this.totalOtherCost(carType));
 	};
@@ -380,19 +408,19 @@ var EVCfx = function(
 	this.debug = function(){
 		console.debug("this.valueStartOfTheYear-f: "+parseFloat(this.valueStartOfTheYear("f")));
 		console.debug("this.valueStartOfTheYear-e: "+parseFloat(this.valueStartOfTheYear("e")));
-		
+
 		console.debug("this.actualAnnualKms-f: "+parseFloat(this.actualAnnualKms("f")));
 		console.debug("this.actualAnnualKms-e: "+parseFloat(this.actualAnnualKms("e")));
-		
+
 		console.debug("totalUpFrontPayment-f: "+parseFloat(this.totalUpFrontPayment("f")));
 		console.debug("totalUpFrontPayment-e: "+parseFloat(this.totalUpFrontPayment("e")));
-		
+
 		console.debug("totalFinanceCost-f: "+parseFloat(this.totalFinanceCost("f")));
 		console.debug("totalFinanceCost-e: "+parseFloat(this.totalFinanceCost("e")));
-		
+
 		console.debug("totalFixedCost-f: "+parseFloat(this.totalFixedCost("f")));
 		console.debug("totalFixedCost-e: "+parseFloat(this.totalFixedCost("e")));
-		
+
 		console.debug("totalOperatingCost-f: "+parseFloat(this.totalOperatingCost("f")));
 		console.debug("totalOperatingCost-e: "+parseFloat(this.totalOperatingCost("e")));
 
@@ -404,7 +432,7 @@ var EVCfx = function(
 		console.debug("tyreCost-e: "+parseFloat(this.tyreCost("e")));
 
 		console.debug("totalOperatingCost-e: "+parseFloat(this.totalOperatingCost("e")));
-		
+
 		console.debug("totalOtherCost-f: "+parseFloat(this.totalOtherCost("f")));
 		console.debug("totalOtherCost-e: "+parseFloat(this.totalOtherCost("e")));
 	};
@@ -420,9 +448,11 @@ EVC.HTMLInteraction = {
 	init: function(){
 		this.clear();
 		this.buildKeyAssumptionForm();
+		this.buildPlayAroundAssumptionForm();
 		this.buildOtherAssumptionsForm();
 		this.populateResultTable();
 		this.populateCalculations();
+		this.populateLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
 	},
@@ -439,13 +469,19 @@ EVC.HTMLInteraction = {
 			"<h2>"+EVC.DataDescription.headerTitles["keyAssumptions"]+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.keyAssumptionKeys)
 		);
 	},
-	
-	buildOtherAssumptionsForm: function() {
-		jQuery("#OtherAssumptions").html(
-			"<h2>"+EVC.DataDescription.headerTitles["allAssumptions"]+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.otherAssumptionKeys)
+
+	buildPlayAroundAssumptionForm: function() {
+		jQuery("#PlayAroundAssumptions").html(
+			"<h2>"+EVC.DataDescription.headerTitles["playAroundAssumptions"]+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.playAroundAssumptionKeys)
 		);
 	},
-	
+
+	buildOtherAssumptionsForm: function() {
+		jQuery("#OtherAssumptions").html(
+			"<h2>"+EVC.DataDescription.headerTitles["otherAssumptions"]+"</h2>"+this.createFormFieldsFromList(EVC.DataDescription.otherAssumptionKeys)
+		);
+	},
+
 	populateResultTable: function() {
 		jQuery("#ResultTableHolder table th, #ResultTableHolder table td").each(
 			function(i, el) {
@@ -461,7 +497,7 @@ EVC.HTMLInteraction = {
 						}
 						else if(format == "number") {
 							var formattedValue = numberValue.formatNumber();
-						}	
+						}
 						else if(format == "percentage") {
 							var formattedValue = numberValue.formatPercentage();
 						}
@@ -502,7 +538,17 @@ EVC.HTMLInteraction = {
 				}
 			}
 		);
+	},
 
+	populateLinks: function() {
+		if(EVC.workableLinks()) {
+			jQuery("#ShareLink").attr("href", "mailto:?subject="+encodeURIComponent("I want an Electric Car")+"&body="+encodeURIComponent("Please visit: "+EVC.shareLink()));
+			jQuery("#ResetLink").attr("href", EVC.resetLink());
+		}
+		else {
+			jQuery("#ShareLink").hide();
+			jQuery("#ResetLink").attr("#");
+		}
 	},
 
 	setupShowAndHideResultRows: function(){
@@ -538,7 +584,7 @@ EVC.HTMLInteraction = {
 			if (list.hasOwnProperty(key)) {
 				var type = list[key];
 				var labelVariableName = key + "Label";
-				var DescVariableName = key + "Desc";				
+				var DescVariableName = key + "Desc";
 				var label = EVC.DataDescription.labels[key];
 				var desc = EVC.DataDescription.desc[key];
 				var holderID = key + "Holder";
@@ -566,9 +612,12 @@ EVC.HTMLInteraction = {
 	formatValue: function(key, value) {
 		var format = EVC.DataDescription["keyAssumptionKeys"][key];
 		if (typeof format == 'undefined') {
-			format = EVC.DataDescription["otherAssumptionKeys"][key];
+			format = EVC.DataDescription["playAroundAssumptionKeys"][key];
 			if (typeof format == 'undefined') {
-				format = "error";
+				format = EVC.DataDescription["otherAssumptionKeys"][key];
+				if (typeof format == 'undefined') {
+					format = "error";
+				}
 			}
 		}
 		value = parseFloat(value);
@@ -581,7 +630,7 @@ EVC.HTMLInteraction = {
 				break;
 			default:
 				value = value.formatMoney();
-		}		
+		}
 		return value;
 	},
 
@@ -591,31 +640,40 @@ EVC.HTMLInteraction = {
 		//remove comma and $ ...
 		value = parseFloat(value.replace(/\$|,/g, ''));
 		//send to server
-		jQuery.ajax({
-			method: "GET",
-			url: EVC.saveLink(),
-			data: { key: key, value: value },
-			cache: false
-		})
-		.done(function( returnKey ) {
-			EVC.serverKey = returnKey
-		})
-		.fail(function( jqXHR, textStatus ) {
-			alert( "Data could not be saved: " + textStatus );
-		});
-		//save locally...
+		if(EVC.baseLink) {
+			jQuery.ajax({
+				method: "GET",
+				url: EVC.saveLink(),
+				data: { key: key, value: value },
+				cache: false
+			})
+			.done(function( returnKey ) {
+				EVC.serverKey = returnKey
+			})
+			.fail(function( jqXHR, textStatus ) {
+				alert( "Data could not be saved: " + textStatus );
+			});
+			//save locally...
+		}
 		EVC.DefaultData[key] = value;
-		window.history.pushState({},"", EVC.showLink());
 		//special exception ..
-		if(key == "kmDrivenPerYear") {
-			EVC.kmDrivenPerYear = value;
-			EVC.myData.updateKmDrivenPerYear(value);
+		if(key == "kmDrivenPerYear" || key == "yearsFromNow" || key == "yearsAfterSwitch") {
+			if(key == "kmDrivenPerYear") {
+				EVC.myData.updateKmDrivenPerYear(key, value);
+			}
+			else if(key == "yearsFromNow") {
+				EVC.myData.updateYearsFromNow(key, value);
+			}
+				EVC.myData.updateYearsAfterSwitch(key, value);
+ww			else if(key == ""){
+			}
 		}
 		//update HTML
 
 		this.populateResultTable();
 		this.populateCalculations();
-		
+		this.populateLinks();
+
 	},
 
 	setMyValue: function(key, item){
@@ -648,18 +706,18 @@ EVC.scenarios = {
 		var year3 = new EVCfx(0, 2, EVC.DefaultData.kmDrivenPerYear);
 		return year1.totalProfit() + year2.totalProfit() + year3.totalProfit();
 	},
-	
+
 	plusFiveThousand: function(){
 		var newDistance = parseFloat(EVC.DefaultData.kmDrivenPerYear) + 5000;
 		var year1 = new EVCfx(0, 0, newDistance);
 		return year1.totalProfit();
 	},
-	
+
 	minusFiveThousand: function(){
 		var year1 = new EVCfx(0, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear) - 5000);
 		return year1.totalProfit();
 	},
-	
+
 	inThreeYearsTime: function(){
 		var year1 = new EVCfx(3, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear) - 5000);
 		//return year1.debug();
@@ -672,8 +730,13 @@ EVC.DataDescription = {
 
 	keyAssumptionKeys: {
 		"CVValueToday":                         "currency",
-		"kmDrivenPerYear":                      "number",
-		"daysWithContinuousTripsOver100Km":     "number"
+		"kmDrivenPerYear":                      "number"
+	},
+
+	playAroundAssumptionKeys: {
+		"daysWithContinuousTripsOver100Km":     "number",
+		"yearsFromNow":                         "number",
+		"yearsAfterSwitch":                     "number"
 	},
 
 	otherAssumptionKeys: {
@@ -712,6 +775,9 @@ EVC.DataDescription = {
 		/* key assumptions s */
 		CVValueToday:                           "Current Car Value",
 		kmDrivenPerYear:                        "Kilometers Driven per Year",
+		/* play around assumptions */
+		yearsFromNow:                           "Number of Years Before Switch",
+		yearsAfterSwitch:                       "Number of Years after Switch",
 		daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "Borrowed Amount for Current Car",
@@ -750,7 +816,10 @@ EVC.DataDescription = {
 		/* key assumptions s */
 		CVValueToday:                           "The price at which you can sell your car today without taking into consideration the cost of the sale (e.g. auction cost)",
 		kmDrivenPerYear:                        "Approximate kilometers you drive per year. Most people drive between 15,000 and 45,000km per year.",
+		/* play around assumptions */
 		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week)",
+		yearsFromNow:                           "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
+		yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
 		upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
@@ -792,7 +861,8 @@ EVC.DataDescription = {
 
 	headerTitles: {
 		keyAssumptions:                         "your current situation",
-		allAssumptions:                         "all assumptions",
+		playAroundAssumptions:                  "play around",
+		otherAssumptions:                       "tweak assumptions",
 	}
 };
 
@@ -802,7 +872,11 @@ EVC.DefaultData = {
 	/* key assumptions */
 	CVValueToday:                            0,
 	kmDrivenPerYear:                         0,
+
+	/* play around assumptions */
 	daysWithContinuousTripsOver100Km:        0,
+	yearsFromNow:                            0,
+	yearsAfterSwitch:                        0,
 
 	/* other assumptions */
 	amountOfCurrentCarAsLoan:                0,
@@ -835,19 +909,19 @@ EVC.DefaultData = {
 	subsidyPaymentPerKM:                  0.00,
 	personalContributionFixed:               0,
 	personalContributionPerKM:               0,
-	
+
 };
 
 
 
 
 Number.prototype.formatMoney = function(c, d, t){
-	var n = this, 
+	var n = this,
 	c = isNaN(c = Math.abs(c)) ? (Math.abs(n) < 5  && n != 0? 2 : 0) : c,
-	d = d == undefined ? "." : d, 
-	t = t == undefined ? "," : t, 
-	s = n < 0 ? "-" : "", 
-	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+	d = d == undefined ? "." : d,
+	t = t == undefined ? "," : t,
+	s = n < 0 ? "-" : "",
+	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
 	j = (j = i.length) > 3 ? j % 3 : 0;
 	return s + "$" + (j ? i.substr(0, j) + t : "") +  i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };

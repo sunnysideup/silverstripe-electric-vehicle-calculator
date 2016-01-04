@@ -19,7 +19,7 @@
 		<fieldset id="KeyAssupmptions"></fieldset>
 		<fieldset id="ResultTableHolder">
 			<h2>results</h2>
-			<p class="message good">Total Savings per Year after Switch: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+			<p class="message good">Total Savings per Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
 			<table>
 				<thead>
 					<tr class="header summary">
@@ -182,29 +182,42 @@
 				</tbody>
 			</table>
 		</fieldset>
-		
-		<fieldset id="scenarios">
+
+
+		<fieldset id="PlayAroundAssumptions">
+
+		</fieldset>
+
+
+		<fieldset id="Scenarios">
 			<h2>more results</h2>
 			<p>Three year result: <span class="calcVal" data-fx="theeYearProfit"</p>
 			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"</p>
 			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"</p>
 			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"</p>
 		</fieldset>
-		
+
 		<fieldset id="OtherAssumptions">
 
 		</fieldset>
-		<h2>Send results to a friend</h2>
-		<p>...</p>
-		<h2>Purchase your electric vehicle today</h2>
-		<p>...</p>
+
+		<h2>send results to a friend</h2>
+		<p>
+			<a href="#" id="ShareLink">e-mail current calculation to a friend</a>
+		</p>
+
+		<h2>purchase your electric vehicle</h2>
+		<p>More information to come ... </p>
+
 		<h2>load data</h2>
 		<p>
-			<button id="resetButton">reset to default values</button>
+			<a href="" id="#ResetLink">start new calculation</a>
 		</p>
+
 	</form>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="javascript/ElectricVehicleCalculator.js"></script>
-	
+
 </body>
 </html>
