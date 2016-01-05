@@ -405,7 +405,7 @@ var EVCfx = function(
 		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
 		var kmMultiplier = (this.actualAnnualKms(carType) / 5000)
 		var total = 0
-		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 400;
+		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
 		if(valueMultiplier > 0) {
 			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
 		}
