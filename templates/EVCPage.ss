@@ -23,10 +23,10 @@
 	<form id="ElectricVehicleCalculator">
 		<fieldset id="KeyAssupmptions"></fieldset>
 
-		<h2>Total Savings including resell value</h2>
-		<p class="message good">After One Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
-		<p class="message good">After Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
-		<p class="message good">After Five Years: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
+		<h2>Profit / Loss</h2>
+		<p class="message good">after One Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+		<p class="message good">after Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
+		<p class="message good">after Five Years: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
 
 		<hr />
 

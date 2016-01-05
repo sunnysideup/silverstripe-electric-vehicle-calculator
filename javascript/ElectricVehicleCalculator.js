@@ -587,6 +587,7 @@ EVC.HTMLInteraction = {
 
 	clear: function(){
 		jQuery("#KeyAssupmptions").html("");
+		jQuery("#PlayAroundAssumptions").html("");
 		jQuery("#OtherAssumptions").html("");
 		jQuery("tr.detail").hide();
 		jQuery("a.expandRows").unbind("click");
