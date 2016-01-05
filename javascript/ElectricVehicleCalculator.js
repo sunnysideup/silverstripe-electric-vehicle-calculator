@@ -15,13 +15,15 @@ jQuery(document).ready(
 
 var EVC = {
 
+	debug: true,
+
 	myData: {},
 
-	kmDrivenPerYear: -1,
-
-	yearsFromNow: -1,
+	yearsBeforeSwitch: -1,
 
 	yearsAfterSwitch: -1,
+
+	kmDrivenPerDay: -1,
 
 	serverKey: "",
 
@@ -63,10 +65,10 @@ var EVC = {
 	},
 
 	init: function() {
-		var kmDrivenPerYearTempVar = this.kmDrivenPerYear == -1 ? EVC.DefaultData.kmDrivenPerYear : this.kmDrivenPerYear;
-		var yearsFromNowTempVar = this.yearsFromNow == -1 ? EVC.DefaultData.yearsFromNow : this.yearsFromNow;
+		var kmDrivenPerDayTempVar = this.kmDrivenPerDay == -1 ? EVC.DefaultData.kmDrivenPerDay : this.kmDrivenPerDay;
+		var yearsBeforeSwitchTempVar = this.yearsBeforeSwitch == -1 ? EVC.DefaultData.yearsBeforeSwitch : this.yearsBeforeSwitch;
 		var yearsAfterSwitchTempVar = this.yearsAfterSwitch == -1 ? EVC.DefaultData.yearsAfterSwitch : this.yearsAfterSwitch;
-		this.myData = new EVCfx(yearsFromNowTempVar, yearsAfterSwitchTempVar, kmDrivenPerYearTempVar);
+		this.myData = new EVCfx(yearsBeforeSwitchTempVar, yearsAfterSwitchTempVar, kmDrivenPerDayTempVar);
 		//now we have the data, we can show it ...
 		EVC.HTMLInteraction.init();
 	}
@@ -74,28 +76,28 @@ var EVC = {
 };
 
 var EVCfx = function(
-	yearsFromNow,
+	yearsBeforeSwitch,
 	yearsAfterSwitch,
-	kmDrivenPerYear
+	kmDrivenPerDay
 ) {
 
-	kmDrivenPerYear = kmDrivenPerYear == undefined ? EVC.DefaultData.kmDrivenPerYear : kmDrivenPerYear;
+	yearsBeforeSwitch = yearsBeforeSwitch == undefined || yearsBeforeSwitch == -1 ? EVC.DefaultData.yearsBeforeSwitch : yearsBeforeSwitch;
 
-	yearsFromNow = yearsFromNow == undefined ? EVC.DefaultData.yearsFromNow : yearsFromNow;
+	yearsAfterSwitch = yearsAfterSwitch == undefined || yearsAfterSwitch == -1  ? EVC.DefaultData.yearsAfterSwitch : yearsAfterSwitch;
 
-	yearsAfterSwitch = yearsAfterSwitch == undefined ? EVC.DefaultData.yearsAfterSwitch : yearsAfterSwitch;
-
-	this.updateKmDrivenPerYear = function(newValue){
-		kmDrivenPerYear = newValue;
-	};
+	kmDrivenPerDay = kmDrivenPerDay == undefined || kmDrivenPerDay == -1  ? EVC.DefaultData.kmDrivenPerDay : kmDrivenPerDay;
 
 	/* getters and setters */
-	this.updateYearsFromNow = function(newValue){
-		yearsFromNow = newValue;
+	this.updateYearsBeforeSwitch = function(newValue){
+		yearsBeforeSwitch = newValue;
 	};
 
 	this.updateYearsAfterSwitch = function(newValue){
 		yearsAfterSwitch = newValue;
+	};
+
+	this.updateKmDrivenPerDay = function(newValue){
+		kmDrivenPerDay = newValue;
 	};
 
 	/* calculations */
@@ -113,76 +115,10 @@ var EVCfx = function(
 		}
 	};
 
-	this.originalPrice = function(carType) {
-		var originalValue = this.valueStartOfTheYear(carType);
-		for(i = yearsAfterSwitch; i > 0; i--) {
-			originalValue = originalValue / (1-(this.depreciationRate(carType) / 100));
-		}
-		return originalValue;
-	};
 
-	this.salePrice = function(carType) {
-		if(yearsAfterSwitch == 0) {
-			if(yearsAfterSwitch == 0) {
-				if(carType == "e") {
-					return 0;
-				}
-				else {
-					return this.valueStartOfTheYear(carType) - (this.valueStartOfTheYear(carType) * (EVC.DefaultData.saleCostForCarInPercentage / 100))
-				}
-			}
-			else {
-				return 0;
-			}
-		}
-		else {
-			return 0;
-		}
-	};
-
-	this.purchasePrice = function(carType) {
-		if(yearsAfterSwitch == 0) {
-			if(carType == "e") {
-				return this.valueStartOfTheYear(carType) + (this.valueStartOfTheYear(carType) * (EVC.DefaultData.purchaseCostForCarInPercentage / 100))
-			}
-			else {
-				return 0;
-			}
-		}
-		else {
-			return 0;
-		}
-	};
-
-	this.costOfSwap = function(carType) {
-		if(yearsAfterSwitch == 0) {
-			if(carType == "e") {
-				return (this.valueStartOfTheYear("f") - this.salePrice("f")) + this.purchasePrice("e") - this.valueStartOfTheYear("e");
-			}
-			else {
-				return 0;
-			}
-		}
-		else {
-			return 0;
-		}
-	};
-
-	this.amountBorrowedAtStartOfTheYear = function(carType){
-		if(carType == "e") {
-			var loan = (this.purchasePrice(carType) - (this.salePrice("f") - EVC.DefaultData.amountOfCurrentCarAsLoan)) - (yearsAfterSwitch * this.standardPrincipalRepaymentPerYear(carType));
-		}
-		else {
-			var loan = EVC.DefaultData.amountOfCurrentCarAsLoan - (yearsAfterSwitch * this.standardPrincipalRepaymentPerYear(carType));
-		}
-		return loan < 0 ? 0 : loan;
-	};
-
-	this.amountBorrowedAtEndOfTheYear = function(carType){
-		var loan = this.amountBorrowedAtStartOfTheYear(carType) - this.standardPrincipalRepaymentPerYear(carType);
-		return loan < 0 ? 0 : loan;
-	};
-
+	/**
+	 * how much does the car depreciate each year?
+	 */
 	this.depreciationRate = function(carType) {
 		if(carType == "e") {
 			var rate = EVC.DefaultData.depreciationRatePerYearEV;
@@ -193,52 +129,186 @@ var EVCfx = function(
 		return rate;
 	}
 
-	this.valueStartOfTheYear =  function(carType){
-		var rateCV = this.depreciationRate("f");
-
+	/**
+	 * what is the price of the current car at the moment you sell it?
+	 */
+	this.currentCarValueAtTimeOfSale = function(carType){
 		//value today
 		var value = EVC.DefaultData.CVValueToday;
 		//what will that value be in the future ...
-		for(var i = yearsFromNow; i > 0; i--) {
-			value = value - (value * (rateCV / 100));
-		}
-		if(carType == "e") {
-			var minimum = EVC.DefaultData.minimumCostElectricVehicle;
-			//to do: which one should come first... value improvement or upgrade cost?
-			//the e value improvements in the future ...
-			if(yearsFromNow > 0) {
-				var upgradeCostDividedByFutureYears = (EVC.DefaultData.upgradeCostToGoElectric / 100) / yearsFromNow;
-				for(var i = yearsFromNow; i > 0; i--) {
-					value = value + (value * upgradeCostDividedByFutureYears);
-					value = value - (value * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
-					minimum = minimum - (minimum * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
-				}
+		if(yearsBeforeSwitch > 0) {
+			var rateCV = this.depreciationRate("f");
+			for(var i = yearsBeforeSwitch; i > 0; i--) {
+				value = value - (value * (rateCV / 100));
 			}
-			else {
-				value = value + (value * (EVC.DefaultData.upgradeCostToGoElectric / 100));
-			}
-			if(value < minimum) {
-				value = minimum;
-			}
-		}
-		var rate = this.depreciationRate(carType);
-		//depreciate for years after switch
-		for(var i = yearsAfterSwitch; i > 0; i--) {
-			value = value - (value * (rate / 100));
 		}
 		return value;
 	};
 
-	this.valueAtTheEndOfTheYear = function(carType){
-		var startOfYearValue = this.valueStartOfTheYear(carType);
-		return startOfYearValue - (startOfYearValue * (this.depreciationRate(carType)/100));
+	/**
+	 * what is the minimum price you pay for an electric vehicle when you purchase it?
+	 */
+	this.minimumCostElectricVehicleAtYearOfSwitch = function(carType){
+		var minimum = EVC.DefaultData.minimumCostElectricVehicle;
+		if(yearsBeforeSwitch > 0) {
+			for(var i = yearsBeforeSwitch; i > 0; i--) {
+				minimum = minimum - (minimum * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
+			}
+		}
+		return minimum;
 	};
 
-	this.standardPrincipalRepaymentPerYear = function(carType){
-		var loanRepaymentsPerYear = this.originalPrice(carType) * (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
-		return loanRepaymentsPerYear;
+	/**
+	 * how much do you sell your current car for?
+	 */
+	this.salePrice = function(carType) {
+		if(carType == "e") {
+			return 0;
+		}
+		else {
+			return this.currentCarValueAtTimeOfSale(carType) - (this.currentCarValueAtTimeOfSale(carType) * (EVC.DefaultData.saleCostForCarInPercentage / 100))
+		}
+	};
+
+	/**
+	 * what is the value that you sell your car (more) for, as opposed to what do you get for it (which is a little bit less)
+	 */
+	this.salePriceExSalesCost = function(carType){
+		return this.salePrice(carType) / (1 - (EVC.DefaultData.saleCostForCarInPercentage / 100));
+	};
+
+	/**
+	 * how much do you pay for the electric car?
+	 */
+	this.purchasePrice = function(carType) {
+		if(carType == "e") {
+			var value = this.currentCarValueAtTimeOfSale(carType);
+			var minimum = this.minimumCostElectricVehicleAtYearOfSwitch(carType);
+			var upgradeRate = (EVC.DefaultData.upgradeCostToGoElectric / 100);
+			//to do: which one should come first... value improvement or upgrade cost?
+			//the e value improvements in the future ...
+			if(yearsBeforeSwitch > 0) {
+				var upgradeCostDividedByFutureYears =  upgradeRate / yearsBeforeSwitch;
+				var valueImprovementRate = (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100);
+				for(var i = yearsBeforeSwitch; i > 0; i--) {
+					value = value + (value * upgradeCostDividedByFutureYears);
+					value = value - (value * valueImprovementRate);
+				}
+			}
+			else {
+				value = value + (value * upgradeRate);
+			}
+			value = value + (value * (EVC.DefaultData.purchaseCostForCarInPercentage / 100));
+			if(value < minimum) {
+				value = minimum;
+			}
+			return value;
+		}
+		else {
+			return 0;
+		}
+	};
+
+	/**
+	 * how much is the electric car you purchase worth at the time of purchase (less than what you paid for it)
+	 */
+	this.purchasePriceExSalesCost = function(carType){
+		return this.purchasePrice(carType) / (1 + (EVC.DefaultData.purchaseCostForCarInPercentage / 100));
+	};
+
+	/**
+	 * what is the total cost for the swap of the cars (how much value do you loose )
+	 */
+	this.costOfSwap = function(carType) {
+		if(yearsAfterSwitch == 0) {
+			if(carType == "e") {
+				var saleDifference = this.salePriceExSalesCost("f") - this.salePrice("f");
+				var purchaseDifference = this.purchasePrice("e") - this.purchasePriceExSalesCost("e");
+				return saleDifference + purchaseDifference;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			return 0;
+		}
+	};
+
+
+	/**
+	 * what is the value of the car at the start of the year?
+	 */
+	this.valueStartOfTheYear =  function(carType){
+		if(carType == "e") {
+			var value = this.purchasePriceExSalesCost(carType);
+		}
+		else {
+			var value = this.salePriceExSalesCost(carType);
+		}
+		if(yearsAfterSwitch) {
+			var rate = this.depreciationRate(carType) / 100;
+			//depreciate for years after switch
+			for(var i = yearsAfterSwitch; i > 0; i--) {
+				value = value - (value * rate);
+			}
+		}
+		return value;
+	};
+
+	/**
+	 * what is the value of the car at the end of the year?
+	 */
+	this.valueAtTheEndOfTheYear = function(carType){
+		var rate = this.depreciationRate(carType) / 100;
+		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
+		return valueStartOfTheYear - (valueStartOfTheYear * rate);
+	};
+
+
+	/**
+	 * what was the total size of the car loan at the time of the switch?
+	 */
+	this.totalLoanAtStart = function(carType) {
+		if(carType == "e") {
+			var amountPaid = this.purchasePrice(carType);
+			var paidUpFront = this.salePrice("f") - EVC.DefaultData.amountOfCurrentCarAsLoan;
+			return amountPaid - paidUpFront;
+		}
+		else {
+			return EVC.DefaultData.amountOfCurrentCarAsLoan;
+		}
 	}
 
+	/**
+	 * how much do you pay towards paying off the loan in any year?
+	 */
+	this.standardPrincipalRepaymentPerYear = function(carType){
+		var rate = (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
+		return this.totalLoanAtStart(carType) * rate;
+	}
+
+	/**
+	 * what is the amount outstanding in loan at the start of the year?
+	 */
+	this.amountBorrowedAtStartOfTheYear = function(carType){
+		var paidSoFar = yearsAfterSwitch * this.standardPrincipalRepaymentPerYear(carType);
+		var loan = this.totalLoanAtStart(carType) - paidSoFar;
+		return loan < 0 ? 0 : loan;
+	};
+
+	/**
+	 * what is the amount outstanding in loan at the end of the year?
+	 */
+	this.amountBorrowedAtEndOfTheYear = function(carType){
+		var loan = this.amountBorrowedAtStartOfTheYear(carType) - this.standardPrincipalRepaymentPerYear(carType);
+		return loan < 0 ? 0 : loan;
+	};
+
+
+	/**
+	 * what is the principal repayment paid this year?
+	 */
 	this.principalRepayment = function(carType){
 		var loanRepaymentsPerYear = this.standardPrincipalRepaymentPerYear(carType);
 		var maxAmountToPay = this.amountBorrowedAtStartOfTheYear(carType);
@@ -250,11 +320,9 @@ var EVCfx = function(
 		}
 	};
 
-	this.cashLeftAfterSellingCar = function(carType){
-		var salePrice = this.valueAtTheEndOfTheYear(carType) - this.amountBorrowedAtEndOfTheYear(carType);
-		return salePrice - ((EVC.DefaultData.saleCostForCarInPercentage / 100) * salePrice);
-	};
-
+	/**
+	 * what is the interest paid in the year?
+	 */
 	this.interest = function(carType){
 		var interest = 0;
 		var dailyInterest = (EVC.DefaultData.financingCostInPercentage / 100) / 365;
@@ -265,6 +333,19 @@ var EVCfx = function(
 			}
 		}
 		return interest;
+	};
+
+
+	/**
+	 * if you were to sell the car at the end of the year, how much $$ would you have left?
+	 */
+	this.cashLeftAfterSellingCar = function(carType){
+		var salePrice = this.valueAtTheEndOfTheYear(carType) - this.amountBorrowedAtEndOfTheYear(carType);
+		return salePrice - ((EVC.DefaultData.saleCostForCarInPercentage / 100) * salePrice);
+	};
+
+	this.equityImprovementAtEndOfYear = function(carType) {
+		return this.cashLeftAfterSellingCar("e") - this.cashLeftAfterSellingCar("f");
 	};
 
 	this.insuranceCost = function(carType){
@@ -282,19 +363,19 @@ var EVCfx = function(
 
 	this.actualAnnualKms = function(carType){
 		if(carType == "e") {
-			return kmDrivenPerYear - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips);
+			return (kmDrivenPerDay - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips)) * 365;
 		}
 		else {
-			return kmDrivenPerYear;
+			return kmDrivenPerDay * 365;
 		}
 	};
 
 	this.actualAnnualKmsPerDay = function(carType){
 		if(carType == "e") {
-			return (kmDrivenPerYear - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips)) / 365;
+			return (kmDrivenPerDay - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips));
 		}
 		else {
-			return kmDrivenPerYear / 365;
+			return kmDrivenPerDay;
 		}
 	};
 
@@ -307,6 +388,10 @@ var EVCfx = function(
 		}
 	};
 
+	this.fuelCostPerWeek = function(carType) {
+		return this.fuelCost(carType) / 52;
+	};
+
 	this.maintenanceCost = function(carType) {
 		if(carType == "e") {
 			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.DefaultData.maintenanceEVPerTenThousandKm;
@@ -315,6 +400,18 @@ var EVCfx = function(
 			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.DefaultData.maintenanceCVPerTenThousandKm;
 		}
 	};
+
+	this.repairCost = function(carType){
+		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
+		var kmMultiplier = (this.actualAnnualKms(carType) / 10000)
+		var total = 0
+		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
+		if(valueMultiplier > 0) {
+			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
+		}
+		return total;
+
+	}
 
 	this.tyreCost = function(carType) {
 		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.DefaultData.averageKmsPerTyre;
@@ -386,7 +483,7 @@ var EVCfx = function(
 	};
 
 	this.totalOperatingCost = function(carType) {
-		return this.fuelCost(carType) + this.maintenanceCost(carType) + this.tyreCost(carType);
+		return this.fuelCost(carType) + this.maintenanceCost(carType) + this.tyreCost(carType) + this.repairCost(carType);
 	};
 
 	this.totalOtherCost = function(carType) {
@@ -407,39 +504,60 @@ var EVCfx = function(
 	};
 
 	this.totalProfit = function(){
+		if(EVC.debug) {
+			this.debug();
+			EVC.debug = false;
+		}
 		return this.totalCombined("f") - this.totalCombined("e");
 	};
 
 	this.debug = function(){
-		console.debug("this.valueStartOfTheYear-f: "+parseFloat(this.valueStartOfTheYear("f")));
-		console.debug("this.valueStartOfTheYear-e: "+parseFloat(this.valueStartOfTheYear("e")));
+		var methodArray = [
+			"setupCost",
+			"depreciationRate",
+			"currentCarValueAtTimeOfSale",
+			"minimumCostElectricVehicleAtYearOfSwitch",
+			"salePrice",
+			"salePriceExSalesCost",
+			"purchasePrice",
+			"purchasePriceExSalesCost",
+			"costOfSwap",
+			"valueStartOfTheYear",
+			"valueAtTheEndOfTheYear",
+			"totalLoanAtStart",
+			"standardPrincipalRepaymentPerYear",
+			"amountBorrowedAtStartOfTheYear",
+			"amountBorrowedAtEndOfTheYear",
+			"principalRepayment",
+			"interest",
+			"cashLeftAfterSellingCar",
+			"insuranceCost",
+			"licensingAndWOFCost",
+			"actualAnnualKms",
+			"actualAnnualKmsPerDay",
+			"fuelCost",
+			"fuelCostPerWeek",
+			"maintenanceCost",
+			"repairCost",
+			"tyreCost",
+			"carRentalCost",
+			"numberOfKMsWithRentalCar",
+			"carRentaFuel",
+			"subsidy",
+			"personalContribution"
+		];
+		var arrayLength = methodArray.length;
+		var method = "";
+		console.debug("===========================");
+		console.debug("yearsBeforeSwitch: " + yearsBeforeSwitch);
+		console.debug("yearsAfterSwitch: " + yearsAfterSwitch);
+		console.debug("kmDrivenPerDay: " + kmDrivenPerDay);
+		for (var i = 0; i < arrayLength; i++) {
+			method = methodArray[i];
+			console.debug(method +": "+Math.round(parseFloat(this[method]("f"))) + " ||| " + Math.round(parseFloat(this[method]("e"))));
+			//Do something
+		}
 
-		console.debug("this.actualAnnualKms-f: "+parseFloat(this.actualAnnualKms("f")));
-		console.debug("this.actualAnnualKms-e: "+parseFloat(this.actualAnnualKms("e")));
-
-		console.debug("totalUpFrontPayment-f: "+parseFloat(this.totalUpFrontPayment("f")));
-		console.debug("totalUpFrontPayment-e: "+parseFloat(this.totalUpFrontPayment("e")));
-
-		console.debug("totalFinanceCost-f: "+parseFloat(this.totalFinanceCost("f")));
-		console.debug("totalFinanceCost-e: "+parseFloat(this.totalFinanceCost("e")));
-
-		console.debug("totalFixedCost-f: "+parseFloat(this.totalFixedCost("f")));
-		console.debug("totalFixedCost-e: "+parseFloat(this.totalFixedCost("e")));
-
-		console.debug("totalOperatingCost-f: "+parseFloat(this.totalOperatingCost("f")));
-		console.debug("totalOperatingCost-e: "+parseFloat(this.totalOperatingCost("e")));
-
-		console.debug("fuelCost-f: "+parseFloat(this.fuelCost("f")));
-		console.debug("fuelCost-e: "+parseFloat(this.fuelCost("e")));
-		console.debug("maintenanceCost-f: "+parseFloat(this.maintenanceCost("f")));
-		console.debug("maintenanceCost-e: "+parseFloat(this.maintenanceCost("e")));
-		console.debug("tyreCost-f: "+parseFloat(this.tyreCost("f")));
-		console.debug("tyreCost-e: "+parseFloat(this.tyreCost("e")));
-
-		console.debug("totalOperatingCost-e: "+parseFloat(this.totalOperatingCost("e")));
-
-		console.debug("totalOtherCost-f: "+parseFloat(this.totalOtherCost("f")));
-		console.debug("totalOtherCost-e: "+parseFloat(this.totalOtherCost("e")));
 	};
 
 	return this;
@@ -666,12 +784,12 @@ EVC.HTMLInteraction = {
 		}
 		EVC.DefaultData[key] = value;
 		//special exception ..
-		if(key == "kmDrivenPerYear" || key == "yearsFromNow" || key == "yearsAfterSwitch") {
-			if(key == "kmDrivenPerYear") {
-				EVC.myData.updateKmDrivenPerYear(value);
+		if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
+			if(key == "kmDrivenPerDay") {
+				EVC.myData.updateKmDrivenPerDay(value);
 			}
-			else if(key == "yearsFromNow") {
-				EVC.myData.updateYearsFromNow(value);
+			else if(key == "yearsBeforeSwitch") {
+				EVC.myData.updateYearsBeforeSwitch(value);
 			}
 			else if(key == "yearsAfterSwitch"){
 				EVC.myData.updateYearsAfterSwitch(value);
@@ -706,29 +824,44 @@ EVC.HTMLInteraction = {
 EVC.scenarios = {
 
 	totalProfit: function(){
-		return EVC.myData.totalProfit();
+		return EVC.myData.totalProfit() + EVC.myData.equityImprovementAtEndOfYear();
 	},
 
 	theeYearProfit: function(){
-		var year1 = new EVCfx(0, 0, EVC.DefaultData.kmDrivenPerYear);
-		var year2 = new EVCfx(0, 1, EVC.DefaultData.kmDrivenPerYear);
-		var year3 = new EVCfx(0, 2, EVC.DefaultData.kmDrivenPerYear);
-		return year1.totalProfit() + year2.totalProfit() + year3.totalProfit();
+		var start = parseInt(EVC.DefaultData.yearsAfterSwitch) - 0;
+		var year1 = new EVCfx(-1, 0 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year2 = new EVCfx(-1, 1 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year3 = new EVCfx(-1, 2 + start, EVC.DefaultData.kmDrivenPerDay);
+		var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit();
+		var restValue = year3.equityImprovementAtEndOfYear();
+		return totalProfit + restValue;
+	},
+
+	fiveYearProfit: function(){
+		var start = parseInt(EVC.DefaultData.yearsAfterSwitch) - 0;
+		var year1 = new EVCfx(-1, 0 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year2 = new EVCfx(-1, 1 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year3 = new EVCfx(-1, 2 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year4 = new EVCfx(-1, 3 + start, EVC.DefaultData.kmDrivenPerDay);
+		var year5 = new EVCfx(-1, 4 + start, EVC.DefaultData.kmDrivenPerDay);
+		var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit() + year4.totalProfit() + year5.totalProfit();
+		var restValue = year5.equityImprovementAtEndOfYear();
+		return totalProfit + restValue;
 	},
 
 	plusFiveThousand: function(){
-		var newDistance = parseFloat(EVC.DefaultData.kmDrivenPerYear) + 5000;
-		var year1 = new EVCfx(0, 0, newDistance);
+		var newDistance = parseFloat(EVC.DefaultData.kmDrivenPerDay) + (5000/365);
+		var year1 = new EVCfx(-1, -1, newDistance);
 		return year1.totalProfit();
 	},
 
 	minusFiveThousand: function(){
-		var year1 = new EVCfx(0, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear) - 5000);
+		var year1 = new EVCfx(-1, -1, parseFloat(EVC.DefaultData.kmDrivenPerDay) - (5000 / 365));
 		return year1.totalProfit();
 	},
 
 	inThreeYearsTime: function(){
-		var year1 = new EVCfx(3, 0, parseFloat(EVC.DefaultData.kmDrivenPerYear));
+		var year1 = new EVCfx(3 + parseInt(EVC.DefaultData.yearsBeforeSwitch), -1, parseFloat(EVC.DefaultData.kmDrivenPerDay));
 		//return year1.debug();
 		return year1.totalProfit();
 	}
@@ -739,12 +872,12 @@ EVC.DataDescription = {
 
 	keyAssumptionKeys: {
 		"CVValueToday":                         "currency",
-		"kmDrivenPerYear":                      "number"
+		"kmDrivenPerDay":                       "number"
 	},
 
 	playAroundAssumptionKeys: {
 		"daysWithContinuousTripsOver100Km":     "number",
-		"yearsFromNow":                         "number",
+		"yearsBeforeSwitch":                    "number",
 		"yearsAfterSwitch":                     "number"
 	},
 
@@ -784,9 +917,9 @@ EVC.DataDescription = {
 	labels: {
 		/* key assumptions s */
 		CVValueToday:                           "Current Car Value",
-		kmDrivenPerYear:                        "Kilometers Driven per Year",
+		kmDrivenPerDay:                         "Average Kilometers Driven per Day",
 		/* play around assumptions */
-		yearsFromNow:                           "Number of Years Before Switch",
+		yearsBeforeSwitch:                      "Number of Years Before Switch",
 		yearsAfterSwitch:                       "Number of Years after Switch",
 		daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
 		/* other assumptions */
@@ -817,19 +950,19 @@ EVC.DataDescription = {
 		depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year",
 		costPerDayRentalCar:                    "Cost per Day for Rental Car",
 		kilometresPerDayForLongTrips:           "KMs per Day for Long Trips",
-		subsidyPaymentFixed:                    "Electric Car: Fixed Subsidy",
-		subsidyPaymentPerKM:                    "Electric Car: Kilometer Subsidy",
-		personalContributionFixed:              "Electric Car: Personal Contribution per Year",
-		personalContributionPerKM:              "Electric Car: Personal Contribution per KM"
+		subsidyPaymentFixed:                    "Fixed Subsidy",
+		subsidyPaymentPerKM:                    "KM Subsidy",
+		personalContributionFixed:              "Personal Contribution per Year",
+		personalContributionPerKM:              "Personal Contribution per KM"
 	},
 
 	desc: {
 		/* key assumptions s */
 		CVValueToday:                           "The price at which you can sell your car today without taking into consideration the cost of the sale (e.g. auction cost)",
-		kmDrivenPerYear:                        "Approximate kilometers you drive per year. Most people drive between 15,000 and 45,000km per year.",
+		kmDrivenPerDay:                         "Approximate kilometers you drive per day. Consider weekends and weekdays. You might be able to add up all the KMs you drive Mon-Fri and separately for Saturday and Sunday. After that, add all of them and divide by seven.",
 		/* play around assumptions */
 		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week)",
-		yearsFromNow:                           "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
+		yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
 		yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
@@ -883,23 +1016,23 @@ EVC.DefaultData = {
 
 	/* key assumptions */
 	CVValueToday:                            0,
-	kmDrivenPerYear:                         0,
+	kmDrivenPerDay:                          0,
 
 	/* play around assumptions */
 	daysWithContinuousTripsOver100Km:        0,
-	yearsFromNow:                            0,
+	yearsBeforeSwitch:                       0,
 	yearsAfterSwitch:                        0,
 
 	/* other assumptions */
 	amountOfCurrentCarAsLoan:                0,
-	minimumCostElectricVehicle:          16000,
-	upgradeCostToGoElectric:                20,
-	EVValueImprovementPerYearPercentage:     5,
+	minimumCostElectricVehicle:          18000,
+	upgradeCostToGoElectric:                50,
+	EVValueImprovementPerYearPercentage:    20,
 	setupChargeStation:                    300,
 	saleCostForCarInPercentage:              7,
 	purchaseCostForCarInPercentage:          3,
 	financingCostInPercentage:              10,
-	principalRepaymentsPerYearPercentage:   10,
+	principalRepaymentsPerYearPercentage:   20,
 	costOfPetrolPerLitre:                 2.00,
 	costOfElectricityPerKwH:              0.20,
 	fuelEfficiencyCV:                       12,

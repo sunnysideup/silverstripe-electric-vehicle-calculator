@@ -19,19 +19,21 @@
 <body>
 	<div id="EVCWrapper">
 	<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
-	<div id="ContentHolder">$Content</div> 
+	<div id="ContentHolder">$Content</div>
 	<form id="ElectricVehicleCalculator">
 		<fieldset id="KeyAssupmptions"></fieldset>
 
-		<p class="message good">Total Savings First Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
-		<p class="message good">Total Savings First Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
+		<h2>Total Savings</h2>
+		<p class="message good">After One Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
+		<p class="message good">After Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
+		<p class="message good">After Five Years: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
 
 		<hr />
 
 		<fieldset id="PlayAroundAssumptions"></fieldset>
-		
+
 		<fieldset id="ResultTableHolder">
-			<h2>detailed results</h2>
+			<h2>detailed results for a year</h2>
 			<table>
 				<thead>
 					<tr class="header summary">
@@ -79,11 +81,6 @@
 						<td class="total" data-fx="totalFinanceCost" data-type="e"></td>
 					</tr>
 					<tr class="detail excludedFromTotal">
-						<th scope="row" class="detailHeader">original price</th>
-						<td class="detail" data-fx="originalPrice" data-type="f"></td>
-						<td class="detail" data-fx="originalPrice" data-type="e"></td>
-					</tr>
-					<tr class="detail excludedFromTotal">
 						<th scope="row" class="detailHeader">value at the start of the year</th>
 						<td class="detail" data-fx="valueStartOfTheYear" data-type="f"></td>
 						<td class="detail" data-fx="valueStartOfTheYear" data-type="e"></td>
@@ -92,6 +89,11 @@
 						<th scope="row" class="detailHeader">value at the end of the year</th>
 						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="f"></td>
 						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="e"></td>
+					</tr>
+					<tr class="detail excludedFromTotal">
+						<th scope="row" class="detailHeader">original amount of loan</th>
+						<td class="detail" data-fx="totalLoanAtStart" data-type="f"></td>
+						<td class="detail" data-fx="totalLoanAtStart" data-type="e"></td>
 					</tr>
 					<tr class="detail excludedFromTotal">
 						<th scope="row" class="detailHeader">loan at start of the year</th>
@@ -139,19 +141,19 @@
 						<td class="total" data-fx="totalOperatingCost" data-type="e"></td>
 					</tr>
 					<tr class="detail excludedFromTotal">
-						<th scope="row" class="detailHeader">actual KMs driven</th>
+						<th scope="row" class="detailHeader">actual KMs driven per year</th>
 						<td class="detail" data-fx="actualAnnualKms" data-type="f"></td>
 						<td class="detail" data-fx="actualAnnualKms" data-type="e"></td>
-					</tr>
-					<tr class="detail excludedFromTotal">
-						<th scope="row" class="detailHeader">average kms per day</th>
-						<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="f"></td>
-						<td class="detail" data-fx="actualAnnualKmsPerDay" data-type="e"></td>
 					</tr>
 					<tr class="detail includedInTotal">
 						<th scope="row" class="detailHeader">fuel</th>
 						<td class="detail" data-fx="fuelCost" data-type="f"></td>
 						<td class="detail" data-fx="fuelCost" data-type="e"></td>
+					</tr>
+					<tr class="detail excludedFromTotal">
+						<th scope="row" class="detailHeader">fuel per week</th>
+						<td class="detail" data-fx="fuelCostPerWeek" data-type="f"></td>
+						<td class="detail" data-fx="fuelCostPerWeek" data-type="e"></td>
 					</tr>
 					<tr class="detail includedInTotal">
 						<th scope="row" class="detailHeader">maintenance and service</th>
@@ -162,6 +164,11 @@
 						<th scope="row" class="detailHeader">tyres</th>
 						<td class="detail" data-fx="tyreCost" data-type="f"></td>
 						<td class="detail" data-fx="tyreCost" data-type="e"></td>
+					</tr>
+					<tr class="detail includedInTotal">
+						<th scope="row" class="detailHeader">unscheduled repairs</th>
+						<td class="detail" data-fx="repairCost" data-type="f"></td>
+						<td class="detail" data-fx="repairCost" data-type="e"></td>
 					</tr>
 					<tr class="summary">
 						<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other</a></th>
@@ -199,13 +206,6 @@
 
 
 
-
-		<fieldset id="Scenarios">
-			<h2>more results</h2>
-			<p>Driving 5,000km more - first year result:<span class="calcVal" data-fx="plusFiveThousand"></span></p>
-			<p>Driving 5,000km less - first year result:<span class="calcVal" data-fx="minusFiveThousand"></span></p>
-			<p>Purchasing electric car in three years time:<span class="calcVal" data-fx="inThreeYearsTime"></span></p>
-		</fieldset>
 
 		<fieldset id="OtherAssumptions">
 

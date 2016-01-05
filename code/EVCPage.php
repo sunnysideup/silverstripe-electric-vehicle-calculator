@@ -39,7 +39,7 @@ class EVCPage_Controller extends Page_Controller {
 			Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
 			Requirements::javascript("framework/thirdparty/jquery/jquery.js");
 			Requirements::javascript('electric-vehicle-calculator/javascript/ElectricVehicleCalculator.js');
-			
+
 			//Requirements::javascript("assets/evc/translations.js");
 			Requirements::customScript("
 				EVC.baseLink = '".$this->AbsoluteLink()."';
@@ -70,9 +70,9 @@ class EVCPage_Controller extends Page_Controller {
 	function retrieve($request){
 		$code = $request->param("ID");
 		$oldObject = EVCDataSet::find_or_create($code, false);
-		if($oldObject && $objObject->exists() && $oldObject->Data) {
+		if($oldObject && $oldObject->exists() && $oldObject->Data) {
 			$this->evcDataSet = EVCDataSet::create();
-			$this->evcDataSet->Data = $objObject->Data;
+			$this->evcDataSet->Data = $oldObject->Data;
 			$id = $this->evcDataSet->write();
 			Session::set("EVCLastCode", $this->evcDataSet->Code);
 			Session::save();
