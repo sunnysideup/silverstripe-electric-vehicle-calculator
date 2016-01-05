@@ -401,18 +401,6 @@ var EVCfx = function(
 		}
 	};
 
-	this.repairCost = function(carType){
-		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
-		var kmMultiplier = (this.actualAnnualKms(carType) / 5000)
-		var total = 0
-		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
-		if(valueMultiplier > 0) {
-			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
-		}
-		return total;
-
-	}
-
 	this.tyreCost = function(carType) {
 		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.DefaultData.averageKmsPerTyre;
 		if(carType == "e") {
@@ -422,6 +410,18 @@ var EVCfx = function(
 			return tyresNeeded * EVC.DefaultData.tyreCostCV;
 		}
 	};
+
+	this.repairCost = function(carType){
+		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
+		var kmMultiplier = (this.actualAnnualKms(carType) / 5000)
+		var total = 0
+		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
+		if(valueMultiplier > 0) {
+			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
+		}
+		return total;
+	};
+
 
 	this.carRentalCost = function(carType) {
 		if(carType == "e") {
@@ -501,6 +501,10 @@ var EVCfx = function(
 
 	this.totalCombined = function(carType) {
 		return parseFloat(this.totalUpFrontPayment(carType)) + parseFloat(this.totalFinanceCost(carType)) + parseFloat(this.totalFixedCost(carType)) + parseFloat(this.totalOperatingCost(carType)) + parseFloat(this.totalOtherCost(carType));
+	};
+
+	this.costPerKM = function(carType){
+		return this.totalCombined(carType) / this.actualAnnualKms(carType);
 	};
 
 	this.totalProfit = function(){

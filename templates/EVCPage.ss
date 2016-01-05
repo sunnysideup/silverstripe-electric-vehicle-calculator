@@ -170,6 +170,11 @@
 						<td class="detail" data-fx="repairCost" data-type="f"></td>
 						<td class="detail" data-fx="repairCost" data-type="e"></td>
 					</tr>
+					<tr class="detail includedInTotal">
+						<th scope="row" class="detailHeader">total cost per KM</th>
+						<td class="detail" data-fx="costPerKM" data-type="f"></td>
+						<td class="detail" data-fx="costPerKM" data-type="e"></td>
+					</tr>
 					<tr class="summary">
 						<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other</a></th>
 						<td class="total" data-fx="totalOtherCost" data-type="f"></td>
