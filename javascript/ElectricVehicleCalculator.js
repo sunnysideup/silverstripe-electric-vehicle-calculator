@@ -203,6 +203,7 @@ var EVCfx = function(
 			value = value - (value * (rateCV / 100));
 		}
 		if(carType == "e") {
+			var minimum = EVC.DefaultData.minimumCostElectricVehicle;
 			//to do: which one should come first... value improvement or upgrade cost?
 			//the e value improvements in the future ...
 			if(yearsFromNow > 0) {
@@ -210,10 +211,14 @@ var EVCfx = function(
 				for(var i = yearsFromNow; i > 0; i--) {
 					value = value + (value * upgradeCostDividedByFutureYears);
 					value = value - (value * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
+					minimum = minimum - (minimum * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
 				}
 			}
 			else {
 				value = value + (value * (EVC.DefaultData.upgradeCostToGoElectric / 100));
+			}
+			if(value < minimum) {
+				value = minimum;
 			}
 		}
 		var rate = this.depreciationRate(carType);
@@ -744,6 +749,7 @@ EVC.DataDescription = {
 	},
 
 	otherAssumptionKeys: {
+		"minimumCostElectricVehicle":           "currency",
 		"upgradeCostToGoElectric":              "percentage",
 		"EVValueImprovementPerYearPercentage":  "percentage",
 		"setupChargeStation":                   "currency",
@@ -785,6 +791,7 @@ EVC.DataDescription = {
 		daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "Borrowed Amount for Current Car",
+		minimumCostElectricVehicle:             "Minimum Cost for Electric Car",
 		upgradeCostToGoElectric:                "Premium for Electrical Car",
 		EVValueImprovementPerYearPercentage:    "Relative Value Improvement per Year for Electric Cars",
 		setupChargeStation:                     "Infrastructure Set Up",
@@ -826,6 +833,7 @@ EVC.DataDescription = {
 		yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
+		minimumCostElectricVehicle:             "Minimum price for an electric vehicle at the moment. Because electric cars are relatively new, there are few older models and depreciated cars, therefore a minimum price may apply.",
 		upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
 		EVValueImprovementPerYearPercentage:    "The expected amount of relative cost improvements of electric vehicles as compared to conventional cars powered by oil based fuel for each year.",
 		setupChargeStation:                     "The cost of setting up a charging station at your home (or work) to charge your electric car. If your home has a garage with a plug then the cost could be zero.",
@@ -884,6 +892,7 @@ EVC.DefaultData = {
 
 	/* other assumptions */
 	amountOfCurrentCarAsLoan:                0,
+	minimumCostElectricVehicle:          16000,
 	upgradeCostToGoElectric:                20,
 	EVValueImprovementPerYearPercentage:     5,
 	setupChargeStation:                    300,
