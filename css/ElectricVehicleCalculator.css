@@ -8,7 +8,7 @@
 	p {margin-bottom: 1.7em;}
 
 	/* form */
-	#EVCWrapper {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto;}
+	#EVCWrapper {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; position: relative;}
 	fieldset {border: none; padding: 0.5em 0; outline: none;}
 	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both;}
@@ -42,6 +42,9 @@
 	/* calcVals */
 	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
 	.calcVal .negativeNumber {color: red;}
+	.fixed {position:fixed; top: 0; left: 0; border-bottom: 3px solid orange; background-color: orange; width: 100%; }
+	.fixed p {padding-top: 1em!important;padding-bottom: 1em!important; margin: 0!important; padding-left: 1em; padding-right: 1em}
+	
 
 	hr {border: 1px solid #ccc; margin-top: 7em; margin-bottom: 7em;}
 
@@ -64,6 +67,10 @@
 	#KeyAssupmptions input {font-size: 21px;}
 	tr.detail th, tr.detail td {border-bottom: 1px solid transparent;}
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
+}
+@media screen and (min-width: 700px) {
+	.fixed {left: 50%; margin-left: -350px; width: 700px;}
+	.fixed p{padding-left: 0; padding-right: 0;}
 }
 @media screen and (min-width: 1100px) {
 

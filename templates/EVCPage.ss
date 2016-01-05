@@ -23,11 +23,10 @@
 	<form id="ElectricVehicleCalculator">
 		<fieldset id="KeyAssupmptions"></fieldset>
 
-		<h2>Profit / Loss</h2>
-		<p class="message good">after One Year: <span id="TotalProfit" class="calcVal" data-fx="totalProfit"></span></p>
-		<p class="message good">after Three Years: <span class="calcVal" data-fx="theeYearProfit"></span></p>
-		<p class="message good">after Five Years: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
-
+		<div id="ProfitAndLoss">
+		<p class="message good">Income / Loss five years after going electric: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
+		</div>
+		
 		<hr />
 
 		<fieldset id="PlayAroundAssumptions"></fieldset>
@@ -235,10 +234,15 @@
 			Thank you.
 		</p>
 
+		<h2>disclaimer</h2>
+		<p>
+			Please use completely at your own risk.
+			This tool is meant to be used as an indicative guide only.
+			Please seek professional advice for any decisions you may make and do not make any decisions based on what is presented to you in this tool.
+		</p>
+
 	</form>
 	</div>
-
-	<script src="javascript/ElectricVehicleCalculator.js"></script>
 
 </body>
 </html>

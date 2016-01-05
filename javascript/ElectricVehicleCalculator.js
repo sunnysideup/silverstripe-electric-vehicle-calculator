@@ -648,22 +648,28 @@ EVC.HTMLInteraction = {
 	populateCalculations: function(){
 		jQuery("span.calcVal").each(
 			function(i, el) {
-				var method = jQuery(el).attr("data-fx");
-				//console.debug(method);
-				var value = EVC.scenarios[method]();
-				var numberValue = parseFloat(value);
-				var formattedValue = numberValue.formatMoney();
-				if(value < 0) {
-					var htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
+				if(EVC.DefaultData.CVValueToday > 0 && EVC.DefaultData.kmDrivenPerDay > 0) {
+					var method = jQuery(el).attr("data-fx");
+					//console.debug(method);
+					var value = EVC.scenarios[method]();
+					var numberValue = parseFloat(value);
+					var formattedValue = numberValue.formatMoney();
+					if(value < 0) {
+						var htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
+					}
+					else {
+						var htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
+					}
+					if(typeof numberValue === "number") {
+						jQuery(el).html(htmlValue);
+					}
+					else {
+						jQuery(el).text("error");
+					}
+					jQuery(el).parent().fadeIn();
 				}
 				else {
-					var htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
-				}
-				if(typeof numberValue === "number") {
-					jQuery(el).html(htmlValue);
-				}
-				else {
-					jQuery(el).text("error");
+					jQuery(el).parent().fadeOut();
 				}
 			}
 		);
@@ -801,11 +807,21 @@ EVC.HTMLInteraction = {
 			}
 		}
 		//update HTML
+		this.updateScreen();
 
+	},
+
+	updateScreen: function(){
 		this.populateResultTable();
 		this.populateCalculations();
 		this.populateLinks();
-
+		var $el = jQuery("#ProfitAndLoss");
+		if(this.isScrolledIntoView($el)) {
+			jQuery($el).removeClass("fixed");
+		}
+		else {
+			jQuery($el).addClass("fixed");
+		}
 	},
 
 	setMyValue: function(key, item){
@@ -822,7 +838,24 @@ EVC.HTMLInteraction = {
 
 	resetSession: function(){
 		alert("to be completed");
-	}
+	},
+
+	isMobileView: function(){
+		return false;
+	},
+
+	isScrolledIntoView: function(elem) {
+		var $elem = jQuery(elem);
+		var $window = jQuery(window);
+
+		var docViewTop = $window.scrollTop();
+		var docViewBottom = docViewTop + $window.height();
+
+		var elemTop = $elem.offset().top;
+		var elemBottom = elemTop + $elem.height();
+
+		return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	}	
 
 };
 
