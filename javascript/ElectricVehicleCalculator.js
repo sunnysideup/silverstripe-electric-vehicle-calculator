@@ -403,9 +403,9 @@ var EVCfx = function(
 
 	this.repairCost = function(carType){
 		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
-		var kmMultiplier = (this.actualAnnualKms(carType) / 10000)
+		var kmMultiplier = (this.actualAnnualKms(carType) / 5000)
 		var total = 0
-		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
+		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 400;
 		if(valueMultiplier > 0) {
 			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
 		}
