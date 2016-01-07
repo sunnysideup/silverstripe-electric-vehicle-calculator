@@ -378,7 +378,7 @@ var EVCfx = function(
 
 	this.actualAnnualKmsPerDay = function(carType){
 		if(carType == "e") {
-			var totalValue = (kmDrivenPerDay - (EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips));
+			var totalValue = kmDrivenPerDay - ((EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips) / 365);
 		}
 		else {
 			var totalValue = kmDrivenPerDay;
@@ -391,10 +391,10 @@ var EVCfx = function(
 
 	this.actualAnnualKms = function(carType){
 		if(carType == "e") {
-			var totalValue = (kmDrivenPerDay * 365)- this.numberOfKMsWithRentalCar();
+			var totalValue = this.actualAnnualKmsPerDay(carType) * 365;
 		}
 		else {
-			var totalValue =  kmDrivenPerDay * 365;
+			var totalValue =  this.actualAnnualKmsPerDay(carType) * 365;
 		}
 		if(totalValue < 0) {
 			totalValue = 0;
