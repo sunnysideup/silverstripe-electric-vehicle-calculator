@@ -1232,7 +1232,7 @@ EVC.DefaultDataMinMax = {
 	costOfPetrolPerLitre:                    [1.00,3.50],
 	costOfElectricityPerKwH:                 [0.05,0.5],
 	fuelEfficiencyCV:                        [5,30],
-	fuelEfficiencyEV:                        [1,0],
+	fuelEfficiencyEV:                        [1,10],
 	fuelEfficiencyRentalCar:                 [5,30],
 	insuranceBaseCost:                       [0,1000],
 	insuranceCostPerThousand:                [0,200],
