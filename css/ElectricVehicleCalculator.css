@@ -32,7 +32,9 @@
 	.middleColumn {margin-top: 0.3em;}
 	label strong {font-weight: 400; color: #999}
 	.fieldHolder.changed label strong {color: #222}
+	/* hide */
 	label span.desc {display: none; color: orange;}
+	input[type=range] {display: none; }
 
 	/* results */
 	table {width: 100%; }
@@ -70,8 +72,9 @@
 		text-align: right;
 		font-size: 100%;
 		margin-top: 0em;
+		font-size: 17px
 	}
-	input[type='text'] {margin-top: 1em;}	
+	input[type='range'] {margin-bottom: 2em;}	
 	#KeyAssupmptions input {font-size: 21px;}
 	tr.detail th, tr.detail td {border-bottom: 1px solid transparent;}
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}

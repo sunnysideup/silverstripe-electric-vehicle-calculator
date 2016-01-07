@@ -762,7 +762,7 @@ EVC.HTMLInteraction = {
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\"  />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -810,6 +810,7 @@ EVC.HTMLInteraction = {
 		//var val = jQuery(el).val();
 		//jQuery(el).attr("placeholder", val)
 		//jQuery(el).val(val.replace(/\$|,/g, ''));
+		EVC.HTMLInteraction.showDesc(key);
 	},
 
 	updateInProgress: false,
@@ -859,6 +860,10 @@ EVC.HTMLInteraction = {
 			//update fields
 			if(fieldID != currentID) {
 				jQuery("#"+fieldID).val(value).trigger("blur");
+			}
+			else {
+				jQuery("div#"+key+"Holder label span.desc").css("display", "none");
+				jQuery("div#"+key+"Holder input[type='range']").css("display", "none");
 			}
 			if(rangeFieldID != currentID) {
 				jQuery("#"+rangeFieldID).val(value);
@@ -918,11 +923,11 @@ EVC.HTMLInteraction = {
 		value = parseFloat(value.replace(/\$|,/g, ''));
 		value = this.formatValue(key, value);
 		item.value = value;
-		jQuery("div#"+key+"Holder label span.desc").css("display", "none");
 	},
 
 	showDesc: function(key){
 		jQuery("div#"+key+"Holder label span.desc").css("display", "block");
+		jQuery("div#"+key+"Holder input[type='range']").css("display", "block");
 	},
 
 	resetSession: function(){
