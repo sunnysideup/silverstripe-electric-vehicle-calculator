@@ -807,9 +807,9 @@ EVC.HTMLInteraction = {
 	},
 
 	inputReady: function(key, el) {
-		var val = jQuery(el).val();
-		jQuery(el).attr("placeholder", val)
-		jQuery(el).val("");
+		//var val = jQuery(el).val();
+		//jQuery(el).attr("placeholder", val)
+		//jQuery(el).val(val.replace(/\$|,/g, ''));
 	},
 
 	updateInProgress: false,
@@ -826,28 +826,14 @@ EVC.HTMLInteraction = {
 			var holderSelector = "#"+key+"Holder";
 			var labelSelector = "#"+key+"Holder label[for='"+fieldID+"'] strong";
 			var defaultValue = EVC.DefaultData[key];
+			var currentID = "";
+			//does it need cleaning?
 			if(isNaN(elOrValue)) {
 				var value = jQuery(elOrValue).val();
-				var placeHolderValue = jQuery(elOrValue).attr("placeholder");
-				if(value == "") {
-					value = placeHolderValue;
-				}
 				//remove comma and $ ...
 				value = parseFloat(value.replace(/\$|,/g, ''));
-				if (typeof placeHolderValue == 'undefined') {
-					placeHolderValue = 0;
-				}
-				else {
-					placeHolderValue = parseFloat(placeHolderValue.replace(/\$|,/g, ''));
-				}
 				if(isNaN(value)) {
-					if(!isNaN(placeHolderValue)) {
-						value = placeHolderValue;
-					}
-					else {
-						value = 0;
-					}
-					currentID = "";
+					value = defaultValue;
 				}
 				else {
 					var currentID = jQuery(elOrValue).attr("id");
@@ -855,7 +841,6 @@ EVC.HTMLInteraction = {
 			}
 			else {
 				var value = elOrValue;
-				var currentID = "";
 			}
 			var labelValue = EVC.DataDescription.labels[key];
 			if(value != defaultValue) {
@@ -918,13 +903,14 @@ EVC.HTMLInteraction = {
 		this.populateCalculations();
 		this.populateLinks();
 		var $el = jQuery("#ProfitAndLoss");
-		jQuery($el).removeClass("fixed");
-		if(this.isScrolledIntoView($el)) {
+		//jQuery($el).removeClass("fixed");
+		jQuery($el).addClass("fixed");
+		//if(this.isScrolledIntoView($el)) {
 			//do nothing
-		}
-		else {
-			jQuery($el).addClass("fixed");
-		}
+		//}
+		//else {
+		//	
+		//}
 	},
 
 	setMyValue: function(key, item){
@@ -1064,8 +1050,8 @@ EVC.DataDescription = {
 		yearsAfterSwitch:                       "Number of Years after Switch",
 		daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
 		/* other assumptions */
-		amountOfCurrentCarAsLoan:               "Borrowed Amount for Current Car",
-		minimumCostElectricVehicle:             "Minimum Cost for Electric Car",
+		amountOfCurrentCarAsLoan:               "Current Car: Borrowed Amount",
+		minimumCostElectricVehicle:             "Electric Car: Minimum Purchase Price",
 		upgradeCostToGoElectric:                "Premium for Electrical Car",
 		EVValueImprovementPerYearPercentage:    "Relative Value Improvement per Year for Electric Cars",
 		setupChargeStation:                     "Infrastructure Set Up",
