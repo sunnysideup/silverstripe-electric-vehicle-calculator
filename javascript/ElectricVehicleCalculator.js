@@ -14,7 +14,7 @@ jQuery(document).ready(
 
 var EVC = {
 
-	debug: true,
+	debug: false,
 
 	myData: {},
 
@@ -762,7 +762,7 @@ EVC.HTMLInteraction = {
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -806,6 +806,12 @@ EVC.HTMLInteraction = {
 		return value;
 	},
 
+	inputReady: function(key, el) {
+		var val = jQuery(el).val();
+		jQuery(el).attr("placeholder", val)
+		jQuery(el).val("");
+	},
+
 	updateInProgress: false,
 	
 	setValue: function(key, elOrValue){
@@ -822,9 +828,30 @@ EVC.HTMLInteraction = {
 			var defaultValue = EVC.DefaultData[key];
 			if(isNaN(elOrValue)) {
 				var value = jQuery(elOrValue).val();
+				var placeHolderValue = jQuery(elOrValue).attr("placeholder");
+				if(value == "") {
+					value = placeHolderValue;
+				}
 				//remove comma and $ ...
 				value = parseFloat(value.replace(/\$|,/g, ''));
-				var currentID = jQuery(elOrValue).attr("id");
+				if (typeof placeHolderValue == 'undefined') {
+					placeHolderValue = 0;
+				}
+				else {
+					placeHolderValue = parseFloat(placeHolderValue.replace(/\$|,/g, ''));
+				}
+				if(isNaN(value)) {
+					if(!isNaN(placeHolderValue)) {
+						value = placeHolderValue;
+					}
+					else {
+						value = 0;
+					}
+					currentID = "";
+				}
+				else {
+					var currentID = jQuery(elOrValue).attr("id");
+				}
 			}
 			else {
 				var value = elOrValue;

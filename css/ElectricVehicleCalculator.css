@@ -1,6 +1,6 @@
 @media screen and (min-width: 0px) {
 	/* general */
-	body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 0.9em; color: #222;}
+	body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222;}
 	* {font-weight: 400;}
 	strong {font-weight: 700;}
 	a {border-bottom: 1px solid #ccc; text-decoration: none; color: black;}
@@ -12,8 +12,9 @@
 	fieldset {border: none; padding: 0.5em 0; outline: none;}
 	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both;}
-	label, input {font-size: 15px;}
+	label, input {font-size: 12px;}
 	input {
+		margin-top: 1.5em;
 		width: 100%;
 		background-color: transparent;
 		border: none;
@@ -45,10 +46,9 @@
 	.calcVal .negativeNumber {color: red;}
 	#ProfitAndLoss {background-color: orange; color: green;}
 	.fixed {position:fixed; top: 0; left: 0; width: 100%; }
-	#ProfitAndLoss p {padding: 1em!important; margin: 0;}
+	#ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
+	#ProfitAndLoss p span.calcVal{border-bottom: none;}
 	
-
-	hr {border: 1px solid #ccc; margin-top: 7em; margin-bottom: 7em;}
 
 }
 
@@ -71,10 +71,108 @@
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
 }
 @media screen and (min-width: 700px) {
+	input {margin-top: 1em;}
+
+	label, input {font-size: 15px;}
 	.fixed {}
 	.fixed p{padding-left: 0; padding-right: 0; width: 700px; margin-left: auto!important; margin-right: auto!important;}
 }
 @media screen and (min-width: 1100px) {
+	body {font-size: 0.9em; }
+}
 
+/************
+ * slider
+ * source: http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html
+ *
+ */ 
 
+input[type=range] {
+	/*removes default webkit styles*/
+	-webkit-appearance: none;
+	
+	/*fix for FF unable to apply focus style bug */
+	border: 1px solid white;
+	
+	/*required for proper track sizing in FF*/
+	width: 100%px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+	width: 100%px;
+	height: 5px;
+	background: #ddd;
+	border: none;
+	border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	border: none;
+	height: 26px;
+	width: 26px;
+	border-radius: 50%;
+	background: blue;
+	margin-top: -9px;
+}
+input[type=range]:focus {
+	outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+	width: 100%px;
+	height: 5px;
+	background: #ddd;
+	border: none;
+	border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+	border: none;
+	height: 26px;
+	width: 26px;
+	border-radius: 50%;
+	background: blue;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+	outline: 1px solid white;
+	outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+	width: 100%px;
+	height: 5px;
+	
+	/*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+	background: transparent;
+	
+	/*leave room for the larger thumb to overflow with a transparent border */
+	border-color: transparent;
+	border-width: 6px 0;
+
+	/*remove default tick marks*/
+	color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+	background: #777;
+	border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+	background: #ddd;
+	border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+	border: none;
+	height: 26px;
+	width: 26px;
+	border-radius: 50%;
+	background: blue;
+}
+input[type=range]:focus::-ms-fill-lower {
+	background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+	background: #ccc;
 }
