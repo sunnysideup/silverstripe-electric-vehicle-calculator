@@ -831,8 +831,13 @@ EVC.HTMLInteraction = {
 				var currentID = "";
 			}
 			var labelValue = EVC.DataDescription.labels[key];
-			if(value != defaultValue && defaultValue > 0) {
-				jQuery(labelSelector).text(labelValue+" (default = "+this.formatValue(key, defaultValue)+")");
+			if(value != defaultValue) {
+				if(defaultValue > 0) {
+					jQuery(labelSelector).text(labelValue+" (default = "+this.formatValue(key, defaultValue)+")");
+				}
+				else {
+					jQuery(labelSelector).text(labelValue);
+				}
 				jQuery(holderSelector).addClass("changed");
 			}
 			else {
