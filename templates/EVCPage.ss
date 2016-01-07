@@ -240,6 +240,16 @@
 		</p>
 		<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
 
+		<h2>to do</h2>
+		<ul>
+			<li>show years before and after switch in headers to make sense of data</li>
+			<li>show results table for actual years after switch but show five year result from first day of switch</li>
+			<li>show actual date for five years from now in total after after five years</li>
+			<li>listen to scroll to move results bar</li>
+			<li>formatting of total profit bar on smallest screen</li>
+			<li>add explanation at the top</li>
+			<li>create more space at the top for total profit bar</li>
+
 	</form>
 	</div>
 
