@@ -604,7 +604,6 @@ EVC.HTMLInteraction = {
 		this.populateCalculations();
 		this.populateLinks();
 		this.setupShowAndHideResultRows();
-		this.makeMobileInputNumeric();
 		this.selectFirstInput();
 	},
 
@@ -726,9 +725,6 @@ EVC.HTMLInteraction = {
 		);
 	},
 
-	makeMobileInputNumeric: function(){
-	},
-
 	selectFirstInput: function(){
 		//we have to wait until HTML is registered...
 		window.setTimeout(
@@ -741,6 +737,11 @@ EVC.HTMLInteraction = {
 
 	createFormFieldsFromList: function(list) {
 		var html = "";
+		var isMobile = this.isMobile();
+		var readOnly = "";
+		if(isMobile){
+			var readOnly = " readonly=\"readonly\" ";
+		}		
 		for (var key in list) {
 			if (list.hasOwnProperty(key)) {
 				var type = list[key];
@@ -756,18 +757,28 @@ EVC.HTMLInteraction = {
 				var min = EVC.DefaultDataMinMax[key][0];
 				var max = EVC.DefaultDataMinMax[key][1];
 				var step = Math.round(((max - min) / 20)*100)/100;
+
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.hideDesc('"+key+"')\"\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\"  />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" "+readOnly+" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
 		}
 		return html;
+	},
+
+	isMobile: function(){
+		var isMobile = false; //initiate as false
+		// device detection
+		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		 isMobile = true;// some code..
+		}
+		return isMobile;
 	},
 
 	getValueFromDefaultsOrSession: function(key, formatted){
@@ -940,10 +951,6 @@ EVC.HTMLInteraction = {
 		alert("to be completed");
 	},
 
-	isMobileView: function(){
-		return false;
-	},
-
 	isScrolledIntoView: function(elem) {
 		var $elem = jQuery(elem);
 		var $window = jQuery(window);
@@ -1054,8 +1061,8 @@ EVC.DataDescription = {
 
 	labels: {
 		/* key assumptions s */
-		CVValueToday:                           "Current Car Value",
-		kmDrivenPerDay:                         "Average Kilometers Driven per Day",
+		CVValueToday:                           "* Current Car Value",
+		kmDrivenPerDay:                         "* Average Kilometers Driven per Day",
 		/* play around assumptions */
 		yearsBeforeSwitch:                      "Number of Years Before Switch",
 		yearsAfterSwitch:                       "Number of Years after Switch",
