@@ -31,10 +31,9 @@
 
 	.middleColumn {margin-top: 0.3em;}
 	label strong {font-weight: 400; color: #999}
+	label span.desc {color: orange;}
 	.fieldHolder.changed label strong {color: #222}
-	/* hide */
-	label span.desc {display: none; color: orange;}
-	input[type=range] {display: none; }
+
 
 	/* results */
 	table {width: 100%; }
@@ -56,6 +55,12 @@
 	#ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
 	#ProfitAndLoss p span.calcVal{border-bottom: none;}
 	
+	/* hide */
+	label span.desc {display: none; color: orange;}
+	input[type=range] {display: none; }
+	.fieldHolder.infocusinfocus label span.desc {display: block;}
+	.fieldHolder.infocus input[type=range] {display: block; }
+	.fieldHolder.infocus input[type=text] {font-size: 33px!important; }
 
 }
 
@@ -199,9 +204,16 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 /**********
- * glow
+ * transitions
  *
  */
+.fieldHolder {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+}
+ 
 input[type=text], textarea {
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
@@ -212,6 +224,6 @@ input[type=text], textarea {
 }
  
 input[type=text]:focus, textarea:focus {
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-  border: 1px solid rgba(81, 203, 238, 1);
+  box-shadow: inset 0 0 10px #ccc;
+  border: 1px solid #bbb;
 }
