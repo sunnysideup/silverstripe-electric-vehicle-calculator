@@ -24,7 +24,8 @@
 	}
 
 	.middleColumn {margin-top: 0.3em;}
-	label strong {font-weight: 400;}
+	label strong {font-weight: 400; color: #999}
+	.fieldHolder.changed label strong {color: #222}
 	label span.desc {display: none; color: orange;}
 
 	/* results */
@@ -42,8 +43,9 @@
 	/* calcVals */
 	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
 	.calcVal .negativeNumber {color: red;}
-	.fixed {position:fixed; top: 0; left: 0; border-bottom: 3px solid orange; background-color: orange; width: 100%; }
-	.fixed p {padding-top: 1em!important;padding-bottom: 1em!important; margin: 0!important; padding-left: 1em; padding-right: 1em}
+	#ProfitAndLoss {background-color: orange; color: green;}
+	.fixed {position:fixed; top: 0; left: 0; width: 100%; }
+	#ProfitAndLoss p {padding: 1em!important; margin: 0;}
 	
 
 	hr {border: 1px solid #ccc; margin-top: 7em; margin-bottom: 7em;}
@@ -69,8 +71,8 @@
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
 }
 @media screen and (min-width: 700px) {
-	.fixed {left: 50%; margin-left: -350px; width: 700px;}
-	.fixed p{padding-left: 0; padding-right: 0;}
+	.fixed {}
+	.fixed p{padding-left: 0; padding-right: 0; width: 700px; margin-left: auto!important; margin-right: auto!important;}
 }
 @media screen and (min-width: 1100px) {
 

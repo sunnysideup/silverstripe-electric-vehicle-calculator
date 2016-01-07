@@ -46,13 +46,15 @@ class EVCDataSet extends DataObject {
 	 */ 
 	public function returnValuesAsJS(){
 		$array = unserialize($this->Data);
-		$json = "";
+		$json = null;
 		if(is_array($array) && count($array)) {
+			$json = "jQuery(document).ready(function(){";
 			foreach($array as $key => $value) {
-				$json .= "\nEVC.DefaultData.".$key." = ".$value.";";
+				$json .= "\nEVC.HTMLInteraction.setValue('".$key."', ".(floatval($value)-0).");";
 			}
-			return $json;
+			$json .= "});";
 		}
+		return $json;
 	}
 	
 	function onBeforeWrite(){

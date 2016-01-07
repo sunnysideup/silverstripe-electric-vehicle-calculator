@@ -18,7 +18,6 @@
 
 <body>
 	<div id="EVCWrapper">
-	<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
 	<div id="ContentHolder">$Content</div>
 	<form id="ElectricVehicleCalculator">
 		<fieldset id="KeyAssupmptions"></fieldset>
@@ -27,7 +26,6 @@
 		<p class="message good">Income / Loss five years after going electric: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
 		</div>
 		
-		<hr />
 
 		<fieldset id="PlayAroundAssumptions"></fieldset>
 
@@ -240,6 +238,7 @@
 			This tool is meant to be used as an indicative guide only.
 			Please seek professional advice for any decisions you may make and do not make any decisions based on what is presented to you in this tool.
 		</p>
+		<p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
 
 	</form>
 	</div>

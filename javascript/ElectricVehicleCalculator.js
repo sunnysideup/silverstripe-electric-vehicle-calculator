@@ -6,7 +6,6 @@
  */
 
 
-
 jQuery(document).ready(
 	function(){
 		EVC.init();
@@ -65,13 +64,29 @@ var EVC = {
 	},
 
 	init: function() {
-		var kmDrivenPerDayTempVar = this.kmDrivenPerDay == -1 ? EVC.DefaultData.kmDrivenPerDay : this.kmDrivenPerDay;
-		var yearsBeforeSwitchTempVar = this.yearsBeforeSwitch == -1 ? EVC.DefaultData.yearsBeforeSwitch : this.yearsBeforeSwitch;
-		var yearsAfterSwitchTempVar = this.yearsAfterSwitch == -1 ? EVC.DefaultData.yearsAfterSwitch : this.yearsAfterSwitch;
+		var kmDrivenPerDayTempVar = this.kmDrivenPerDay == -1 ? EVC.ActualData.kmDrivenPerDay : this.kmDrivenPerDay;
+		var yearsBeforeSwitchTempVar = this.yearsBeforeSwitch == -1 ? EVC.ActualData.yearsBeforeSwitch : this.yearsBeforeSwitch;
+		var yearsAfterSwitchTempVar = this.yearsAfterSwitch == -1 ? EVC.ActualData.yearsAfterSwitch : this.yearsAfterSwitch;
 		this.myData = new EVCfx(yearsBeforeSwitchTempVar, yearsAfterSwitchTempVar, kmDrivenPerDayTempVar);
 		//now we have the data, we can show it ...
 		EVC.HTMLInteraction.init();
+	},
+
+	cloneObject: function(obj) {
+		if (null == obj || "object" != typeof obj) {
+			return obj;
+		}
+		var copy = obj.constructor();
+		for (var attr in obj) {
+			if (obj.hasOwnProperty(attr)) {
+				copy[attr] = obj[attr];
+			}
+		}
+		return copy;
 	}
+
+
+
 
 };
 
@@ -81,11 +96,11 @@ var EVCfx = function(
 	kmDrivenPerDay
 ) {
 
-	yearsBeforeSwitch = yearsBeforeSwitch == undefined || yearsBeforeSwitch == -1 ? EVC.DefaultData.yearsBeforeSwitch : yearsBeforeSwitch;
+	yearsBeforeSwitch = yearsBeforeSwitch == undefined || yearsBeforeSwitch == -1 ? EVC.ActualData.yearsBeforeSwitch : yearsBeforeSwitch;
 
-	yearsAfterSwitch = yearsAfterSwitch == undefined || yearsAfterSwitch == -1  ? EVC.DefaultData.yearsAfterSwitch : yearsAfterSwitch;
+	yearsAfterSwitch = yearsAfterSwitch == undefined || yearsAfterSwitch == -1  ? EVC.ActualData.yearsAfterSwitch : yearsAfterSwitch;
 
-	kmDrivenPerDay = kmDrivenPerDay == undefined || kmDrivenPerDay == -1  ? EVC.DefaultData.kmDrivenPerDay : kmDrivenPerDay;
+	kmDrivenPerDay = kmDrivenPerDay == undefined || kmDrivenPerDay == -1  ? EVC.ActualData.kmDrivenPerDay : kmDrivenPerDay;
 
 	/* getters and setters */
 	this.updateYearsBeforeSwitch = function(newValue){
@@ -104,7 +119,7 @@ var EVCfx = function(
 	this.setupCost = function(carType){
 		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
-				return EVC.DefaultData.setupChargeStation;
+				return EVC.ActualData.setupChargeStation;
 			}
 			else {
 				return 0;
@@ -121,10 +136,10 @@ var EVCfx = function(
 	 */
 	this.depreciationRate = function(carType) {
 		if(carType == "e") {
-			var rate = EVC.DefaultData.depreciationRatePerYearEV;
+			var rate = EVC.ActualData.depreciationRatePerYearEV;
 		}
 		else {
-			var rate = EVC.DefaultData.depreciationRatePerYearCV;
+			var rate = EVC.ActualData.depreciationRatePerYearCV;
 		}
 		return rate;
 	}
@@ -134,7 +149,7 @@ var EVCfx = function(
 	 */
 	this.currentCarValueAtTimeOfSale = function(carType){
 		//value today
-		var value = EVC.DefaultData.CVValueToday;
+		var value = EVC.ActualData.CVValueToday;
 		//what will that value be in the future ...
 		if(yearsBeforeSwitch > 0) {
 			var rateCV = this.depreciationRate("f");
@@ -149,10 +164,10 @@ var EVCfx = function(
 	 * what is the minimum price you pay for an electric vehicle when you purchase it?
 	 */
 	this.minimumCostElectricVehicleAtYearOfSwitch = function(carType){
-		var minimum = EVC.DefaultData.minimumCostElectricVehicle;
+		var minimum = EVC.ActualData.minimumCostElectricVehicle;
 		if(yearsBeforeSwitch > 0) {
 			for(var i = yearsBeforeSwitch; i > 0; i--) {
-				minimum = minimum - (minimum * (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100));
+				minimum = minimum - (minimum * (EVC.ActualData.EVValueImprovementPerYearPercentage / 100));
 			}
 		}
 		return minimum;
@@ -166,7 +181,7 @@ var EVCfx = function(
 			return 0;
 		}
 		else {
-			return this.currentCarValueAtTimeOfSale(carType) - (this.currentCarValueAtTimeOfSale(carType) * (EVC.DefaultData.saleCostForCarInPercentage / 100))
+			return this.currentCarValueAtTimeOfSale(carType) - (this.currentCarValueAtTimeOfSale(carType) * (EVC.ActualData.saleCostForCarInPercentage / 100))
 		}
 	};
 
@@ -174,7 +189,7 @@ var EVCfx = function(
 	 * what is the value that you sell your car (more) for, as opposed to what do you get for it (which is a little bit less)
 	 */
 	this.salePriceExSalesCost = function(carType){
-		return this.salePrice(carType) / (1 - (EVC.DefaultData.saleCostForCarInPercentage / 100));
+		return this.salePrice(carType) / (1 - (EVC.ActualData.saleCostForCarInPercentage / 100));
 	};
 
 	/**
@@ -184,12 +199,12 @@ var EVCfx = function(
 		if(carType == "e") {
 			var value = this.currentCarValueAtTimeOfSale(carType);
 			var minimum = this.minimumCostElectricVehicleAtYearOfSwitch(carType);
-			var upgradeRate = (EVC.DefaultData.upgradeCostToGoElectric / 100);
+			var upgradeRate = (EVC.ActualData.upgradeCostToGoElectric / 100);
 			//to do: which one should come first... value improvement or upgrade cost?
 			//the e value improvements in the future ...
 			if(yearsBeforeSwitch > 0) {
 				var upgradeCostDividedByFutureYears =  upgradeRate / yearsBeforeSwitch;
-				var valueImprovementRate = (EVC.DefaultData.EVValueImprovementPerYearPercentage / 100);
+				var valueImprovementRate = (EVC.ActualData.EVValueImprovementPerYearPercentage / 100);
 				for(var i = yearsBeforeSwitch; i > 0; i--) {
 					value = value + (value * upgradeCostDividedByFutureYears);
 					value = value - (value * valueImprovementRate);
@@ -198,7 +213,7 @@ var EVCfx = function(
 			else {
 				value = value + (value * upgradeRate);
 			}
-			value = value + (value * (EVC.DefaultData.purchaseCostForCarInPercentage / 100));
+			value = value + (value * (EVC.ActualData.purchaseCostForCarInPercentage / 100));
 			if(value < minimum) {
 				value = minimum;
 			}
@@ -213,7 +228,7 @@ var EVCfx = function(
 	 * how much is the electric car you purchase worth at the time of purchase (less than what you paid for it)
 	 */
 	this.purchasePriceExSalesCost = function(carType){
-		return this.purchasePrice(carType) / (1 + (EVC.DefaultData.purchaseCostForCarInPercentage / 100));
+		return this.purchasePrice(carType) / (1 + (EVC.ActualData.purchaseCostForCarInPercentage / 100));
 	};
 
 	/**
@@ -272,11 +287,11 @@ var EVCfx = function(
 	this.totalLoanAtStart = function(carType) {
 		if(carType == "e") {
 			var amountPaid = this.purchasePrice(carType);
-			var paidUpFront = this.salePrice("f") - EVC.DefaultData.amountOfCurrentCarAsLoan;
+			var paidUpFront = this.salePrice("f") - EVC.ActualData.amountOfCurrentCarAsLoan;
 			return amountPaid - paidUpFront;
 		}
 		else {
-			return EVC.DefaultData.amountOfCurrentCarAsLoan;
+			return EVC.ActualData.amountOfCurrentCarAsLoan;
 		}
 	}
 
@@ -284,7 +299,7 @@ var EVCfx = function(
 	 * how much do you pay towards paying off the loan in any year?
 	 */
 	this.standardPrincipalRepaymentPerYear = function(carType){
-		var rate = (EVC.DefaultData.principalRepaymentsPerYearPercentage / 100);
+		var rate = (EVC.ActualData.principalRepaymentsPerYearPercentage / 100);
 		return this.totalLoanAtStart(carType) * rate;
 	}
 
@@ -325,7 +340,7 @@ var EVCfx = function(
 	 */
 	this.interest = function(carType){
 		var interest = 0;
-		var dailyInterest = (EVC.DefaultData.financingCostInPercentage / 100) / 365;
+		var dailyInterest = (EVC.ActualData.financingCostInPercentage / 100) / 365;
 		for(var i = 1; i < 366; i++) {
 			var valueOfTheDay = (this.amountBorrowedAtStartOfTheYear(carType) - ((this.principalRepayment(carType) / 365) * i));
 			if(valueOfTheDay > 0) {
@@ -341,7 +356,7 @@ var EVCfx = function(
 	 */
 	this.cashLeftAfterSellingCar = function(carType){
 		var salePrice = this.valueAtTheEndOfTheYear(carType) - this.amountBorrowedAtEndOfTheYear(carType);
-		return salePrice - ((EVC.DefaultData.saleCostForCarInPercentage / 100) * salePrice);
+		return salePrice - ((EVC.ActualData.saleCostForCarInPercentage / 100) * salePrice);
 	};
 
 	this.equityImprovementAtEndOfYear = function(carType) {
@@ -349,42 +364,50 @@ var EVCfx = function(
 	};
 
 	this.insuranceCost = function(carType){
-		return EVC.DefaultData.insuranceBaseCost + ((this.valueStartOfTheYear(carType) / 1000) * EVC.DefaultData.insuranceCostPerThousand);
+		return EVC.ActualData.insuranceBaseCost + ((this.valueStartOfTheYear(carType) / 1000) * EVC.ActualData.insuranceCostPerThousand);
 	};
 
 	this.licensingAndWOFCost = function(carType) {
 		if(carType == "e") {
-			return EVC.DefaultData.licenseWOFCostEVPerYear;
+			return EVC.ActualData.licenseWOFCostEVPerYear;
 		}
 		else {
-			return EVC.DefaultData.licenseWOFCostCVPerYear;
-		}
-	};
-
-	this.actualAnnualKms = function(carType){
-		if(carType == "e") {
-			return (kmDrivenPerDay - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips)) * 365;
-		}
-		else {
-			return kmDrivenPerDay * 365;
+			return EVC.ActualData.licenseWOFCostCVPerYear;
 		}
 	};
 
 	this.actualAnnualKmsPerDay = function(carType){
 		if(carType == "e") {
-			return (kmDrivenPerDay - (EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips));
+			var totalValue = (kmDrivenPerDay - (EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips));
 		}
 		else {
-			return kmDrivenPerDay;
+			var totalValue = kmDrivenPerDay;
 		}
+		if(totalValue < 0) {
+			totalValue = 0;
+		}
+		return totalValue;
+	};
+
+	this.actualAnnualKms = function(carType){
+		if(carType == "e") {
+			var totalValue = (kmDrivenPerDay * 365)- this.numberOfKMsWithRentalCar();
+		}
+		else {
+			var totalValue =  kmDrivenPerDay * 365;
+		}
+		if(totalValue < 0) {
+			totalValue = 0;
+		}
+		return totalValue;
 	};
 
 	this.fuelCost = function(carType) {
 		if(carType == "e") {
-			return (this.actualAnnualKms(carType) / EVC.DefaultData.fuelEfficiencyEV) * EVC.DefaultData.costOfElectricityPerKwH;
+			return (this.actualAnnualKms(carType) / EVC.ActualData.fuelEfficiencyEV) * EVC.ActualData.costOfElectricityPerKwH;
 		}
 		else {
-			return (this.actualAnnualKms(carType) / EVC.DefaultData.fuelEfficiencyCV) * EVC.DefaultData.costOfPetrolPerLitre;
+			return (this.actualAnnualKms(carType) / EVC.ActualData.fuelEfficiencyCV) * EVC.ActualData.costOfPetrolPerLitre;
 		}
 	};
 
@@ -394,20 +417,20 @@ var EVCfx = function(
 
 	this.maintenanceCost = function(carType) {
 		if(carType == "e") {
-			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.DefaultData.maintenanceEVPerTenThousandKm;
+			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.ActualData.maintenanceEVPerTenThousandKm;
 		}
 		else {
-			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.DefaultData.maintenanceCVPerTenThousandKm;
+			return maintanceCost = (this.actualAnnualKms(carType)  / 10000) * EVC.ActualData.maintenanceCVPerTenThousandKm;
 		}
 	};
 
 	this.tyreCost = function(carType) {
-		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.DefaultData.averageKmsPerTyre;
+		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.ActualData.averageKmsPerTyre;
 		if(carType == "e") {
-			return tyresNeeded * EVC.DefaultData.tyreCostEV;
+			return tyresNeeded * EVC.ActualData.tyreCostEV;
 		}
 		else {
-			return tyresNeeded * EVC.DefaultData.tyreCostCV;
+			return tyresNeeded * EVC.ActualData.tyreCostCV;
 		}
 	};
 
@@ -425,7 +448,7 @@ var EVCfx = function(
 
 	this.carRentalCost = function(carType) {
 		if(carType == "e") {
-			return EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.costPerDayRentalCar;
+			return EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.costPerDayRentalCar;
 		}
 		else {
 			return 0;
@@ -434,7 +457,7 @@ var EVCfx = function(
 
 	this.numberOfKMsWithRentalCar = function(carType) {
 		if(carType == "e") {
-			return EVC.DefaultData.daysWithContinuousTripsOver100Km * EVC.DefaultData.kilometresPerDayForLongTrips;
+			return EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips;
 		}
 		else {
 			return 0;
@@ -443,16 +466,16 @@ var EVCfx = function(
 
 	this.carRentaFuel = function(carType) {
 		var kms = this.numberOfKMsWithRentalCar(carType);
-		return (kms / EVC.DefaultData.fuelEfficiencyRentalCar) * EVC.DefaultData.costOfPetrolPerLitre;
+		return (kms / EVC.ActualData.fuelEfficiencyRentalCar) * EVC.ActualData.costOfPetrolPerLitre;
 	};
 
 	this.subsidy = function(carType){
 		if(carType == "e") {
 			var fixedSubsidy = 0;
 			if(yearsAfterSwitch == 0) {
-				var fixedSubsidy = EVC.DefaultData.subsidyPaymentFixed;
+				var fixedSubsidy = EVC.ActualData.subsidyPaymentFixed;
 			}
-			return -1 * (fixedSubsidy + (EVC.DefaultData.subsidyPaymentPerKM * this.actualAnnualKms(carType)));
+			return -1 * (fixedSubsidy + (EVC.ActualData.subsidyPaymentPerKM * this.actualAnnualKms(carType)));
 		}
 		else {
 			return 0;
@@ -461,7 +484,7 @@ var EVCfx = function(
 
 	this.personalContribution = function(carType){
 		if(carType == "e") {
-			return -1 * (EVC.DefaultData.personalContributionFixed + (EVC.DefaultData.personalContributionPerKM * this.actualAnnualKms(carType)));
+			return -1 * (EVC.ActualData.personalContributionFixed + (EVC.ActualData.personalContributionPerKM * this.actualAnnualKms(carType)));
 		}
 		else {
 			return 0;
@@ -648,7 +671,7 @@ EVC.HTMLInteraction = {
 	populateCalculations: function(){
 		jQuery("span.calcVal").each(
 			function(i, el) {
-				if(EVC.DefaultData.CVValueToday > 0 && EVC.DefaultData.kmDrivenPerDay > 0) {
+				if(EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0) {
 					var method = jQuery(el).attr("data-fx");
 					//console.debug(method);
 					var value = EVC.scenarios[method]();
@@ -727,13 +750,19 @@ EVC.HTMLInteraction = {
 				var desc = EVC.DataDescription.desc[key];
 				var holderID = key + "Holder";
 				var fieldID = key + "Field";
-				var value = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key);
+				var rangeFieldID = key + "FieldRange";
+				var unformattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, false);
+				var formattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, true);
+				var min = EVC.DefaultDataMinMax[key][0];
+				var max = EVC.DefaultDataMinMax[key][1];
+				var step = Math.round(((max - min) / 20)*100)/100;
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
 				html += "\t<label for=\""+ fieldID + "\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"')\" value=\""+value+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
+				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.showDesc('"+key+"');\" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -741,10 +770,15 @@ EVC.HTMLInteraction = {
 		return html;
 	},
 
-	getValueFromDefaultsOrSession: function(key){
+	getValueFromDefaultsOrSession: function(key, formatted){
 		//todo - get from session here ...
-		var value = EVC.DefaultData[key];
-		return this.formatValue(key, value)
+		var value = EVC.ActualData[key];
+		if(formatted) {
+			return this.formatValue(key, value)
+		}
+		else {
+			return value;
+		}
 	},
 
 	formatValue: function(key, value) {
@@ -772,43 +806,79 @@ EVC.HTMLInteraction = {
 		return value;
 	},
 
-	setValue: function(key){
-		var fieldID = key + "Field";
-		var value = jQuery("#"+fieldID).val();
-		//remove comma and $ ...
-		value = parseFloat(value.replace(/\$|,/g, ''));
-		//send to server
-		if(EVC.workableLinks()) {
-			jQuery.ajax({
-				method: "GET",
-				url: EVC.saveLink(),
-				data: { key: key, value: value },
-				cache: false
-			})
-			.done(function( returnKey ) {
-				EVC.serverKey = returnKey
-			})
-			.fail(function( jqXHR, textStatus ) {
-				alert( "Data could not be saved: " + textStatus );
-			});
-			//save locally...
+	updateInProgress: false,
+	
+	setValue: function(key, elOrValue){
+		if(this.updateInProgress) {
+			return true;
+			//do nothing
 		}
-		EVC.DefaultData[key] = value;
-		//special exception ..
-		if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
-			if(key == "kmDrivenPerDay") {
-				EVC.myData.updateKmDrivenPerDay(value);
+		else {
+			this.updateInProgress = true;
+			var fieldID = key + "Field";
+			var rangeFieldID = key + "FieldRange";
+			var holderSelector = "#"+key+"Holder";
+			var labelSelector = "#"+key+"Holder label[for='"+fieldID+"'] strong";
+			var defaultValue = EVC.DefaultData[key];
+			if(isNaN(elOrValue)) {
+				var value = jQuery(elOrValue).val();
+				//remove comma and $ ...
+				value = parseFloat(value.replace(/\$|,/g, ''));
+				var currentID = jQuery(elOrValue).attr("id");
 			}
-			else if(key == "yearsBeforeSwitch") {
-				EVC.myData.updateYearsBeforeSwitch(value);
+			else {
+				var value = elOrValue;
+				var currentID = "";
 			}
-			else if(key == "yearsAfterSwitch"){
-				EVC.myData.updateYearsAfterSwitch(value);
+			var labelValue = EVC.DataDescription.labels[key];
+			if(value != defaultValue && defaultValue > 0) {
+				jQuery(labelSelector).text(labelValue+" (default = "+this.formatValue(key, defaultValue)+")");
+				jQuery(holderSelector).addClass("changed");
 			}
+			else {
+				jQuery(labelSelector).text(labelValue);
+				jQuery(holderSelector).removeClass("changed");
+			}
+			//update fields
+			if(fieldID != currentID) {
+				jQuery("#"+fieldID).val(value).trigger("blur");
+			}
+			if(rangeFieldID != currentID) {
+				jQuery("#"+rangeFieldID).val(value);
+			}
+			//send to server
+			if(EVC.workableLinks()) {
+				jQuery.ajax({
+					method: "GET",
+					url: EVC.saveLink(),
+					data: { key: key, value: value },
+					cache: false
+				})
+				.done(function( returnKey ) {
+					EVC.serverKey = returnKey
+				})
+				.fail(function( jqXHR, textStatus ) {
+					alert( "Data could not be saved: " + textStatus );
+				});
+				//save locally...
+			}
+			EVC.ActualData[key] = value;
+			//special exception ..
+			if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
+				if(key == "kmDrivenPerDay") {
+					EVC.myData.updateKmDrivenPerDay(value);
+				}
+				else if(key == "yearsBeforeSwitch") {
+					EVC.myData.updateYearsBeforeSwitch(value);
+				}
+				else if(key == "yearsAfterSwitch"){
+					EVC.myData.updateYearsAfterSwitch(value);
+				}
+			}
+			//update HTML
+			this.updateScreen();
+			this.updateInProgress = false;
 		}
-		//update HTML
-		this.updateScreen();
-
 	},
 
 	updateScreen: function(){
@@ -816,8 +886,9 @@ EVC.HTMLInteraction = {
 		this.populateCalculations();
 		this.populateLinks();
 		var $el = jQuery("#ProfitAndLoss");
+		jQuery($el).removeClass("fixed");
 		if(this.isScrolledIntoView($el)) {
-			jQuery($el).removeClass("fixed");
+			//do nothing
 		}
 		else {
 			jQuery($el).addClass("fixed");
@@ -866,40 +937,40 @@ EVC.scenarios = {
 	},
 
 	theeYearProfit: function(){
-		var start = parseInt(EVC.DefaultData.yearsAfterSwitch) - 0;
-		var year1 = new EVCfx(-1, 0 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year2 = new EVCfx(-1, 1 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year3 = new EVCfx(-1, 2 + start, EVC.DefaultData.kmDrivenPerDay);
+		var start = parseInt(EVC.ActualData.yearsAfterSwitch) - 0;
+		var year1 = new EVCfx(-1, 0 + start, EVC.ActualData.kmDrivenPerDay);
+		var year2 = new EVCfx(-1, 1 + start, EVC.ActualData.kmDrivenPerDay);
+		var year3 = new EVCfx(-1, 2 + start, EVC.ActualData.kmDrivenPerDay);
 		var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit();
 		var restValue = year3.equityImprovementAtEndOfYear();
 		return totalProfit + restValue;
 	},
 
 	fiveYearProfit: function(){
-		var start = parseInt(EVC.DefaultData.yearsAfterSwitch) - 0;
-		var year1 = new EVCfx(-1, 0 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year2 = new EVCfx(-1, 1 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year3 = new EVCfx(-1, 2 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year4 = new EVCfx(-1, 3 + start, EVC.DefaultData.kmDrivenPerDay);
-		var year5 = new EVCfx(-1, 4 + start, EVC.DefaultData.kmDrivenPerDay);
+		var start = parseInt(EVC.ActualData.yearsAfterSwitch) - 0;
+		var year1 = new EVCfx(-1, 0 + start, EVC.ActualData.kmDrivenPerDay);
+		var year2 = new EVCfx(-1, 1 + start, EVC.ActualData.kmDrivenPerDay);
+		var year3 = new EVCfx(-1, 2 + start, EVC.ActualData.kmDrivenPerDay);
+		var year4 = new EVCfx(-1, 3 + start, EVC.ActualData.kmDrivenPerDay);
+		var year5 = new EVCfx(-1, 4 + start, EVC.ActualData.kmDrivenPerDay);
 		var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit() + year4.totalProfit() + year5.totalProfit();
 		var restValue = year5.equityImprovementAtEndOfYear();
 		return totalProfit + restValue;
 	},
 
 	plusFiveThousand: function(){
-		var newDistance = parseFloat(EVC.DefaultData.kmDrivenPerDay) + (5000/365);
+		var newDistance = parseFloat(EVC.ActualData.kmDrivenPerDay) + (5000/365);
 		var year1 = new EVCfx(-1, -1, newDistance);
 		return year1.totalProfit();
 	},
 
 	minusFiveThousand: function(){
-		var year1 = new EVCfx(-1, -1, parseFloat(EVC.DefaultData.kmDrivenPerDay) - (5000 / 365));
+		var year1 = new EVCfx(-1, -1, parseFloat(EVC.ActualData.kmDrivenPerDay) - (5000 / 365));
 		return year1.totalProfit();
 	},
 
 	inThreeYearsTime: function(){
-		var year1 = new EVCfx(3 + parseInt(EVC.DefaultData.yearsBeforeSwitch), -1, parseFloat(EVC.DefaultData.kmDrivenPerDay));
+		var year1 = new EVCfx(3 + parseInt(EVC.ActualData.yearsBeforeSwitch), -1, parseFloat(EVC.ActualData.kmDrivenPerDay));
 		//return year1.debug();
 		return year1.totalProfit();
 	}
@@ -1050,6 +1121,40 @@ EVC.DataDescription = {
 };
 
 
+Number.prototype.formatMoney = function(c, d, t){
+	var n = this,
+	c = isNaN(c = Math.abs(c)) ? (Math.abs(n) < 5  && n != 0? 2 : 0) : c,
+	d = d == undefined ? "." : d,
+	t = t == undefined ? "," : t,
+	s = n < 0 ? "-" : "",
+	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+	j = (j = i.length) > 3 ? j % 3 : 0;
+	return s + "$" + (j ? i.substr(0, j) + t : "") +  i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+Number.prototype.formatPercentage = function(){
+	var n = this;
+	return n + "%";
+};
+
+Number.prototype.formatNumber = function() {
+	var n = this;
+	n = Math.round(n, 2)
+	return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
+/******************************************************************
+ * DATA
+ *
+ *
+ *
+ *
+ */
+
+
+
+
 EVC.DefaultData = {
 
 	/* key assumptions */
@@ -1096,27 +1201,50 @@ EVC.DefaultData = {
 
 };
 
+EVC.ActualData = EVC.cloneObject(EVC.DefaultData);
 
+EVC.DefaultDataMinMax = {
 
+	/* key assumptions */
+	CVValueToday:                            [0, 40000],
+	kmDrivenPerDay:                          [0, 100],
 
-Number.prototype.formatMoney = function(c, d, t){
-	var n = this,
-	c = isNaN(c = Math.abs(c)) ? (Math.abs(n) < 5  && n != 0? 2 : 0) : c,
-	d = d == undefined ? "." : d,
-	t = t == undefined ? "," : t,
-	s = n < 0 ? "-" : "",
-	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
-	j = (j = i.length) > 3 ? j % 3 : 0;
-	return s + "$" + (j ? i.substr(0, j) + t : "") +  i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+	/* play around assumptions */
+	daysWithContinuousTripsOver100Km:        [0, 50],
+	yearsBeforeSwitch:                       [0,10],
+	yearsAfterSwitch:                        [0,10],
+
+	/* other assumptions */
+	amountOfCurrentCarAsLoan:                [0,10000],
+	minimumCostElectricVehicle:              [18000,36000],
+	upgradeCostToGoElectric:                 [0,100],
+	EVValueImprovementPerYearPercentage:     [0,50],
+	setupChargeStation:                      [0,5000],
+	saleCostForCarInPercentage:              [0,25],
+	purchaseCostForCarInPercentage:          [0,25],
+	financingCostInPercentage:               [0,20],
+	principalRepaymentsPerYearPercentage:    [0,50],
+	costOfPetrolPerLitre:                    [1.00,3.50],
+	costOfElectricityPerKwH:                 [0.05,0.5],
+	fuelEfficiencyCV:                        [5,30],
+	fuelEfficiencyEV:                        [1,0],
+	fuelEfficiencyRentalCar:                 [5,30],
+	insuranceBaseCost:                       [0,1000],
+	insuranceCostPerThousand:                [0,200],
+	averageKmsPerTyre:                       [20000,80000],
+	tyreCostCV:                              [50,300],
+	tyreCostEV:                              [50,300],
+	licenseWOFCostCVPerYear:                 [0,1000],
+	licenseWOFCostEVPerYear:                 [0,1000],
+	maintenanceCVPerTenThousandKm:           [50,500],
+	maintenanceEVPerTenThousandKm:           [50,500],
+	depreciationRatePerYearCV:               [10,40],
+	depreciationRatePerYearEV:               [10,40],
+	costPerDayRentalCar:                     [10,100],
+	kilometresPerDayForLongTrips:            [100,2000],
+	subsidyPaymentFixed:                     [0,15000],
+	subsidyPaymentPerKM:                     [0,0.50],
+	personalContributionFixed:               [0,15000],
+	personalContributionPerKM:               [0,0.50]
 };
 
-Number.prototype.formatPercentage = function(){
-	var n = this;
-	return n + "%";
-};
-
-Number.prototype.formatNumber = function() {
-	var n = this;
-	n = Math.round(n, 2)
-	return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
