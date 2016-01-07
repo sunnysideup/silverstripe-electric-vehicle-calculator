@@ -249,6 +249,8 @@
 			<li>formatting of total profit bar on smallest screen</li>
 			<li>add explanation at the top</li>
 			<li>create more space at the top for total profit bar</li>
+			<li>add settings for max electric car value</li>
+			<li>add settings for unexpected repair cost</li>
 
 	</form>
 	</div>
