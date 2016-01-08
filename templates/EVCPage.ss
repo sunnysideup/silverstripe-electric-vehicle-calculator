@@ -23,14 +23,14 @@
 		<fieldset id="KeyAssupmptions"></fieldset>
 
 		<div id="ProfitAndLoss">
-		<p class="message good">Income / Loss five years after going electric: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
+		<p class="message good">Income / Loss five <span class="straightFillers" data-fx="profitLossDate">five years from now</span>: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
 		</div>
 		
 
 		<fieldset id="PlayAroundAssumptions"></fieldset>
 
 		<fieldset id="ResultTableHolder">
-			<h2>detailed results for a year</h2>
+			<h2>detailed results for year <span class="straightFillers" data-fx="resultsTableYear"></span></h2>
 			<table>
 				<thead>
 					<tr class="header summary">

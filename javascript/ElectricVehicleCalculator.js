@@ -102,6 +102,7 @@ var EVCfx = function(
 
 	kmDrivenPerDay = kmDrivenPerDay == undefined || kmDrivenPerDay == -1  ? EVC.ActualData.kmDrivenPerDay : kmDrivenPerDay;
 
+
 	/* getters and setters */
 	this.updateYearsBeforeSwitch = function(newValue){
 		yearsBeforeSwitch = newValue;
@@ -116,6 +117,9 @@ var EVCfx = function(
 	};
 
 	/* calculations */
+
+
+		
 	this.setupCost = function(carType){
 		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
@@ -174,6 +178,19 @@ var EVCfx = function(
 	};
 
 	/**
+	 * what is the maximum price you pay for an electric vehicle when you purchase it?
+	 */
+	this.maximumCostElectricVehicleAtYearOfSwitch = function(carType){
+		var maximum = EVC.ActualData.maximumCostElectricVehicle;
+		if(yearsBeforeSwitch > 0) {
+			for(var i = yearsBeforeSwitch; i > 0; i--) {
+				maximum = maximum - (maximum * (EVC.ActualData.EVValueImprovementPerYearPercentage / 100));
+			}
+		}
+		return maximum;
+	};
+
+	/**
 	 * how much do you sell your current car for?
 	 */
 	this.salePrice = function(carType) {
@@ -199,6 +216,7 @@ var EVCfx = function(
 		if(carType == "e") {
 			var value = this.currentCarValueAtTimeOfSale(carType);
 			var minimum = this.minimumCostElectricVehicleAtYearOfSwitch(carType);
+			var maximum = this.maximumCostElectricVehicleAtYearOfSwitch(carType);
 			var upgradeRate = (EVC.ActualData.upgradeCostToGoElectric / 100);
 			//to do: which one should come first... value improvement or upgrade cost?
 			//the e value improvements in the future ...
@@ -216,6 +234,9 @@ var EVCfx = function(
 			value = value + (value * (EVC.ActualData.purchaseCostForCarInPercentage / 100));
 			if(value < minimum) {
 				value = minimum;
+			}
+			if(value > maximum) {
+				value = maximum;
 			}
 			return value;
 		}
@@ -544,6 +565,7 @@ var EVCfx = function(
 			"depreciationRate",
 			"currentCarValueAtTimeOfSale",
 			"minimumCostElectricVehicleAtYearOfSwitch",
+			"maximumCostElectricVehicleAtYearOfSwitch",
 			"salePrice",
 			"salePriceExSalesCost",
 			"purchasePrice",
@@ -695,6 +717,14 @@ EVC.HTMLInteraction = {
 				}
 			}
 		);
+		jQuery(".straightFillers").each(
+			function(i, el) {
+				var method = jQuery(el).attr("data-fx");
+				//console.debug(method);
+				var value = EVC.scenarios[method]();
+				jQuery(el).text(value);
+			}
+		)
 	},
 
 	populateLinks: function() {
@@ -845,7 +875,10 @@ EVC.HTMLInteraction = {
 				//remove comma and $ ...
 				value = parseFloat(value.replace(/\$|,/g, ''));
 				if(isNaN(value)) {
-					value = defaultValue;
+					value = EVC.ActualData[key];
+					if(isNaN(value)) {
+						value = defaultValue;
+					}
 				}
 				else {
 					var currentID = jQuery(elOrValue).attr("id");
@@ -867,6 +900,13 @@ EVC.HTMLInteraction = {
 			else {
 				jQuery(labelSelector).text(labelValue);
 				jQuery(holderSelector).removeClass("changed");
+			}
+			//smart numbers
+			if(key == "kmDrivenPerDay") {
+				if((value / 365) > 3) {
+					value = Math.round(value / 365);
+					currentID = "";
+				}
 			}
 			//update fields
 			if(fieldID != currentID) {
@@ -1009,7 +1049,30 @@ EVC.scenarios = {
 		var year1 = new EVCfx(3 + parseInt(EVC.ActualData.yearsBeforeSwitch), -1, parseFloat(EVC.ActualData.kmDrivenPerDay));
 		//return year1.debug();
 		return year1.totalProfit();
-	}
+	},
+
+
+	profitLossDate: function(){
+		var now = new Date();
+		var maturityDate = new Date();
+		maturityDate.setYear(now.getFullYear() + 5  + EVC.ActualData.yearsBeforeSwitch + EVC.ActualData.yearsAfterSwitch);
+		var day = maturityDate.getDate();
+		var monthIndex = maturityDate.getMonth();
+		var year = maturityDate.getFullYear();
+		return " on " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+	},
+
+	resultsTableYear: function(){
+		var now = new Date();
+		var maturityDate = new Date();
+		maturityDate.setYear(now.getFullYear() + EVC.ActualData.yearsBeforeSwitch + EVC.ActualData.yearsAfterSwitch);
+		var day = maturityDate.getDate();
+		var monthIndex = maturityDate.getMonth();
+		var year = maturityDate.getFullYear();
+		return " starting " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+	},
+
+	monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 }
 
@@ -1028,6 +1091,7 @@ EVC.DataDescription = {
 
 	otherAssumptionKeys: {
 		"minimumCostElectricVehicle":           "currency",
+		"maximumCostElectricVehicle":           "currency",
 		"upgradeCostToGoElectric":              "percentage",
 		"EVValueImprovementPerYearPercentage":  "percentage",
 		"setupChargeStation":                   "currency",
@@ -1070,6 +1134,7 @@ EVC.DataDescription = {
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "Current Car: Borrowed Amount",
 		minimumCostElectricVehicle:             "Electric Car: Minimum Purchase Price",
+		maximumCostElectricVehicle:             "Electric Car: Maximum Purchase Price",
 		upgradeCostToGoElectric:                "Premium for Electrical Car",
 		EVValueImprovementPerYearPercentage:    "Relative Value Improvement per Year for Electric Cars",
 		setupChargeStation:                     "Infrastructure Set Up",
@@ -1103,8 +1168,8 @@ EVC.DataDescription = {
 
 	desc: {
 		/* key assumptions s */
-		CVValueToday:                           "The price at which you can sell your car today without taking into consideration the cost of the sale (e.g. auction cost)",
-		kmDrivenPerDay:                         "Approximate kilometers you drive per day. Consider weekends and weekdays. You might be able to add up all the KMs you drive Mon-Fri and separately for Saturday and Sunday. After that, add all of them and divide by seven.",
+		CVValueToday:                           "The price at which you can sell your current car today.",
+		kmDrivenPerDay:                         "Approximate kilometers you drive per day or year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
 		/* play around assumptions */
 		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week)",
 		yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
@@ -1112,6 +1177,7 @@ EVC.DataDescription = {
 		/* other assumptions */
 		amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
 		minimumCostElectricVehicle:             "Minimum price for an electric vehicle at the moment. Because electric cars are relatively new, there are few older models and depreciated cars, therefore a minimum price may apply.",
+		maximumCostElectricVehicle:             "Maximum price for an electric vehicle at the moment. In general, the calculator tries to match your current car with an electric car of a similar value, but this number is limited up to the new price of an electric vehicle.",
 		upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
 		EVValueImprovementPerYearPercentage:    "The expected amount of relative cost improvements of electric vehicles as compared to conventional cars powered by oil based fuel for each year.",
 		setupChargeStation:                     "The cost of setting up a charging station at your home (or work) to charge your electric car. If your home has a garage with a plug then the cost could be zero.",
@@ -1205,8 +1271,9 @@ EVC.DefaultData = {
 	/* other assumptions */
 	amountOfCurrentCarAsLoan:                0,
 	minimumCostElectricVehicle:          18000,
-	upgradeCostToGoElectric:                50,
-	EVValueImprovementPerYearPercentage:    20,
+	maximumCostElectricVehicle:          36000,
+	upgradeCostToGoElectric:                30,
+	EVValueImprovementPerYearPercentage:     5,
 	setupChargeStation:                    300,
 	saleCostForCarInPercentage:              7,
 	purchaseCostForCarInPercentage:          3,
@@ -1252,7 +1319,8 @@ EVC.DefaultDataMinMax = {
 
 	/* other assumptions */
 	amountOfCurrentCarAsLoan:                [0,10000],
-	minimumCostElectricVehicle:              [18000,36000],
+	minimumCostElectricVehicle:              [12000,36000],
+	maximumCostElectricVehicle:              [18000,48000],
 	upgradeCostToGoElectric:                 [0,100],
 	EVValueImprovementPerYearPercentage:     [0,50],
 	setupChargeStation:                      [0,5000],
