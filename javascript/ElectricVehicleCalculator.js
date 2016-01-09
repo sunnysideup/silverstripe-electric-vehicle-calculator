@@ -702,7 +702,7 @@ EVC.HTMLInteraction = {
 						var htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
 					}
 					else {
-						var htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
+						var htmlValue = "<span class=\"positiveNumber\">+"+formattedValue+"</span>";
 					}
 					if(typeof numberValue === "number") {
 						jQuery(el).html(htmlValue);
@@ -1051,6 +1051,15 @@ EVC.scenarios = {
 		return year1.totalProfit();
 	},
 
+	switchDate: function(){
+		var now = new Date();
+		var maturityDate = new Date();
+		maturityDate.setYear(now.getFullYear() + EVC.ActualData.yearsBeforeSwitch);
+		var day = maturityDate.getDate();
+		var monthIndex = maturityDate.getMonth();
+		var year = maturityDate.getFullYear();
+		return " on " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+	},
 
 	profitLossDate: function(){
 		var now = new Date();

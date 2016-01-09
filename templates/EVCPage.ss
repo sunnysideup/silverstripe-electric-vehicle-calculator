@@ -23,7 +23,9 @@
 		<fieldset id="KeyAssupmptions"></fieldset>
 
 		<div id="ProfitAndLoss">
-		<p class="message good">Income / Loss five <span class="straightFillers" data-fx="profitLossDate">five years from now</span>: <span class="calcVal" data-fx="fiveYearProfit"></span></p>
+			<p class="message good">
+				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span> your gain / loss on <span class="straightFillers" data-fx="profitLossDate">five years from now</span> will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
+			</p>
 		</div>
 		
 
