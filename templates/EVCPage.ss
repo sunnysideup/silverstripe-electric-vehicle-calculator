@@ -24,7 +24,7 @@
 
 		<div id="ProfitAndLoss">
 			<p class="message good">
-				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span> your gain / loss on <span class="straightFillers" data-fx="profitLossDate">five years from now</span> will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
+				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>, your gain / loss on <span class="straightFillers" data-fx="profitLossDate">five years from now</span> will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
 			</p>
 		</div>
 		

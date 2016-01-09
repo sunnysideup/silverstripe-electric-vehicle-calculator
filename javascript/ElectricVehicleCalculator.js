@@ -1178,7 +1178,7 @@ EVC.DataDescription = {
 	desc: {
 		/* key assumptions s */
 		CVValueToday:                           "The price at which you can sell your current car today.",
-		kmDrivenPerDay:                         "Approximate kilometers you drive per day or year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
+		kmDrivenPerDay:                         "Approximate kilometers you drive per day or per year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
 		/* play around assumptions */
 		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week)",
 		yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
