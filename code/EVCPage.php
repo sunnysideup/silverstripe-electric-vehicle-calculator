@@ -13,7 +13,9 @@ class EVCPage_Controller extends Page_Controller {
 		"show" => true,
 		"save" => true,
 		"retrieve" => true,
-		"reset" => true
+		"reset" => true,
+		"list" => true,
+		"lock" => true
 	);
 
 	function init(){
@@ -31,6 +33,13 @@ class EVCPage_Controller extends Page_Controller {
 		}
 		return $this->redirect($this->Link("show/".$code."/"));
 	}
+
+	function Title(){
+		if($this->evcDataSet){
+			return $this->evcDataSet->Title;
+		}
+	}
+	function MetaTitle(){
 
 	function show($request){
 		$code = $request->param("ID");
@@ -87,6 +96,26 @@ class EVCPage_Controller extends Page_Controller {
 		Session::set("EVCLastCode", "");
 		Session::clear("EVCLastCode");
 		return $this->redirect($this->Link());
+	}
+
+	function list($request){
+		die("show list of saved items here");
+	}
+
+	/**
+	 * ajax method ...
+	 *
+	 */
+	function lock($request){
+		$code = $request->param("ID");
+		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
+		if($this->evcDataSet && $this->evcDataSet->exists()) {
+			$this->evcDataSet->Locked = true;
+			$title = Convert::raw2sql($request->getVar("title"));
+			$this->evcDataSet->Title = Convert::raw2sql($title);
+			$this->evcDataSet->write();
+			return $this->AbsoluteLink($this->evcDataSet->Link("retrieve"));
+		}
 	}
 
 	function EVCDataSet(){

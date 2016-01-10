@@ -25,8 +25,10 @@ class EVCDataSet extends DataObject {
 	}
 
 	private static $db = array(
+		"Title" => "Varchar(255)",
 		"Code" => "Varchar(7)",
 		"IP" => "Varchar(15)",
+		"Locked" => "Boolean",
 		"Data" => "Text"
 	);
 

@@ -49,9 +49,23 @@ var EVC = {
 		return "";
 	},
 
-	shareLink: function(){
+	retrieveLink: function(){
 		if(this.workableLinks()) {
 			return this.baseLink+"retrieve/"+this.serverKey+"/";
+		}
+		return "";
+	},
+
+	lockLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"lock/"+this.serverKey+"/";
+		}
+		return "";
+	},
+
+	listLink: function(){
+		if(this.workableLinks()) {
+			return this.baseLink+"list/";
 		}
 		return "";
 	},
@@ -636,6 +650,7 @@ EVC.HTMLInteraction = {
 		//this.populateResultTable();
 		//this.populateCalculations();
 		//this.populateLinks();
+		this.setupLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
 	},
@@ -743,14 +758,47 @@ EVC.HTMLInteraction = {
 		)
 	},
 
+	setupLinks: function() {
+		jQuery(".saveLink").each(
+			function(i, el){
+				jQuery(el).attr("data-default-href", jQuery(el).attr("href"));
+			}
+		);
+		jQuery("#ResetLink").attr("href", EVC.resetLink());
+	},
+	
 	populateLinks: function() {
 		if(EVC.workableLinks()) {
-			jQuery("#ShareLink").attr("href", "mailto:?subject="+encodeURIComponent("I want an Electric Car")+"&body="+encodeURIComponent("Please visit: "+EVC.shareLink()));
-			jQuery("#ResetLink").attr("href", EVC.resetLink());
+			
+			var followLink = "";
+			jQuery(".saveLink").click(
+				function(event){
+					var answer = prompt("Please enter title for your calculations");
+					answer = encodeURIComponent(answer);
+					jQuery.ajax({
+						method: "GET",
+						url: EVC.lockLink(),
+						data: { "title": answer },
+						cache: false
+					})
+					.done(function( returnedFollowLink ) {
+							followLink = returnedFollowLink;
+							var oldHref = jQuery(el).attr("data-default-href");
+							var newHref = oldHref.replace("[LINK]", returnedFollowLink);
+							jQuery(el).attr("href", newHref);
+					})
+					.fail(function( jqXHR, textStatus ) {
+							alert( "Error in application - link can not be shared: " + textStatus );
+					});
+					if(followLink) {
+						return true;
+					}
+					return false;
+				}
+			);
 		}
 		else {
-			jQuery("#ShareLink").hide();
-			jQuery("#ResetLink").attr("#");
+			jQuery(".saveLink").hide();
 		}
 	},
 
@@ -1091,7 +1139,7 @@ EVC.scenarios = {
 		var day = maturityDate.getDate();
 		var monthIndex = maturityDate.getMonth();
 		var year = maturityDate.getFullYear();
-		return " in " + this.monthNames[monthIndex].substring(0,3) + ". " + year + " ";
+		return " in " + this.monthNames[monthIndex].substring(0,3) + ". " + year;
 	},
 
 	profitLossDate: function(){
@@ -1101,7 +1149,7 @@ EVC.scenarios = {
 		var day = maturityDate.getDate();
 		var monthIndex = maturityDate.getMonth();
 		var year = maturityDate.getFullYear();
-		return " on " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+		return " on " + day + " " + this.monthNames[monthIndex] + " " + year;
 	},
 
 	resultsTableYear: function(){
@@ -1111,7 +1159,7 @@ EVC.scenarios = {
 		var day = maturityDate.getDate();
 		var monthIndex = maturityDate.getMonth();
 		var year = maturityDate.getFullYear();
-		return " starting " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+		return " starting " + day + " " + this.monthNames[monthIndex] + " " + year;
 	},
 
 	checkInfluence: function(){
@@ -1315,7 +1363,7 @@ EVC.DataDescription = {
 		CVValueToday:                           "The price at which you can sell your current car today.",
 		kmDrivenPerDay:                         "Approximate kilometers you drive per day or per year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
 		/* play around assumptions */
-		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week)",
+		daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week). On these big days you will rent a car so that you can cover larger distances.",
 		yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
 		yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
 		/* other assumptions */
