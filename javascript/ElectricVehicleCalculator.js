@@ -117,7 +117,14 @@ var EVCfx = function(
 	};
 
 	/* calculations */
-
+	this.hasCar = function(carType) {
+		if(carType == "f") {
+			return EVC.ActualData.CVValueToday > 100 ? true : false;
+		}
+		else {
+			return true;
+		}
+	};
 
 		
 	this.setupCost = function(carType){
@@ -398,16 +405,19 @@ var EVCfx = function(
 	};
 
 	this.actualAnnualKmsPerDay = function(carType){
-		if(carType == "e") {
-			var totalValue = kmDrivenPerDay - ((EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips) / 365);
+		if(this.hasCar(carType)) {
+			if(carType == "e") {
+				var totalValue = kmDrivenPerDay - ((EVC.ActualData.daysWithContinuousTripsOver100Km * EVC.ActualData.kilometresPerDayForLongTrips) / 365);
+			}
+			else {
+				var totalValue = kmDrivenPerDay;
+			}
+			if(totalValue < 0) {
+				totalValue = 0;
+			}
+			return totalValue;
 		}
-		else {
-			var totalValue = kmDrivenPerDay;
-		}
-		if(totalValue < 0) {
-			totalValue = 0;
-		}
-		return totalValue;
+		return 0;
 	};
 
 	this.actualAnnualKms = function(carType){
@@ -446,7 +456,7 @@ var EVCfx = function(
 	};
 
 	this.tyreCost = function(carType) {
-		var tyresNeeded = this.actualAnnualKms(carType)  / EVC.ActualData.averageKmsPerTyre;
+		var tyresNeeded = (this.actualAnnualKms(carType)  / EVC.ActualData.averageKmsPerTyre) * 4;
 		if(carType == "e") {
 			return tyresNeeded * EVC.ActualData.tyreCostEV;
 		}
@@ -457,11 +467,11 @@ var EVCfx = function(
 
 	this.repairCost = function(carType){
 		var valueStartOfTheYear = this.valueStartOfTheYear(carType);
-		var kmMultiplier = (this.actualAnnualKms(carType) / 5000)
+		var kmMultiplier = (this.actualAnnualKms(carType) / EVC.ActualData.repairKMDivider)
 		var total = 0
-		var valueMultiplier = ((valueStartOfTheYear - 7000) * -1) / 200;
+		var valueMultiplier = ((valueStartOfTheYear - EVC.ActualData.maxCarValueForRepairs) * -1) / EVC.ActualData.valueDividerForRepairCalculation;
 		if(valueMultiplier > 0) {
-			total = Math.pow(valueMultiplier, 2) *  kmMultiplier;
+			total = Math.pow(valueMultiplier, EVC.ActualData.exponentialGrowthFactorForRepairs) *  kmMultiplier;
 		}
 		return total;
 	};
@@ -561,6 +571,7 @@ var EVCfx = function(
 
 	this.debug = function(){
 		var methodArray = [
+			"hasCar",
 			"setupCost",
 			"depreciationRate",
 			"currentCarValueAtTimeOfSale",
@@ -622,9 +633,9 @@ EVC.HTMLInteraction = {
 		this.buildKeyAssumptionForm();
 		this.buildPlayAroundAssumptionForm();
 		this.buildOtherAssumptionsForm();
-		this.populateResultTable();
-		this.populateCalculations();
-		this.populateLinks();
+		//this.populateResultTable();
+		//this.populateCalculations();
+		//this.populateLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
 	},
@@ -661,7 +672,12 @@ EVC.HTMLInteraction = {
 				var method = jQuery(el).attr("data-fx");
 				var carType = jQuery(el).attr("data-type");
 				if(method && carType) {
-					var value = EVC.myData[method](carType);
+					if(EVC.myData.hasCar(carType) == true) {
+						var value = EVC.myData[method](carType);
+					}
+					else {
+						var value = 0;
+					}
 					var numberValue = parseFloat(value);
 					if(typeof numberValue === "number") {
 						format = EVC.DataDescription["alternativeFormatsForFxs"][method];
@@ -782,6 +798,7 @@ EVC.HTMLInteraction = {
 				var holderID = key + "Holder";
 				var fieldID = key + "Field";
 				var rangeFieldID = key + "FieldRange";
+				var influencerID = key + "Influence";
 				var unformattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, false);
 				var formattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, true);
 				var min = EVC.DefaultDataMinMax[key][0];
@@ -794,7 +811,7 @@ EVC.HTMLInteraction = {
 				html += "\t<label for=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.hideDesc('"+key+"')\"\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\"  onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" "+readOnly+" />";
+				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.clickInput('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" "+readOnly+" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -847,6 +864,12 @@ EVC.HTMLInteraction = {
 		return value;
 	},
 
+	clickInput: function(key, el) {
+		jQuery(el).removeAttr("readonly");
+		jQuery(el).focus();
+		return true;
+	},
+
 	inputReady: function(key, el) {
 		//var val = jQuery(el).val();
 		//jQuery(el).attr("placeholder", val)
@@ -869,8 +892,10 @@ EVC.HTMLInteraction = {
 			var labelSelector = "#"+key+"Holder label[for='"+fieldID+"'] strong";
 			var defaultValue = EVC.DefaultData[key];
 			var currentID = "";
+			var updateScreen = false;
 			//does it need cleaning?
 			if(isNaN(elOrValue)) {
+				updateScreen = true;
 				var value = jQuery(elOrValue).val();
 				//remove comma and $ ...
 				value = parseFloat(value.replace(/\$|,/g, ''));
@@ -934,6 +959,7 @@ EVC.HTMLInteraction = {
 				});
 				//save locally...
 			}
+			//set data ...
 			EVC.ActualData[key] = value;
 			//special exception ..
 			if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
@@ -948,7 +974,9 @@ EVC.HTMLInteraction = {
 				}
 			}
 			//update HTML
-			this.updateScreen();
+			if(updateScreen) {
+				this.updateScreen();
+			}
 			this.updateInProgress = false;
 		}
 	},
@@ -967,6 +995,7 @@ EVC.HTMLInteraction = {
 	},
 
 	updateScreen: function(){
+		console.debug("=========================");
 		this.populateResultTable();
 		this.populateCalculations();
 		this.populateLinks();
@@ -979,6 +1008,7 @@ EVC.HTMLInteraction = {
 		//else {
 		//	
 		//}
+		EVC.scenarios.checkInfluence();
 	},
 
 	setMyValue: function(key, item){
@@ -1002,11 +1032,15 @@ EVC.HTMLInteraction = {
 		var elemBottom = elemTop + $elem.height();
 
 		return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-	}	
+	},
+
+
 
 };
 
 EVC.scenarios = {
+
+	monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 
 	totalProfit: function(){
 		return EVC.myData.totalProfit() + EVC.myData.equityImprovementAtEndOfYear();
@@ -1023,12 +1057,11 @@ EVC.scenarios = {
 	},
 
 	fiveYearProfit: function(){
-		var start = parseInt(EVC.ActualData.yearsAfterSwitch) - 0;
-		var year1 = new EVCfx(-1, 0 + start, EVC.ActualData.kmDrivenPerDay);
-		var year2 = new EVCfx(-1, 1 + start, EVC.ActualData.kmDrivenPerDay);
-		var year3 = new EVCfx(-1, 2 + start, EVC.ActualData.kmDrivenPerDay);
-		var year4 = new EVCfx(-1, 3 + start, EVC.ActualData.kmDrivenPerDay);
-		var year5 = new EVCfx(-1, 4 + start, EVC.ActualData.kmDrivenPerDay);
+		var year1 = new EVCfx(-1, 0, EVC.ActualData.kmDrivenPerDay);
+		var year2 = new EVCfx(-1, 1, EVC.ActualData.kmDrivenPerDay);
+		var year3 = new EVCfx(-1, 2, EVC.ActualData.kmDrivenPerDay);
+		var year4 = new EVCfx(-1, 3, EVC.ActualData.kmDrivenPerDay);
+		var year5 = new EVCfx(-1, 4, EVC.ActualData.kmDrivenPerDay);
 		var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit() + year4.totalProfit() + year5.totalProfit();
 		var restValue = year5.equityImprovementAtEndOfYear();
 		return totalProfit + restValue;
@@ -1058,13 +1091,13 @@ EVC.scenarios = {
 		var day = maturityDate.getDate();
 		var monthIndex = maturityDate.getMonth();
 		var year = maturityDate.getFullYear();
-		return " on " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
+		return " in " + this.monthNames[monthIndex].substring(0,3) + ". " + year + " ";
 	},
 
 	profitLossDate: function(){
 		var now = new Date();
 		var maturityDate = new Date();
-		maturityDate.setYear(now.getFullYear() + 5  + EVC.ActualData.yearsBeforeSwitch + EVC.ActualData.yearsAfterSwitch);
+		maturityDate.setYear(now.getFullYear() + 5  + EVC.ActualData.yearsBeforeSwitch);
 		var day = maturityDate.getDate();
 		var monthIndex = maturityDate.getMonth();
 		var year = maturityDate.getFullYear();
@@ -1081,8 +1114,102 @@ EVC.scenarios = {
 		return " starting " + day + " " + this.monthNames[monthIndex] + " " + year + " ";
 	},
 
-	monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
+	checkInfluence: function(){
+		EVC.ActualData.influence = {};
+		var list = EVC.DataDescription.otherAssumptionKeys;
+		var startingFromZero = false;
+		var currentValue = 0;
+		var actualValueInc = 0;
+		var actualValueDec = 0;
+		var totalProfitInc = 0;
+		var totalProfitDec = 0;
+		var plusTenPercentMultiplier = 1.05;
+		var minusTenPercentMultiplier = (1 / (plusTenPercentMultiplier));
+		var defaultProfit = this.fiveYearProfit();
+		var holderID = "";
+		var influencerID = "";
+		var percentage = 0;
+		var html = "";
+		var changeDescription = "";
+		for (var key in list) {
+			if (list.hasOwnProperty(key)) {
+				holderID = key + "Holder";
+				influencerID = key + "Influence";
+				currentValue = EVC.ActualData[key];
+				if(currentValue != 0) {
+					startingFromZero = false;
+					if(currentValue == 0) {
+						startingFromZero = true;
+						var minValue = EVC.DefaultDataMinMax[key][0];
+						var maxValue = EVC.DefaultDataMinMax[key][1];
+						var avgValueTemp = 0 + (maxValue - minValue) / 2;
+						actualValueTempInc = avgValueTemp * plusTenPercentMultiplier;
+						actualValueTempDec = avgValueTemp * minusTenPercentMultiplier;
+						actualValueInc = actualValueTempInc - actualValueTempDec;
+						actualValueDec = 0;
+					}
+					else {
+						avgValue = currentValue;
+					}
+					actualValueInc = avgValue * plusTenPercentMultiplier;
+					actualValueDec = avgValue * minusTenPercentMultiplier;
+					//calculate +10%
+					EVC.ActualData[key] = actualValueInc;
+					totalProfitInc = this.fiveYearProfit();
+					//calculate +10%
+					EVC.ActualData[key] = actualValueDec;
+					totalProfitDec = this.fiveYearProfit();
+					// start reset #######################
+					EVC.ActualData[key] = currentValue;
+					// end reset #######################
+					//calculate results
+					percentage = Math.abs(totalProfitInc / totalProfitDec);
+					if(EVC.debug) {
+						var check = this.fiveYearProfit();
+						console.debug(key + "(" + Math.round(defaultProfit)+ ")" + "["+Math.round(actualValueDec)+","+Math.round(actualValueInc)+"]: " + Math.round(totalProfitDec)+", "+ Math.round(totalProfitInc)+ " = "+ Math.round(percentage * 100) / 100);
+						if(defaultProfit != check) {
+							console.debug("ERROR!: " + key + defaultProfit - check);
+						}
+					}
+					if(percentage > 1.1 || percentage < (1/1.1)) {
+						//make sure all are in the same direction ... 
+						if(percentage < 1) {
+							percentage = 1 / percentage; 
+						}
+						percentage--;
+						EVC.ActualData.influence[key] = [percentage];
+						percentageTimesHundred = (percentage * 100);
+						if(startingFromZero) {
+							changeDescription = " to around "+EVC.HTMLInteraction.formatValue(key, (actualValueInc-actualValueDec));
+						}
+						else {
+							changeDescription = " by "+(Math.round((plusTenPercentMultiplier-1)*100)*2)+"%";
+						}
+						html = "<div id="+influencerID+" class=\"influence\">";
+						html += "\t <em>you can change the overall outcome by "+Math.round(percentageTimesHundred)+"% by changing this value "+changeDescription+"</em>";
+						html += "\t <span style=\"width: "+(percentageTimesHundred)+"%\"></span>";
+						html += "</div>";
+						jQuery("#" + influencerID).remove();
+						jQuery("#" + holderID).append(html);
+					}
+				}
+				else {
+					jQuery("#" + key + "Holder").remove("#"+influencerID);
+				}
+				startingFromZero = false;
+				currentValue = 0;
+				actualValueInc = 0;
+				actualValueDec = 0;
+				totalProfitInc = 0;
+				totalProfitDec = 0;
+				holderID = "";
+				influencerID = "";
+				percentage = 0;
+				html = "";
+				changeDescription = "";
+			}
+		}
+	}
 }
 
 EVC.DataDescription = {
@@ -1122,6 +1249,10 @@ EVC.DataDescription = {
 		"licenseWOFCostEVPerYear":              "currency",
 		"maintenanceCVPerTenThousandKm":        "currency",
 		"maintenanceEVPerTenThousandKm":        "currency",
+		"repairKMDivider":                      "number",
+		"maxCarValueForRepairs":                   "currency",
+		"exponentialGrowthFactorForRepairs":    "number",
+		"valueDividerForRepairCalculation":     "number",
 		"depreciationRatePerYearCV":            "percentage",
 		"depreciationRatePerYearEV":            "percentage",
 		"costPerDayRentalCar":                  "currency",
@@ -1165,6 +1296,10 @@ EVC.DataDescription = {
 		licenseWOFCostEVPerYear:                "Electric Car: License and WOF per Year",
 		maintenanceCVPerTenThousandKm:          "Current Car: Service per 10,000kms",
 		maintenanceEVPerTenThousandKm:          "Electric Car: Service per 10,000kms",
+		repairKMDivider:                        "KM divider for unexpected repairs",
+		maxCarValueForRepairs:                  "Car value where unexpected repairs start",
+		exponentialGrowthFactorForRepairs:      "Exponential unexpected repairs growth factor",
+		valueDividerForRepairCalculation:       "Inverse value unexpected value divider",
 		depreciationRatePerYearCV:              "Current Car: Depreciation rate per Year",
 		depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year",
 		costPerDayRentalCar:                    "Cost per Day for Rental Car",
@@ -1208,14 +1343,18 @@ EVC.DataDescription = {
 		licenseWOFCostEVPerYear:                "The total amount of licensing and testing charges and fees for an electric car, per year.",
 		maintenanceCVPerTenThousandKm:          "The total service cost for your current car per 10,000km.  For this, you may include the replacements of parts that are expected in older parts (e.g. Cam Belt, Radiator, etc...)",
 		maintenanceEVPerTenThousandKm:          "The total service cost for your electric car per 10,000km. ",
+		repairKMDivider:                        "A number used to divide the number of KMs per year. From there this number is used as a unexpected repair multiplier to basically ensure that the more you drive, the more unexpected repair cost you may have.  A typical value is 40,000.",
+		maxCarValueForRepairs:                  "The value of the car when unexpected repairs start.  For example, if set to $5,000, unexpected repairs start once the car is worth less than $5,000.",
+		exponentialGrowthFactorForRepairs:      "This is a number between 1 and 3 that is used to exponentially increase the unexpected repair cost as the value of the car decreases.",
+		valueDividerForRepairCalculation:       "When working out the unexpected repair cost for the car, we take the inverse value of the car relative to the maximum value at which repairs start.  Thus, for example, if the maximum value at which unexpected repairs start is $5000, then the inverse value increases from $0 to $5000 as the value of the car lowers from $5000 to $0.  The divider value entered here is used to divide this inverse value to get an idea of the unexpected repair value.",
 		depreciationRatePerYearCV:              "The value reduction per year for your current car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
 		depreciationRatePerYearEV:              "The value reduction per year for your an electric car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
 		costPerDayRentalCar:                    "How much does it cost to rent a similar vehicle per day, including a full insurance package.",
 		kilometresPerDayForLongTrips:           "What are the average number of KMs you will drive on any days that you will use a rental car?",
 		subsidyPaymentFixed:                    "Any subsidies as a percentage of the purchase cost from the government and/or your employer you will receive when purchasing an electric vehicle. This only applies at the time of purchase.  It is not a yearly payment.",
 		subsidyPaymentPerKM:                    "Any per kilometer subsidies (government / employer) payments you will receive when driving an electric vehicle.",
-		personalContributionFixed:              "Any personal payments or value you would like to add to the total purchase price of your electric vehicle to account for your reduced emissions. This only applies at the time of purchase.  It is not a yearly payment.",
-		personalContributionPerKM:              "Any per kilometer personal payments or value you would like to add when driving an electric vehicle. This could, for example, be equal to the carbon credits you receive based on your reduced emissions."
+		personalContributionFixed:              "Any yearly personal payments or value you would like to add to the total purchase price of your electric vehicle to account for your reduced emissions. This only applies at the time of purchase.  It is not a yearly payment.",
+		personalContributionPerKM:              "Any per kilometer, personal, payments or value you would like to add when driving an electric vehicle. This could, for example, be equal to the carbon credits you receive based on your reduced emissions."
 	},
 
 	alternativeFormatsForFxs: {
@@ -1268,6 +1407,7 @@ Number.prototype.formatNumber = function() {
 
 EVC.DefaultData = {
 
+
 	/* key assumptions */
 	CVValueToday:                            0,
 	kmDrivenPerDay:                          0,
@@ -1297,11 +1437,15 @@ EVC.DefaultData = {
 	insuranceCostPerThousand:               50,
 	averageKmsPerTyre:                   40000,
 	tyreCostCV:                            100,
-	tyreCostEV:                            150,
+	tyreCostEV:                            100,
 	licenseWOFCostCVPerYear:               250,
 	licenseWOFCostEVPerYear:               350,
 	maintenanceCVPerTenThousandKm:         400,
 	maintenanceEVPerTenThousandKm:          50,
+	repairKMDivider:                     15000,
+	maxCarValueForRepairs:                7000,
+	exponentialGrowthFactorForRepairs:     1.7,
+	valueDividerForRepairCalculation:      100,
 	depreciationRatePerYearCV:              27,
 	depreciationRatePerYearEV:              27,
 	costPerDayRentalCar:                    70,
@@ -1314,6 +1458,7 @@ EVC.DefaultData = {
 };
 
 EVC.ActualData = EVC.cloneObject(EVC.DefaultData);
+
 
 EVC.DefaultDataMinMax = {
 
@@ -1351,6 +1496,10 @@ EVC.DefaultDataMinMax = {
 	licenseWOFCostEVPerYear:                 [0,1000],
 	maintenanceCVPerTenThousandKm:           [50,500],
 	maintenanceEVPerTenThousandKm:           [50,500],
+	repairKMDivider:                         [5000,40000],
+	maxCarValueForRepairs:                   [2000,12000],
+	exponentialGrowthFactorForRepairs:       [0.8,3],
+	valueDividerForRepairCalculation:        [5,500],
 	depreciationRatePerYearCV:               [10,40],
 	depreciationRatePerYearEV:               [10,40],
 	costPerDayRentalCar:                     [10,100],
@@ -1358,6 +1507,6 @@ EVC.DefaultDataMinMax = {
 	subsidyPaymentFixed:                     [0,15000],
 	subsidyPaymentPerKM:                     [0,0.50],
 	personalContributionFixed:               [0,15000],
-	personalContributionPerKM:               [0,0.50]
+	personalContributionPerKM:               [0,0.5]
 };
 

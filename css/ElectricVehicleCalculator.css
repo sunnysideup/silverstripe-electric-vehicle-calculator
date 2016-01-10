@@ -17,7 +17,7 @@
 	.fieldHolder:last-child { border-bottom: 1px solid #ccc; }
 	label, input {font-size: 12px;}
 	input {
-		margin-top: 1.5em;
+		margin-top: 0.5em;
 		width: 100%;
 		background-color: transparent;
 		border: none;
@@ -26,8 +26,11 @@
 		font-size: 21px;
 	}
 	input[type='text'] {
-		width: 5em;
+		width: 150px;
 		float: right;
+	}
+	input[readonly='readonly'] {
+		cursor: pointer;
 	}
 
 	.middleColumn {margin-top: 0.3em;}
@@ -52,9 +55,15 @@
 	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
 	.calcVal .negativeNumber {color: red;}
 	#ProfitAndLoss {background-color: orange; color: green;}
-	.fixed {position:fixed; top: 0; left: 0; width: 100%; }
+	.fixed {position:fixed; top: 0; left: 0; width: 100%; z-index: 10; }
 	#ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
 	#ProfitAndLoss p span.calcVal{border-bottom: none;}
+
+	/* influence */
+
+	.influence {position: relative; background-color: #ccc; height: 3px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; border-top: 12px solid #fff;}
+	.influence span{position: absolute; top: 0; left: 0; background-color: #aaa; height: 3px; z-index: 1;}
+	.influence em{padding: 5px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
 	
 	/* hide */
 	label span.desc {display: none; color: orange;}
@@ -62,6 +71,9 @@
 	.fieldHolder.infocus label span.desc {display: block;}
 	.fieldHolder.infocus input[type=range] {display: block; }
 	.fieldHolder.infocus input[type=text] {font-size: 33px!important; }
+	.fieldHolder.infocus .influence {height: auto; color: #333;}
+	.fieldHolder.infocus .influence span {top:0; bottom: 0; height: auto;}
+	.fieldHolder.infocus .influence em {color: #777;}
 
 }
 
@@ -78,7 +90,8 @@
 		text-align: right;
 		font-size: 100%;
 		margin-top: 0em;
-		font-size: 17px
+		font-size: 17px;
+		margin-top: 0.5em;
 	}
 	input[type='range'] {margin-bottom: 2em;}	
 	#KeyAssupmptions input {font-size: 21px;}

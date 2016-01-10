@@ -17,14 +17,14 @@
 </head>
 
 <body>
-	<div id="EVCWrapper">
+<div id="EVCWrapper">
 	<div id="ContentHolder">$Content</div>
 	<form id="ElectricVehicleCalculator">
 		<fieldset id="KeyAssupmptions"></fieldset>
 
 		<div id="ProfitAndLoss">
 			<p class="message good">
-				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>, your gain / loss on <span class="straightFillers" data-fx="profitLossDate">five years from now</span> will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
+				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>, your gain / loss <span class="straightFillers" data-fx="profitLossDate">five years from now</span> will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
 			</p>
 		</div>
 		
@@ -226,12 +226,19 @@
 		<h2>load data</h2>
 		<p>
 			<a href="{$Link}reset/" id="#ResetLink">reset all settings</a>
+			<a href="{$Link}list/" id="#ResetLink">view other calculations</a>
 		</p>
 
 		<h2>feedback</h2>
 		<p>
 			Please send us an e-mail: <a href='m&#97;ilt&#111;&#58;evs&#64;&#115;%&#55;5&#110;n%&#55;&#57;side%75p&#46;co&#46;&#110;z'>evs&#64;sun&#110;ysideu&#112;&#46;co&#46;&#110;z</a>, if you have any comments.
 			Thank you.
+		</p>
+
+		<h2>links</h2>
+		<p>
+			<a href="http://www.stuff.co.nz/national/9204870/Car-running-costs-lurch-ahead-for-Kiwi-drivers">NZ Car Running Cost</a>
+			<a href="http://www.electricheaven.nz/">Information on Electric Cars in New Zealand</a>
 		</p>
 
 		<h2>disclaimer</h2>
@@ -254,9 +261,9 @@
 			<li>add settings for max electric car value</li>
 			<li>add settings for unexpected repair cost</li>
 			<li>create clearer separation between assumptions</li>
-
+			<li>remove key from on... methods and replace by lookup</li>
 	</form>
-	</div>
+</div>
 
 </body>
 </html>

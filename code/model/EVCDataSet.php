@@ -50,8 +50,9 @@ class EVCDataSet extends DataObject {
 		if(is_array($array) && count($array)) {
 			$json = "jQuery(document).ready(function(){";
 			foreach($array as $key => $value) {
-				$json .= "\nEVC.HTMLInteraction.setValue('".$key."', ".(floatval($value)-0).");";
+				$json .= "\n\tEVC.HTMLInteraction.setValue('".$key."', ".(floatval($value)-0).");";
 			}
+			$json .= "\nEVC.HTMLInteraction.updateScreen();";
 			$json .= "});";
 		}
 		return $json;
