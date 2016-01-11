@@ -15,7 +15,7 @@
 
 	/* form */
 	#EVCWrapper {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; position: relative;}
-	form {margin-top: 3em;}
+	form {margin-top: 7em;}
 	fieldset {border: none; padding: 0.5em 0; outline: none; clear: both;}
 	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both; border-top: 1px solid #ccc; overflow: hidden;}
@@ -69,7 +69,7 @@
 	.influence {position: relative; background-color: #ccc; height: 3px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; border-top: 12px solid #fff;}
 	.influence span{position: absolute; top: 0; left: 0; background-color: #aaa; height: 3px; z-index: 1;}
 	.influence em{padding: 5px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
-	
+
 	/* hide */
 	label span.desc {display: none; color: orange;}
 	input[type=range] {display: none; }
@@ -98,7 +98,7 @@
 		font-size: 17px;
 		margin-top: 0.5em;
 	}
-	input[type='range'] {margin-bottom: 2em;}	
+	input[type='range'] {margin-bottom: 2em;}
 	#KeyAssupmptions input {font-size: 21px;}
 	tr.detail th, tr.detail td {border-bottom: 1px solid transparent;}
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
@@ -128,15 +128,15 @@
  * slider
  * source: http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html
  *
- */ 
+ */
 
 input[type=range] {
 	/*removes default webkit styles*/
 	-webkit-appearance: none;
-	
+
 	/*fix for FF unable to apply focus style bug */
 	border: 1px solid white;
-	
+
 	/*required for proper track sizing in FF*/
 	width: 100%px;
 }
@@ -187,10 +187,10 @@ input[type=range]:-moz-focusring{
 input[type=range]::-ms-track {
 	width: 100%px;
 	height: 5px;
-	
+
 	/*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
 	background: transparent;
-	
+
 	/*leave room for the larger thumb to overflow with a transparent border */
 	border-color: transparent;
 	border-width: 6px 0;
@@ -232,7 +232,7 @@ input[type=range]:focus::-ms-fill-upper {
   -ms-transition: all 0.30s ease-in-out;
   -o-transition: all 0.30s ease-in-out;
 }
- 
+
 input[type=text], textarea {
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
@@ -241,7 +241,7 @@ input[type=text], textarea {
   outline: none;
   border: 1px solid transparent;
 }
- 
+
 input[type=text]:focus, textarea:focus {
   box-shadow: inset 0 0 3px #ddd;
   border: 1px solid #ccc;
@@ -253,17 +253,17 @@ li.button-wrapper {
 	width: 165px;
 	background: #E0E0E0;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E9E9E9', endColorstr='#D7D7D7');
-	background: -webkit-gradient(linear, left top, left bottom, from(#E9E9E9), to(#D7D7D7)); 
-	background: -moz-linear-gradient(top,  #E9E9E9,  #D7D7D7); 
+	background: -webkit-gradient(linear, left top, left bottom, from(#E9E9E9), to(#D7D7D7));
+	background: -moz-linear-gradient(top,  #E9E9E9,  #D7D7D7);
 	padding: 8px;
 	-webkit-box-shadow: inset 0px 2px 2px #B2B3B5, 0px 1px 0 #fff;
 	-moz-box-shadow: inset 0px 2px 2px #B2B3B5, 0px 1px 0 #fff;
 	-o-box-shadow: inset 0px 2px 2px #B2B3B5, 0px 1px 0 #fff;
 	-khtml-box-shadow: inset 0px 2px 2px #B2B3B5, 0px 1px 0 #fff;
 	box-shadow: inset 0px 2px 2px #B2B3B5, 0px 1px 0 #fff;
-	-webkit-border-radius: 50px; 
-	-moz-border-radius: 50px; 
-	-o-border-radius: 50px; 
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	-o-border-radius: 50px;
 	-khtml-border-radius: 50px;
 	border-radius: 50px;
 }
@@ -277,9 +277,9 @@ a.button {
 	text-align: center;
 	line-height: 34px;
 	text-decoration: none;
-	-webkit-border-radius: 50px; 
-	-moz-border-radius: 50px; 
-	-o-border-radius: 50px; 
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	-o-border-radius: 50px;
 	-khtml-border-radius: 50px;
 	border-radius: 50px;
 	font-weight: bold;

@@ -14,7 +14,7 @@ class EVCPage_Controller extends Page_Controller {
 		"save" => true,
 		"retrieve" => true,
 		"reset" => true,
-		"list" => true,
+		"previous" => true,
 		"lock" => true
 	);
 
@@ -31,15 +31,28 @@ class EVCPage_Controller extends Page_Controller {
 			$code = $this->evcDataSet->Code;
 			Session::set("EVCLastCode", $code);
 		}
-		return $this->redirect($this->Link("show/".$code."/"));
+		return $this->redirect($this->evcDataSet->MyLink($this, "show"));
+	}
+
+	public function HasCustomTitle() {
+		if($this->evcDataSet && $this->evcDataSet->Title) {
+			return true;
+		}
 	}
 
 	function Title(){
-		if($this->evcDataSet){
-			return $this->evcDataSet->Title;
+		if($this->HasCustomTitle()){
+			return Convert::raw2xml(urldecode($this->evcDataSet->Title));
 		}
+		return Convert::raw2xml($this->Title);
 	}
+
 	function MetaTitle(){
+		if($this->HasCustomTitle()){
+			return Convert::raw2xml(urldecode($this->evcDataSet->Title));
+		}
+		return Convert::raw2xml($this->MetaTitle);
+	}
 
 	function show($request){
 		$code = $request->param("ID");
@@ -63,8 +76,9 @@ class EVCPage_Controller extends Page_Controller {
 	}
 
 	/**
+	 * returns empty string on error...
 	 * ajax method ...
-	 *
+	 * @return string
 	 */
 	function save($request){
 		$code = $request->param("ID");
@@ -72,8 +86,12 @@ class EVCPage_Controller extends Page_Controller {
 		//save it
 		$key = Convert::raw2sql($request->getVar("key"));
 		$value = Convert::raw2sql($request->getVar("value"));
-		$this->evcDataSet->setValue($key, $value);
-		return $this->evcDataSet->Code;
+		if($this->evcDataSet->setValue($key, $value)) {
+			return $this->evcDataSet->Code;
+		}
+		else {
+			return "";
+		}
 	}
 
 	function retrieve($request){
@@ -85,7 +103,7 @@ class EVCPage_Controller extends Page_Controller {
 			$id = $this->evcDataSet->write();
 			Session::set("EVCLastCode", $this->evcDataSet->Code);
 			Session::save();
-			return $this->redirect($this->Link("show/".$this->evcDataSet->Code."/"));
+			return $this->redirect($this->evcDataSet->MyLink($this, "show"));
 		}
 		else {
 			return $this->httpError(404);
@@ -95,11 +113,8 @@ class EVCPage_Controller extends Page_Controller {
 	function reset($request){
 		Session::set("EVCLastCode", "");
 		Session::clear("EVCLastCode");
+		Session::save();
 		return $this->redirect($this->Link());
-	}
-
-	function list($request){
-		die("show list of saved items here");
 	}
 
 	/**
@@ -111,15 +126,33 @@ class EVCPage_Controller extends Page_Controller {
 		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
 		if($this->evcDataSet && $this->evcDataSet->exists()) {
 			$this->evcDataSet->Locked = true;
-			$title = Convert::raw2sql($request->getVar("title"));
-			$this->evcDataSet->Title = Convert::raw2sql($title);
+			$title = $request->getVar("title");
+			$this->evcDataSet->Title = Convert::raw2sql(urldecode($title));
 			$this->evcDataSet->write();
-			return $this->AbsoluteLink($this->evcDataSet->Link("retrieve"));
+			return $this->evcDataSet->MyLink($this, "retrieve");
 		}
+		return "ERROR!";
 	}
 
 	function EVCDataSet(){
 		return $this->evcDataSet;
+	}
+
+	function IsLocked(){
+		return $this->evcDataSet->Locked;
+	}
+
+
+	protected $previousCalculations = null;
+
+	function previous($request){
+		$this->previousCalculations = PaginatedList::create(EVCDataSet::get()->filter(array("Locked" => 1)));
+		$this->previousCalculations->setPageLength(100);
+		return $this->renderWith("ECVPagePreviousCalculations");
+	}
+
+	function PreviousCalculations(){
+		return $this->previousCalculations;
 	}
 
 }

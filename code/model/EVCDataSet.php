@@ -4,16 +4,19 @@
 class EVCDataSet extends DataObject {
 
 	/**
-	 * 
+	 *
 	 * @param string | null $code
 	 *
 	 * @return EVCDataSet
-	 */ 
+	 */
 	public static function find_or_create($code = null, $forceCreation = false) {
 		$obj = null;
 		if($code) {
 			Convert::raw2sql($code);
 			$obj = EVCDataSet::get()->filter(array("Code" => $code))->first();
+			if(!$obj) {
+				$obj = EVCDataSet::get()->filter(array("Title" => $code))->first();
+			}
 		}
 		if(!$obj) {
 			if($forceCreation) {
@@ -36,16 +39,42 @@ class EVCDataSet extends DataObject {
 		"Code" => true
 	);
 
+	public function Link($action) {
+		$page = EVCPage::get()->first();
+		return $this->MyLink($page, $action);
+	}
+
+	public function MyLink($page, $action) {
+		if($this->Title) {
+			return $page->AbsoluteLink("$action/$this->Title/");
+		}
+		else {
+			return $page->AbsoluteLink("$action/$this->Code/");
+		}
+	}
+
+	/**
+	 * returns zero on error...
+	 * @param string $key
+	 * @param string $value
+	 *
+	 * @return int
+	 */
 	public function setValue($key, $value) {
-		$array = unserialize($this->Data);
-		$array[$key] = $value;
-		$this->Data = serialize($array);
-		$this->write();
+		if($this->Locked) {
+			return 0;
+		}
+		else {
+			$array = unserialize($this->Data);
+			$array[$key] = $value;
+			$this->Data = serialize($array);
+			return $this->write();
+		}
 	}
 
 	/**
 	 * @return string | null
-	 */ 
+	 */
 	public function returnValuesAsJS(){
 		$array = unserialize($this->Data);
 		$json = null;
@@ -59,7 +88,7 @@ class EVCDataSet extends DataObject {
 		}
 		return $json;
 	}
-	
+
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
 		if(!$this->IP) {
@@ -89,6 +118,8 @@ class EVCDataSet extends DataObject {
 		}
 		return $ip;
 	}
+
+
 
 
 }

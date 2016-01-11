@@ -29,7 +29,7 @@ var EVC = {
 	baseLink: "",
 
 	workableLinks: function(){
-		if(this.baseLink && this.serverKey) {
+		if(this.baseLink !== "" && this.serverKey !== "") {
 			return true;
 		}
 		return false;
@@ -65,7 +65,7 @@ var EVC = {
 
 	listLink: function(){
 		if(this.workableLinks()) {
-			return this.baseLink+"list/";
+			return this.baseLink+"all/";
 		}
 		return "";
 	},
@@ -140,7 +140,7 @@ var EVCfx = function(
 		}
 	};
 
-		
+
 	this.setupCost = function(carType){
 		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
@@ -650,7 +650,8 @@ EVC.HTMLInteraction = {
 		//this.populateResultTable();
 		//this.populateCalculations();
 		//this.populateLinks();
-		this.setupLinks();
+		//this.setupLinks();
+		this.populateLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
 	},
@@ -758,42 +759,74 @@ EVC.HTMLInteraction = {
 		)
 	},
 
-	setupLinks: function() {
+	populateLinks: function() {
 		jQuery(".saveLink").each(
 			function(i, el){
-				jQuery(el).attr("data-default-href", jQuery(el).attr("href"));
+				if(jQuery(el).attr("data-replace-link") == "yes") {
+					jQuery(el).attr("data-default-href", jQuery(el).attr("href"));
+				}
 			}
 		);
-		jQuery("#ResetLink").attr("href", EVC.resetLink());
-	},
-	
-	populateLinks: function() {
 		if(EVC.workableLinks()) {
-			
-			var followLink = "";
 			jQuery(".saveLink").click(
 				function(event){
-					var answer = prompt("Please enter title for your calculations");
-					answer = encodeURIComponent(answer);
-					jQuery.ajax({
-						method: "GET",
-						url: EVC.lockLink(),
-						data: { "title": answer },
-						cache: false
-					})
-					.done(function( returnedFollowLink ) {
-							followLink = returnedFollowLink;
-							var oldHref = jQuery(el).attr("data-default-href");
-							var newHref = oldHref.replace("[LINK]", returnedFollowLink);
-							jQuery(el).attr("href", newHref);
-					})
-					.fail(function( jqXHR, textStatus ) {
-							alert( "Error in application - link can not be shared: " + textStatus );
-					});
-					if(followLink) {
-						return true;
+					var el = this;
+					var newLink = "";
+					var mustReplaceLink = jQuery(el).attr("data-replace-link");
+					var lockLink = EVC.lockLink();
+					if(lockLink === "" && mustReplaceLink == "yes") {
+						alert("Could not save data ... please try again");
+						return false;
 					}
-					return false;
+					else {
+						if(lockLink !== "") {
+							var answer = prompt("Please enter title for your calculations");
+							if(answer === null) {
+								return false;
+							}
+							answer = encodeURIComponent(answer);
+							jQuery.ajax({
+								method: "GET",
+								url: EVC.lockLink(),
+								data: { "title": answer },
+								cache: false
+							})
+							.done(function( returnedFollowLink ) {
+									if(mustReplaceLink == "yes") {
+										var decodedReplaceLink = returnedFollowLink;
+										var encodedReplaceLink = encodeURIComponent(returnedFollowLink);
+										var oldHref = jQuery(el).attr("data-default-href");
+										newLink = oldHref;
+										console.debug(newLink);
+										newLink = newLink.replace("[DECODED_LINK]", decodedReplaceLink);
+										console.debug(newLink);
+										newLink = newLink.replace("[ENCODED_LINK]", encodedReplaceLink);
+										console.debug(newLink);
+										jQuery(el).attr("href", newLink);
+									}
+									else {
+										console.debug("no need to replace link");
+										newLink = jQuery(el).attr("href");
+									}
+							})
+							.fail(function( jqXHR, textStatus ) {
+									alert( "Error in application - link data can not be saved: " + textStatus );
+									followLink = "";
+									mustReplaceLink = "yes";
+							});
+						}
+						else {
+							console.debug(EVC.baseLink);
+							console.debug(EVC.serverKey);
+						}
+						console.debug(newLink);
+						if(newLink == "" && mustReplaceLink == "yes") {
+							return false;
+						}
+						else {
+							window.location = newLink;
+						}
+					}
 				}
 			);
 		}
@@ -835,7 +868,7 @@ EVC.HTMLInteraction = {
 		var readOnly = "";
 		if(isMobile){
 			var readOnly = " readonly=\"readonly\" ";
-		}		
+		}
 		for (var key in list) {
 			if (list.hasOwnProperty(key)) {
 				var type = list[key];
@@ -926,7 +959,7 @@ EVC.HTMLInteraction = {
 	},
 
 	updateInProgress: false,
-	
+
 	setValue: function(key, elOrValue){
 		if(this.updateInProgress) {
 			return true;
@@ -1000,7 +1033,7 @@ EVC.HTMLInteraction = {
 					cache: false
 				})
 				.done(function( returnKey ) {
-					EVC.serverKey = returnKey
+					EVC.serverKey = returnKey;
 				})
 				.fail(function( jqXHR, textStatus ) {
 					alert( "Data could not be saved: " + textStatus );
@@ -1046,7 +1079,6 @@ EVC.HTMLInteraction = {
 		console.debug("=========================");
 		this.populateResultTable();
 		this.populateCalculations();
-		this.populateLinks();
 		var $el = jQuery("#ProfitAndLoss");
 		//jQuery($el).removeClass("fixed");
 		jQuery($el).addClass("fixed");
@@ -1054,7 +1086,7 @@ EVC.HTMLInteraction = {
 			//do nothing
 		//}
 		//else {
-		//	
+		//
 		//}
 		EVC.scenarios.checkInfluence();
 	},
@@ -1091,6 +1123,10 @@ EVC.scenarios = {
 	monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 
 	totalProfit: function(){
+		return EVC.myData.totalProfit();
+	},
+
+	totalProfitWithRestValue: function(){
 		return EVC.myData.totalProfit() + EVC.myData.equityImprovementAtEndOfYear();
 	},
 
@@ -1220,9 +1256,9 @@ EVC.scenarios = {
 						}
 					}
 					if(percentage > 1.1 || percentage < (1/1.1)) {
-						//make sure all are in the same direction ... 
+						//make sure all are in the same direction ...
 						if(percentage < 1) {
-							percentage = 1 / percentage; 
+							percentage = 1 / percentage;
 						}
 						percentage--;
 						EVC.ActualData.influence[key] = [percentage];

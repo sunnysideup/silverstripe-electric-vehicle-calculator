@@ -20,20 +20,27 @@
 	<meta property="og:title"         content="$SiteConfig.Title" />
 	<meta property="og:description"   content="$Title" />
 	<meta property="og:image"         content="$AbsoluteLink(facebookimage)" />
-	
+
 </head>
 
 <body>
 <div id="EVCWrapper">
-	<div id="ContentHolder">$Content</div>
+
+	<% if PreviousCalculations %>
+	<div id="PreviousCalculations"></div>
+	<% else %>
 	<form id="ElectricVehicleCalculator">
+
+		<h1>$Title <% if IsLocked %><span class="locked">(locked)</span><% end_if %></h1>
+		<div id="ContentHolder">$Content</div>
+
 		<fieldset id="KeyAssupmptions"></fieldset>
 
 		<div id="ProfitAndLoss">
 			<p class="message good">
 				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>,
-				your bank account (of course you will also make a huge difference to the future of the planet) <span class="straightFillers" data-fx="profitLossDate">five years from now</span>
-				will be: <span class="calcVal" data-fx="fiveYearProfit"></span>
+				your wealth, <span class="straightFillers" data-fx="profitLossDate">five years from now</span>,
+				will change by: <span class="calcVal" data-fx="fiveYearProfit"></span>
 			</p>
 		</div>
 
@@ -223,13 +230,13 @@
 		<h2>save, lock, and load data</h2>
 		<ul class="actions">
 			<li class="buttonWrapper">
-				<a  id="SaveLink" href="[ENCODED_LINK]" class="button saveLink" data-replace-link="1">save and lock</a>
+				<a  id="SaveLink" href="[DECODED_LINK]" class="button saveLink" data-replace-link="yes">save and lock</a>
 			</li>
 			<li id="ListLink" class="buttonWrapper">
-				<a href="{$Link}list/" class="button saveLink" data-replace-link="0">view other calculations</a>
+				<a href="{$Link}previous/" class="button saveLink" data-replace-link="no">view saved results</a>
 			</li>
 			<li id="ResetLink" class="buttonWrapper">
-				<a href="{$Link}reset/" class="button saveLink" data-replace-link="0">reset all settings</a>
+				<a href="{$Link}reset/" class="button saveLink" data-replace-link="no">start new calculation</a>
 			</li>
 		</ul>
 
@@ -237,7 +244,7 @@
 
 		<h2>purchase your electric vehicle</h2>
 		<p>More information to come ... </p>
-		
+
 		<div id="RightCol">
 			<h2>comment</h2>
 			<div id="fb-root"></div>
@@ -251,20 +258,20 @@
 			}(document, 'script', 'facebook-jssdk'));</script>
 		</div>
 
-		
+
 		<div id="LeftCol">
 
-			
+
 			<h2>Share Results ... </h2>
 			<ul class="actions">
 				<li class="buttonWrapper">
-					<a  id="EmailLink" class="button" href="mailto:?subject=I+want+an+Electric+Car&amp;body=Please+visit+[ENCODED_LINK]" data-replace-link="1">in E-mail</a>
+					<a  id="EmailLink" class="button" href="mailto:?subject=I+want+an+Electric+Car&amp;body=Please+visit+[ENCODED_LINK]" data-replace-link="yes">in E-mail</a>
 				</li>
 				<li class="buttonWrapper">
-					<a id="FacebookLink" href="https://www.facebook.com/sharer/sharer.php?u=[ENCODED_LINK]" class="button saveLink" data-replace-link="1">on Facebook</a>
+					<a id="FacebookLink" href="https://www.facebook.com/sharer/sharer.php?u=[ENCODED_LINK]" class="button saveLink" data-replace-link="yes">on Facebook</a>
 				</li>
 				<li class="buttonWrapper">
-					<a id="TwitterLink" href="https://twitter.com/home?status=Check%20out%20%23ev%20calculator%20on%20[ENCODED_LINK]" class="button saveLink" data-replace-link="1">on Twitter</a>
+					<a id="TwitterLink" href="https://twitter.com/home?status=Check%20out%20%23ev%20calculator%20on%20[ENCODED_LINK]" class="button saveLink" data-replace-link="yes">on Twitter</a>
 				</li>
 			</ul>
 
@@ -305,6 +312,7 @@
 			</ul>
 		</div>
 	</form>
+	<% end_if %>
 </div>
 
 </body>
