@@ -34,7 +34,7 @@
 	<% else %>
 	<form id="ElectricVehicleCalculator">
 
-		<h1>$Title <% if IsLocked %><span class="locked">(locked)</span><% end_if %></h1>
+		<h1>$Title <% if IsLocked %><span class="locked">(customised)</span><% end_if %></h1>
 		<div id="ContentHolder">$Content</div>
 
 		<fieldset id="KeyAssupmptions"></fieldset>
