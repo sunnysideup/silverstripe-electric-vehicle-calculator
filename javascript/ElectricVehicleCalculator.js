@@ -35,7 +35,7 @@ var EVC = {
 	},
 
 	workableLinks: function(){
-		console.debug(this.baseLink + "|" + this.serverKey)
+		//console.debug(this.baseLink + "|" + this.serverKey)
 		if(this.baseLink !== "" && this.serverKey !== "") {
 			return true;
 		}
