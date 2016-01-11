@@ -3,6 +3,8 @@
 
 class EVCDataSet extends DataObject {
 
+	private static $default_sort = "LastEdited DESC";
+
 	/**
 	 *
 	 * @param string | null $code

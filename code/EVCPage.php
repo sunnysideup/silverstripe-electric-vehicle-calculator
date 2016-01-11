@@ -120,12 +120,17 @@ class EVCPage_Controller extends Page_Controller {
 	function lock($request){
 		$code = $request->param("ID");
 		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
-		if($this->evcDataSet && $this->evcDataSet->exists()) {
-			$this->evcDataSet = $this->evcDataSet->getCopyIfNeeded();
-			$this->evcDataSet->Locked = true;
-			$title = $request->getVar("title");
-			$this->evcDataSet->Title = Convert::raw2sql(urldecode($title));
-			$this->evcDataSet->write();
+		$title = $request->getVar("title");
+		if($title && $this->evcDataSet && $this->evcDataSet->exists()) {
+			if($title == "ignore") {
+				//no need to do anything
+			}
+			else {
+				$this->evcDataSet = $this->evcDataSet->getCopyIfNeeded();
+				$this->evcDataSet->Locked = true;
+				$this->evcDataSet->Title = Convert::raw2sql(urldecode($title));
+				$this->evcDataSet->write();
+			}
 			return $this->evcDataSet->MyLink($this, "retrieve");
 		}
 		return "ERROR!";

@@ -28,6 +28,8 @@ var EVC = {
 
 	isLocked: false,
 
+	isChanged: false,
+
 	baseLink: "",
 
 	isReadyToCalculate: function(){
@@ -793,8 +795,13 @@ EVC.HTMLInteraction = {
 				else {
 					//can server interact - then lock and redirect ...
 					if(workableLinks === true) {
+						if(EVC.isChanged === true) {
+							var answer = prompt("Please enter a title for your calculation sheet");
+						}
+						else {
+							var answer = "ignore";
+						}
 						var lockLink = EVC.lockLink();
-						var answer = prompt("Please enter title for your calculations");
 						if(answer === null) {
 							if(EVC.debug) {console.debug("cancelled");}
 							return false;
@@ -997,6 +1004,7 @@ EVC.HTMLInteraction = {
 			var updateScreen = false;
 			//does it need cleaning?
 			if(isNaN(elOrValue)) {
+				EVC.isChanged = true;
 				updateScreen = true;
 				var value = jQuery(elOrValue).val();
 				//remove comma and $ ...

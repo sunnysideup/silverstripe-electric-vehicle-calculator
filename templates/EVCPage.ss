@@ -39,7 +39,7 @@
 
 		<fieldset id="KeyAssupmptions"></fieldset>
 
-		<div id="ProfitAndLoss">
+		<div id="ProfitAndLoss" class="mainDetailedSections">
 			<p class="message good">
 				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>,
 				your wealth, <span class="straightFillers" data-fx="profitLossDate">five years from now</span>,
@@ -47,9 +47,9 @@
 			</p>
 		</div>
 
-		<fieldset id="PlayAroundAssumptions"></fieldset>
+		<fieldset id="PlayAroundAssumptions" class="mainDetailedSections"></fieldset>
 
-		<fieldset id="ResultTableHolder">
+		<fieldset id="ResultTableHolder" class="mainDetailedSections">
 			<h2>
 				detailed results for one year <span class="straightFillers" data-fx="resultsTableYear"></span>:
 				<span class="calcVal" data-fx="totalProfit"></span>
@@ -230,25 +230,28 @@
 		</fieldset>
 
 
-		<h2>save, lock, and load data</h2>
-		<ul class="actions">
-			<li class="buttonWrapper">
-				<a  id="SaveLink" href="[DECODED_LINK]" class="button saveLink" data-replace-link="yes">save and lock</a>
-			</li>
-			<li id="ListLink" class="buttonWrapper">
-				<a href="{$Link}previous/" class="button saveLink" data-replace-link="no" data-load-into="">view saved results</a>
-			</li>
-			<li id="ResetLink" class="buttonWrapper">
-				<a href="{$Link}reset/" class="button saveLink" data-replace-link="no">start new calculation</a>
-			</li>
-		</ul>
+		<div id="InteractCol" class="mainDetailedSections">
+			<h2>save, lock, and load data</h2>
+			<ul class="actions">
+				<li class="buttonWrapper">
+					<a  id="SaveLink" href="[DECODED_LINK]" class="button saveLink" data-replace-link="yes">save and lock</a>
+				</li>
+				<li id="ListLink" class="buttonWrapper">
+					<a href="{$Link}previous/" class="button saveLink" data-replace-link="no" data-load-into="">view saved results</a>
+				</li>
+				<li id="ResetLink" class="buttonWrapper">
+					<a href="{$Link}reset/" class="button saveLink" data-replace-link="no">start new calculation</a>
+				</li>
+			</ul>
 
-		<fieldset id="OtherAssumptions"></fieldset>
+			<fieldset id="OtherAssumptions"></fieldset>
 
-		<h2>purchase your electric vehicle</h2>
-		<p>More information to come ... </p>
+			<h2>purchase your electric vehicle</h2>
+			<p>More information to come ... </p>
+		</div>
 
-		<div id="RightCol">
+
+		<div id="RightCol" class="mainDetailedSections">
 			<h2>comment</h2>
 			<div id="fb-root"></div>
 			<div class="fb-comments" data-href="$AbsoluteLink" data-width="320" data-numposts="100" data-order-by="reverse_time"></div>
@@ -262,7 +265,7 @@
 		</div>
 
 
-		<div id="LeftCol">
+		<div id="LeftCol" class="mainDetailedSections">
 
 
 			<h2>Share Results ... </h2>
@@ -316,6 +319,7 @@
 		</div>
 	</form>
 	<% end_if %>
+	<footer><p>&copy; 2016 Sunny Side Up Ltd.</p></footer>
 </div>
 
 </body>
