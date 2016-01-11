@@ -59,8 +59,9 @@
 	/* calcVals */
 	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
 	.calcVal .negativeNumber {color: red;}
-	#ProfitAndLoss {background-color: orange; color: green;}
-	.fixed {position:fixed; top: 0; left: 0; width: 100%; z-index: 10; }
+	#ProfitAndLoss {background-color: orange; color: green; display: block}
+	.notReady #ProfitAndLoss {display: none; }
+	#ProfitAndLoss.fixed {position:fixed; top: 0; left: 0; width: 100%; z-index: 10; }
 	#ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
 	#ProfitAndLoss p span.calcVal{border-bottom: none;}
 

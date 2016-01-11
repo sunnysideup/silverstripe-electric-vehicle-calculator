@@ -26,9 +26,16 @@ var EVC = {
 
 	serverKey: "",
 
+	isLocked: false,
+
 	baseLink: "",
 
+	isReadyToCalculate: function(){
+		return EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0;
+	},
+
 	workableLinks: function(){
+		console.debug(this.baseLink + "|" + this.serverKey)
 		if(this.baseLink !== "" && this.serverKey !== "") {
 			return true;
 		}
@@ -626,6 +633,9 @@ var EVCfx = function(
 		console.debug("yearsBeforeSwitch: " + yearsBeforeSwitch);
 		console.debug("yearsAfterSwitch: " + yearsAfterSwitch);
 		console.debug("kmDrivenPerDay: " + kmDrivenPerDay);
+		console.debug("baseLink: " + EVC.baseLink);
+		console.debug("serverKey: " + EVC.serverKey);
+		console.debug("IsLocked: " + (EVC.isLocked ? "true" : "false"));
 		for (var i = 0; i < arrayLength; i++) {
 			method = methodArray[i];
 			console.debug(method +": "+Math.round(parseFloat(this[method]("f"))) + " ||| " + Math.round(parseFloat(this[method]("e"))));
@@ -654,9 +664,11 @@ EVC.HTMLInteraction = {
 		this.populateLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
+
 	},
 
 	clear: function(){
+		jQuery("#EVCWrapper").addClass("notReady");
 		jQuery("#KeyAssupmptions").html("");
 		jQuery("#PlayAroundAssumptions").html("");
 		jQuery("#OtherAssumptions").html("");
@@ -724,7 +736,7 @@ EVC.HTMLInteraction = {
 	populateCalculations: function(){
 		jQuery("span.calcVal").each(
 			function(i, el) {
-				if(EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0) {
+				if(EVC.isReadyToCalculate()) {
 					var method = jQuery(el).attr("data-fx");
 					//console.debug(method);
 					var value = EVC.scenarios[method]();
@@ -763,75 +775,84 @@ EVC.HTMLInteraction = {
 		jQuery(".saveLink").each(
 			function(i, el){
 				if(jQuery(el).attr("data-replace-link") == "yes") {
-					jQuery(el).attr("data-default-href", jQuery(el).attr("href"));
+					jQuery(el).attr("data-default-href", jQuery(el).attr("href")).addClass("hideWithoutServerInteraction");
 				}
 			}
 		);
-		if(EVC.workableLinks()) {
-			jQuery(".saveLink").click(
-				function(event){
-					var el = this;
-					var newLink = "";
-					var mustReplaceLink = jQuery(el).attr("data-replace-link");
-					var lockLink = EVC.lockLink();
-					if(lockLink === "" && mustReplaceLink == "yes") {
-						alert("Could not save data ... please try again");
-						return false;
-					}
-					else {
-						if(lockLink !== "") {
-							var answer = prompt("Please enter title for your calculations");
-							if(answer === null) {
-								return false;
-							}
-							answer = encodeURIComponent(answer);
-							jQuery.ajax({
-								method: "GET",
-								url: EVC.lockLink(),
-								data: { "title": answer },
-								cache: false
-							})
-							.done(function( returnedFollowLink ) {
-									if(mustReplaceLink == "yes") {
-										var decodedReplaceLink = returnedFollowLink;
-										var encodedReplaceLink = encodeURIComponent(returnedFollowLink);
-										var oldHref = jQuery(el).attr("data-default-href");
-										newLink = oldHref;
-										console.debug(newLink);
-										newLink = newLink.replace("[DECODED_LINK]", decodedReplaceLink);
-										console.debug(newLink);
-										newLink = newLink.replace("[ENCODED_LINK]", encodedReplaceLink);
-										console.debug(newLink);
-										jQuery(el).attr("href", newLink);
-									}
-									else {
-										console.debug("no need to replace link");
-										newLink = jQuery(el).attr("href");
-									}
-							})
-							.fail(function( jqXHR, textStatus ) {
-									alert( "Error in application - link data can not be saved: " + textStatus );
-									followLink = "";
-									mustReplaceLink = "yes";
-							});
-						}
-						else {
-							console.debug(EVC.baseLink);
-							console.debug(EVC.serverKey);
-						}
-						console.debug(newLink);
-						if(newLink == "" && mustReplaceLink == "yes") {
+		jQuery(".saveLink").click(
+			function(event){
+				var el = this;
+				var newLink = "";
+				var mustReplaceLink = jQuery(el).attr("data-replace-link");
+				var workableLinks = EVC.workableLinks();
+				//have to replace but can not replace
+				if(workableLinks !== true && mustReplaceLink == "yes") {
+					alert("Could not save data ... please try again");
+					return false;
+				}
+				else {
+					//can server interact - then lock and redirect ...
+					if(workableLinks === true) {
+						var lockLink = EVC.lockLink();
+						var answer = prompt("Please enter title for your calculations");
+						if(answer === null) {
+							if(EVC.debug) {console.debug("cancelled");}
 							return false;
 						}
-						else {
-							window.location = newLink;
-						}
+						answer = encodeURIComponent(answer);
+						if(EVC.debug) {console.debug("running AJAX: lock link"+lockLink+" answer"+answer);}
+						jQuery.ajax({
+							method: "GET",
+							url: lockLink,
+							data: { "title": answer },
+							cache: false
+						})
+						.done(function( returnedFollowLink ) {
+								if(mustReplaceLink == "yes") {
+									var decodedReplaceLink = returnedFollowLink;
+									var encodedReplaceLink = encodeURIComponent(returnedFollowLink);
+									var oldHref = jQuery(el).attr("data-default-href");
+									newLink = oldHref;
+									newLink = newLink.replace("[DECODED_LINK]", decodedReplaceLink);
+									newLink = newLink.replace("[ENCODED_LINK]", encodedReplaceLink);
+									jQuery(el).attr("href", newLink);
+									if(EVC.debug) {console.debug("redirecting to: "+newLink);}
+								}
+								else {
+									if(EVC.debug ) {console.debug("no need to replace link");}
+									newLink = jQuery(el).attr("href");
+								}
+								window.location = newLink;
+								return true;
+						})
+						.fail(function( jqXHR, textStatus ) {
+								alert( "Error in application - link data can not be saved: " + textStatus );
+								followLink = "";
+								mustReplaceLink = "yes";
+								return false;
+						});
 					}
+					//server is not working, but we can redirect immediately
+					else if(mustReplaceLink == "no") {
+						if(EVC.debug) {console.debug("redirect without saving");}
+						return true;
+					}
+					else {
+						alert("could not run command");
+						return false;
+					}
+					return false;
 				}
-			);
+			}
+		);
+	},
+
+	updateLinks: function() {
+		if(EVC.workableLinks() == true && EVC.isReadyToCalculate() == true) {
+			jQuery(".saveLink.hideWithoutServerInteraction").show();
 		}
 		else {
-			jQuery(".saveLink").hide();
+			jQuery(".saveLink.hideWithoutServerInteraction").hide();
 		}
 	},
 
@@ -1033,7 +1054,10 @@ EVC.HTMLInteraction = {
 					cache: false
 				})
 				.done(function( returnKey ) {
-					EVC.serverKey = returnKey;
+					if(returnKey) {
+						EVC.isLocked = false;
+						EVC.serverKey = returnKey;
+					}
 				})
 				.fail(function( jqXHR, textStatus ) {
 					alert( "Data could not be saved: " + textStatus );
@@ -1079,16 +1103,16 @@ EVC.HTMLInteraction = {
 		console.debug("=========================");
 		this.populateResultTable();
 		this.populateCalculations();
-		var $el = jQuery("#ProfitAndLoss");
-		//jQuery($el).removeClass("fixed");
-		jQuery($el).addClass("fixed");
-		//if(this.isScrolledIntoView($el)) {
-			//do nothing
-		//}
-		//else {
-		//
-		//}
+		this.updateLinks();
 		EVC.scenarios.checkInfluence();
+		if(EVC.isReadyToCalculate()) {
+			jQuery("#EVCWrapper").removeClass("notReady").addClass("ready");
+		}
+		else {
+			jQuery("#EVCWrapper").removeClass("ready").addClass("notReady");
+		}
+
+		jQuery("#ProfitAndLoss").addClass("fixed");
 	},
 
 	setMyValue: function(key, item){
@@ -1097,6 +1121,7 @@ EVC.HTMLInteraction = {
 		value = this.formatValue(key, value);
 		item.value = value;
 	},
+
 	resetSession: function(){
 		alert("to be completed");
 	},
@@ -1112,8 +1137,7 @@ EVC.HTMLInteraction = {
 		var elemBottom = elemTop + $elem.height();
 
 		return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-	},
-
+	}
 
 
 };

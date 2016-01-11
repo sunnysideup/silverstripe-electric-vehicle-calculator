@@ -27,7 +27,10 @@
 <div id="EVCWrapper">
 
 	<% if PreviousCalculations %>
-	<div id="PreviousCalculations"></div>
+	<div id="PreviousCalculations">
+		<h2>Please select from the previous calculations below ... </h2>
+		<% include ECVPagePreviousCalculations %>
+	</div>
 	<% else %>
 	<form id="ElectricVehicleCalculator">
 
@@ -233,7 +236,7 @@
 				<a  id="SaveLink" href="[DECODED_LINK]" class="button saveLink" data-replace-link="yes">save and lock</a>
 			</li>
 			<li id="ListLink" class="buttonWrapper">
-				<a href="{$Link}previous/" class="button saveLink" data-replace-link="no">view saved results</a>
+				<a href="{$Link}previous/" class="button saveLink" data-replace-link="no" data-load-into="">view saved results</a>
 			</li>
 			<li id="ResetLink" class="buttonWrapper">
 				<a href="{$Link}reset/" class="button saveLink" data-replace-link="no">start new calculation</a>
@@ -265,7 +268,7 @@
 			<h2>Share Results ... </h2>
 			<ul class="actions">
 				<li class="buttonWrapper">
-					<a  id="EmailLink" class="button" href="mailto:?subject=I+want+an+Electric+Car&amp;body=Please+visit+[ENCODED_LINK]" data-replace-link="yes">in E-mail</a>
+					<a  id="EmailLink" href="mailto:?subject=I+want+an+Electric+Car&amp;body=Please+visit+[ENCODED_LINK]" class="button saveLink" data-replace-link="yes">in E-mail</a>
 				</li>
 				<li class="buttonWrapper">
 					<a id="FacebookLink" href="https://www.facebook.com/sharer/sharer.php?u=[ENCODED_LINK]" class="button saveLink" data-replace-link="yes">on Facebook</a>

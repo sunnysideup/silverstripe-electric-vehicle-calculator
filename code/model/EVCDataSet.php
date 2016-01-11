@@ -15,7 +15,7 @@ class EVCDataSet extends DataObject {
 			Convert::raw2sql($code);
 			$obj = EVCDataSet::get()->filter(array("Code" => $code))->first();
 			if(!$obj) {
-				$obj = EVCDataSet::get()->filter(array("Title" => $code))->first();
+				$obj = EVCDataSet::get()->filter(array("URLSegment" => $code))->first();
 			}
 		}
 		if(!$obj) {
@@ -29,6 +29,7 @@ class EVCDataSet extends DataObject {
 
 	private static $db = array(
 		"Title" => "Varchar(255)",
+		"URLSegment" => "Varchar(255)",
 		"Code" => "Varchar(7)",
 		"IP" => "Varchar(15)",
 		"Locked" => "Boolean",
@@ -45,31 +46,38 @@ class EVCDataSet extends DataObject {
 	}
 
 	public function MyLink($page, $action) {
-		if($this->Title) {
-			return $page->AbsoluteLink("$action/$this->Title/");
+		if($this->URLSegment) {
+			return $page->AbsoluteLink("$action/$this->URLSegment/");
 		}
 		else {
 			return $page->AbsoluteLink("$action/$this->Code/");
 		}
 	}
 
+	public function getCopyIfNeeded() {
+		if($this->Locked) {
+			$obj = EVCDataSet::find_or_create(null, true);
+			$obj->Data = $this->Data;
+			$obj->write();
+			return $obj;
+		}
+		return $this;
+	}
+
 	/**
-	 * returns zero on error...
+	 *
 	 * @param string $key
 	 * @param string $value
 	 *
-	 * @return int
+	 * @return string
 	 */
 	public function setValue($key, $value) {
-		if($this->Locked) {
-			return 0;
-		}
-		else {
-			$array = unserialize($this->Data);
-			$array[$key] = $value;
-			$this->Data = serialize($array);
-			return $this->write();
-		}
+		$obj = $this->getCopyIfNeeded();
+		$array = unserialize($obj->Data);
+		$array[$key] = $value;
+		$obj->Data = serialize($array);
+		$obj->write();
+		return $obj->Code;
 	}
 
 	/**
@@ -82,6 +90,9 @@ class EVCDataSet extends DataObject {
 			$json = "jQuery(document).ready(function(){";
 			foreach($array as $key => $value) {
 				$json .= "\n\tEVC.HTMLInteraction.setValue('".$key."', ".(floatval($value)-0).");";
+			}
+			if($this->Locked) {
+				$json .= "\nEVC.isLocked = true;";
 			}
 			$json .= "\nEVC.HTMLInteraction.updateScreen();";
 			$json .= "});";
@@ -96,6 +107,27 @@ class EVCDataSet extends DataObject {
 		}
 		if(!$this->Code) {
 			$this->Code = substr(hash("md5", uniqid()), 0, 7);
+		}
+		if($this->Title) {
+			$filter = URLSegmentFilter::create();
+			$this->URLSegment = $filter->filter($this->Title);
+			// Fallback to generic page name if path is empty (= no valid, convertable characters)
+			if(!$this->URLSegment || $this->URLSegment == '-' || $this->URLSegment == '-1') {
+				$this->URLSegment = $this->Code;
+			}
+			$originalURLSegment = $this->URLSegment;
+			$originalTitle = $this->Title;
+			$id = intval($this->ID) - 0;
+			for($i = 2; $i < 9999; $i++) {
+				$count = EVCDataSet::get()->filter(array("URLSegment" => $this->URLSegment))->exclude(array("ID" => $id))->Count();
+				if($count) {
+					$this->URLSegment = $originalURLSegment."-".$i;
+					$this->Title = $originalTitle." #".$i;
+				}
+				else {
+					$i = 9999999;
+				}
+			}
 		}
 	}
 
@@ -118,6 +150,7 @@ class EVCDataSet extends DataObject {
 		}
 		return $ip;
 	}
+
 
 
 

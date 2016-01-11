@@ -20,6 +20,8 @@ class EVCPage_Controller extends Page_Controller {
 
 	function init(){
 		parent::init();
+		Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
+		Requirements::javascript("framework/thirdparty/jquery/jquery.js");
 	}
 
 	protected $evcDataSet = null;
@@ -58,8 +60,6 @@ class EVCPage_Controller extends Page_Controller {
 		$code = $request->param("ID");
 		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
 		if($this->evcDataSet && $this->evcDataSet->exists()) {
-			Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
-			Requirements::javascript("framework/thirdparty/jquery/jquery.js");
 			Requirements::javascript('electric-vehicle-calculator/javascript/ElectricVehicleCalculator.js');
 
 			//Requirements::javascript("assets/evc/translations.js");
@@ -86,21 +86,17 @@ class EVCPage_Controller extends Page_Controller {
 		//save it
 		$key = Convert::raw2sql($request->getVar("key"));
 		$value = Convert::raw2sql($request->getVar("value"));
-		if($this->evcDataSet->setValue($key, $value)) {
-			return $this->evcDataSet->Code;
-		}
-		else {
-			return "";
+		if($newCode = $this->evcDataSet->setValue($key, $value)) {
+			Session::set("EVCLastCode", $newCode);
+			Session::save();
+			return $newCode;
 		}
 	}
 
 	function retrieve($request){
 		$code = $request->param("ID");
-		$oldObject = EVCDataSet::find_or_create($code, false);
-		if($oldObject && $oldObject->exists() && $oldObject->Data) {
-			$this->evcDataSet = EVCDataSet::create();
-			$this->evcDataSet->Data = $oldObject->Data;
-			$id = $this->evcDataSet->write();
+		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
+		if($this->evcDataSet && $this->evcDataSet->exists() && $this->evcDataSet->Data) {
 			Session::set("EVCLastCode", $this->evcDataSet->Code);
 			Session::save();
 			return $this->redirect($this->evcDataSet->MyLink($this, "show"));
@@ -125,6 +121,7 @@ class EVCPage_Controller extends Page_Controller {
 		$code = $request->param("ID");
 		$this->evcDataSet = EVCDataSet::find_or_create($code, false);
 		if($this->evcDataSet && $this->evcDataSet->exists()) {
+			$this->evcDataSet = $this->evcDataSet->getCopyIfNeeded();
 			$this->evcDataSet->Locked = true;
 			$title = $request->getVar("title");
 			$this->evcDataSet->Title = Convert::raw2sql(urldecode($title));
@@ -146,9 +143,9 @@ class EVCPage_Controller extends Page_Controller {
 	protected $previousCalculations = null;
 
 	function previous($request){
-		$this->previousCalculations = PaginatedList::create(EVCDataSet::get()->filter(array("Locked" => 1)));
+		$this->previousCalculations = PaginatedList::create(EVCDataSet::get()->filter(array("Locked" => 1))->where("Title IS NOT NULL AND Title <> ''"));
 		$this->previousCalculations->setPageLength(100);
-		return $this->renderWith("ECVPagePreviousCalculations");
+		return array();
 	}
 
 	function PreviousCalculations(){
