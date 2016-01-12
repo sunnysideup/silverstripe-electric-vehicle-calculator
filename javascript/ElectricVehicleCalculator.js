@@ -884,7 +884,7 @@ EVC.HTMLInteraction = {
 		//we have to wait until HTML is registered...
 		window.setTimeout(
 			function(){
-				jQuery("#CVValueTodayRange").focus();
+				jQuery("#CVValueTodayDisplay").click();
 			},
 			300
 		);
