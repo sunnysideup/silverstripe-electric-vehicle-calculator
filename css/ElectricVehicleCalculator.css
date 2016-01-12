@@ -21,7 +21,7 @@
 	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both; border-top: 1px solid #ccc; overflow: hidden;}
 	.fieldHolder:last-child { border-bottom: 1px solid #ccc; }
-	.middleColumn {margin-top: 0.3em; position: relative;}
+	.middleColumn {position: relative; overflow: hidden; float: right; width: auto;}
 	label, input {font-size: 12px;}
 	label strong {font-weight: 400; color: #999; cursor: pointer;}
 	label span.desc {color: orange;}
@@ -38,16 +38,13 @@
 		font-size: 21px;
 	}
 	input[type=range] {
-		margin-top: 4.5em!important;
+		margin-top: 2em;
 	}
 	input[type=number] {
-		width: 150px;
-		float: right;
+		width: calc(100% - 4px);
 		-wap-input-format: 'N';
 		font-size: 33px!important;
-		position: absolute;
-		top: 0;
-		right: 0;
+		margin-top: 1em;
 	}
 	input[readonly=readonly] {
 		cursor: pointer;
@@ -66,6 +63,7 @@
 	.fieldHolder.infocus input[type=range],
 	.fieldHolder.infocus input[type=number] {display: block;  }
 	.fieldHolder.infocus a.displayValue  {display: none;}
+	.fieldHolder.infocus .middleColumn  {float: none; width: 100%;}
 
 	/* show more of influence */
 	.fieldHolder.infocus .influence {height: auto; color: #333;}
@@ -109,7 +107,7 @@
 
 
 @media screen and (min-width: 480px) {
-	.middleColumn {width: 150px; margin-top: 0; float: right;}
+	.fieldHolder.infocus .middleColumn  {width: 150px!important; float: right!important;}
 	label {
 		width: -webkit-calc(100% - 160px);
 		width: -moz-calc(100% - 160px);
@@ -117,19 +115,25 @@
 		float: left;
 	}
 	input {
-		text-align: right;
-		font-size: 100%;
 		margin-top: 0em;
 		font-size: 17px;
-		margin-top: 0.5em;
 	}
-	input[type='range'] {margin-bottom: 2em;}
+	input[type=number] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 140px;
+		margin-top: 0;
+	}
+	input[type=range] {
+		margin-top: 4.5em!important;
+		padding-bottom: 2em;
+	}
 	#KeyAssupmptions input {font-size: 21px;}
 	tr.detail th, tr.detail td {border-bottom: 1px solid transparent;}
 	.calcVal {font-size: auto; width: auto; border-bottom: 0;}
 }
 @media screen and (min-width: 700px) {
-	.middleColumn {width: 30%px; }
 	input[type='text'] {width: 100%}
 
 	label, input {font-size: 15px;}

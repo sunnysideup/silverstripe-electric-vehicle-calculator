@@ -884,7 +884,7 @@ EVC.HTMLInteraction = {
 		//we have to wait until HTML is registered...
 		window.setTimeout(
 			function(){
-				jQuery("#CVValueTodayField").focus();
+				jQuery("#CVValueTodayRange").focus();
 			},
 			300
 		);
@@ -1011,7 +1011,7 @@ EVC.HTMLInteraction = {
 			var rangeFieldID = key + "FieldRange";
 			var displayFieldID = key + "Display";
 			var holderSelector = "#"+key+"Holder";
-			var labelSelector = "#"+key+"Holder label[for='"+fieldID+"'] strong";
+			var labelSelector = "#"+key+"Holder label strong";
 			var defaultValue = EVC.DefaultData[key];
 			var currentID = "";
 			var updateScreen = false;
@@ -1065,7 +1065,7 @@ EVC.HTMLInteraction = {
 			}
 			var formattedValue = this.formatValue(key, value);
 			jQuery("#"+displayFieldID).text(formattedValue);
-			this.hideDesc(key);
+			//this.hideDesc(key);
 			//send to server
 			if(EVC.workableLinks()) {
 				jQuery.ajax({
