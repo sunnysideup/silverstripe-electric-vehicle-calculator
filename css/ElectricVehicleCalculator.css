@@ -7,9 +7,10 @@
 	a:hover {color: orange;}
 	p {margin-bottom: 1.7em;}
 	h2 {margin-top: 3em; clear: both;}
-	#RightCol {width: 100%; max-width: 320px; float: right;}
-	#LeftCol {width: 100%; max-width: 320px; float: left; margin-right: 30px;}
+	#RightCol {width: 100%; }
+	#LeftCol {width: 100%;  }
 	ul {margin-left: 0px; padding-left: 15px;}
+	li {padding-bottom: 1.5em;}
 	ul.actions {list-style: none; padding: 0; margin: 0; overflow: hidden;}
 	ul.actions li {list-style: none; float: left; padding: 0em 1.5em 1.5em 0;}
 	footer {margin-top: 10em; color: #555; height: 10em; clear: both; border-top: 1px solid #ccc;}
@@ -139,6 +140,8 @@
 	label, input {font-size: 15px;}
 	.fixed {}
 	.fixed p{padding-left: 0; padding-right: 0; width: 700px; margin-left: auto!important; margin-right: auto!important;}
+	#RightCol {max-width: 320px; float: right;}
+	#LeftCol {max-width: 320px; float: left; }
 }
 @media screen and (min-width: 1100px) {
 	body {font-size: 0.9em; }
