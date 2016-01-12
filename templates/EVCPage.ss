@@ -40,10 +40,13 @@
 		<fieldset id="KeyAssupmptions"></fieldset>
 
 		<div id="ProfitAndLoss" class="mainDetailedSections">
+			<p class="message warning">
+				<a href="#" class="button" onclick="return false;">get updated results ...</a>
+			</p>
 			<p class="message good">
 				If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>,
 				your wealth, <span class="straightFillers" data-fx="profitLossDate">five years from now</span>,
-				will change by: <span class="calcVal" data-fx="fiveYearProfit"></span>
+				will change by: <span class="calcVal" data-fx="fiveYearProfit">calculating ...</span>
 			</p>
 		</div>
 

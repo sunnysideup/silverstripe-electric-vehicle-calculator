@@ -93,11 +93,11 @@
 	.calcVal {font-weight: 700; color: green; border-bottom: 1px solid #ccc; display: block; float: right; font-size: 21px; width: 100%; text-align: right;}
 	.calcVal .negativeNumber {color: red;}
 	#ProfitAndLoss {background-color: orange; color: green; }
-
 	#ProfitAndLoss.fixed {position:fixed; top: 0; left: 0; width: 100%; z-index: 10; }
 	#ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
 	#ProfitAndLoss p span.calcVal{border-bottom: none;}
-
+	#ProfitAndLoss p.warning {display: none; font-size: 21px;}
+	#ProfitAndLoss p.warning a{float: right;}
 	/* influence */
 
 	.influence {position: relative; background-color: #ccc; height: 3px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; border-top: 12px solid #fff;}
@@ -315,14 +315,6 @@ a.button {
 	-khtml-border-radius: 50px;
 	border-radius: 50px;
 	font-weight: bold;
-}
-
-li.buttonWrapper a.button:hover, li.buttonWrapper a.button:active {
-	border: none;
-	margin-top: 1px;
-}
-
-li.buttonWrapper a.button {
 	background: #FF5D9F;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5D9F', endColorstr='#FF0080');
 	background: -webkit-gradient(linear, left top, left bottom, from(#FF5D9F), to(#FF0080));
@@ -333,5 +325,14 @@ li.buttonWrapper a.button {
 	-moz-box-shadow: inset 0px 1px 0 #D1066C;
 	-o-box-shadow: inset 0px 1px 0 #D1066C;
 	-khtml-box-shadow: inset 0px 1px 0 #D1066C;
-	box-shadow: inset 0px 1px 0 #D1066C;
+	box-shadow: inset 0px 1px 0 #D1066C;	
+}
+
+li.buttonWrapper a.button:hover, li.buttonWrapper a.button:active {
+	border: none;
+	margin-top: 1px;
+}
+
+li.buttonWrapper a.button {
+
 }

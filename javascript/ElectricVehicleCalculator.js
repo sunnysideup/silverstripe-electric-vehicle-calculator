@@ -925,8 +925,8 @@ EVC.HTMLInteraction = {
 				html += "\t<label for=\""+ rangeFieldID + "\"><strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
-				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this) \" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
-				html += "\t\t<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" id=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.clickInput('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
+				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
+				html += "\t\t<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" oninput=\"return  EVC.HTMLInteraction.startInput('"+key+"', this);\" id=\""+ fieldID + "\" onclick=\"return EVC.HTMLInteraction.clickInput('"+key+"', this);\" onfocus=\"return EVC.HTMLInteraction.inputReady('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -934,13 +934,18 @@ EVC.HTMLInteraction = {
 		return html;
 	},
 
+	isMobileVar: null,
+
 	isMobile: function(){
-		var isMobile = false; //initiate as false
-		// device detection
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		 isMobile = true;// some code..
+		return true;
+		if(this.isMobileVar === null) {
+			this.isMobileVar = false; //initiate as false
+			// device detection
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+			 this.isMobileVar = true;// some code..
+			}
 		}
-		return isMobile;
+		return this.isMobileVar;
 	},
 
 	getValueFromDefaultsOrSession: function(key, formatted){
@@ -997,6 +1002,15 @@ EVC.HTMLInteraction = {
 		var value = jQuery(elOrValue).val();
 		var FieldID = key + "Field";
 		jQuery("#"+ FieldID).val(value);
+		this.startInput(key, elOrValue);
+	},
+
+	startInput: function(key, elOrValue){
+		jQuery("#ProfitAndLoss .calcVal").text("calculating ...");
+		if(this.isMobile()) {
+			jQuery("#ProfitAndLoss p.good").hide();
+			jQuery("#ProfitAndLoss p.warning").show();
+		}
 	},
 
 	updateInProgress: false,
@@ -1134,8 +1148,11 @@ EVC.HTMLInteraction = {
 		else {
 			jQuery("#EVCWrapper").removeClass("ready").addClass("notReady");
 		}
-
 		jQuery("#ProfitAndLoss").addClass("fixed");
+		if(this.isMobile()) {
+			jQuery("#ProfitAndLoss p.good").show();
+			jQuery("#ProfitAndLoss p.warning").hide();
+		}
 	},
 
 	setMyValue: function(key, item){
