@@ -922,7 +922,7 @@ EVC.HTMLInteraction = {
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder "+ type + "\">";
-				html += "\t<label for=\""+ rangeFieldID + "\"><strong onclick=\"EVC.HTMLInteraction.showDesc('"+key+"')\">"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
+				html += "\t<label for=\""+ rangeFieldID + "\"><strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this) \" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
@@ -982,6 +982,7 @@ EVC.HTMLInteraction = {
 	clickInput: function(key, el) {
 		jQuery(el).removeAttr("readonly");
 		jQuery(el).focus();
+		jQuery(el).select();
 		return true;
 	},
 
@@ -1176,7 +1177,7 @@ EVC.scenarios = {
 		return EVC.myData.totalProfit() + EVC.myData.equityImprovementAtEndOfYear();
 	},
 
-	theeYearProfit: function(){
+	threeYearProfit: function(){
 		var start = parseInt(EVC.ActualData.yearsAfterSwitch) - 0;
 		var year1 = new EVCfx(-1, 0 + start, EVC.ActualData.kmDrivenPerDay);
 		var year2 = new EVCfx(-1, 1 + start, EVC.ActualData.kmDrivenPerDay);
