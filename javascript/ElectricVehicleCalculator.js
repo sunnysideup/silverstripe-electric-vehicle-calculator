@@ -895,17 +895,22 @@ EVC.HTMLInteraction = {
 		var isMobile = this.isMobile();
 		var readOnly = "";
 		if(isMobile){
-			var readOnly = " readonly=\"readonly\" ";
+			readOnly = " readonly=\"readonly\" ";
 		}
 		for (var key in list) {
 			if (list.hasOwnProperty(key)) {
 				var type = list[key];
+				var stepHTML = "";
+				if(isMobile) {
+					stepHTML = "step=\""+step+"\"";
+				}
 				var labelVariableName = key + "Label";
 				var DescVariableName = key + "Desc";
 				var label = EVC.DataDescription.labels[key];
 				var desc = EVC.DataDescription.desc[key];
 				var holderID = key + "Holder";
 				var fieldID = key + "Field";
+				var displayFieldID = key + "Display";
 				var rangeFieldID = key + "FieldRange";
 				var influencerID = key + "Influence";
 				var unformattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, false);
@@ -916,11 +921,12 @@ EVC.HTMLInteraction = {
 
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
-				html += "<div id=\""+holderID+"\" class=\"fieldHolder\">";
-				html += "\t<label for=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.hideDesc('"+key+"')\"><strong>"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
+				html += "<div id=\""+holderID+"\" class=\"fieldHolder "+ type + "\">";
+				html += "\t<label for=\""+ rangeFieldID + "\"><strong onclick=\"EVC.HTMLInteraction.showDesc('"+key+"')\">"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
 				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\"/>";
-				html += "\t\t<input type=\"text\" class=\""+ type + "\" id=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.clickInput('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+formattedValue+"\" onblur=\"EVC.HTMLInteraction.setMyValue('"+key+"', this)\" "+readOnly+" />";
+				html += "\t\t<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
+				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this) \" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
+				html += "\t\t<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" id=\""+ fieldID + "\" onclick=\"EVC.HTMLInteraction.clickInput('"+key+"', this)\" onfocus=\"EVC.HTMLInteraction.inputReady('"+key+"', this)\" onchange=\"EVC.HTMLInteraction.setValue('"+key+"', this)\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
 				html += "\t</div>";
 				html += "</div>";
 			}
@@ -941,7 +947,7 @@ EVC.HTMLInteraction = {
 		//todo - get from session here ...
 		var value = EVC.ActualData[key];
 		if(formatted) {
-			return this.formatValue(key, value)
+			return this.formatValue(key, value);
 		}
 		else {
 			return value;
@@ -986,6 +992,12 @@ EVC.HTMLInteraction = {
 		EVC.HTMLInteraction.showDesc(key);
 	},
 
+	showUpdatedValue: function(key, elOrValue){
+		var value = jQuery(elOrValue).val();
+		var FieldID = key + "Field";
+		jQuery("#"+ FieldID).val(value);
+	},
+
 	updateInProgress: false,
 
 	setValue: function(key, elOrValue){
@@ -997,6 +1009,7 @@ EVC.HTMLInteraction = {
 			this.updateInProgress = true;
 			var fieldID = key + "Field";
 			var rangeFieldID = key + "FieldRange";
+			var displayFieldID = key + "Display";
 			var holderSelector = "#"+key+"Holder";
 			var labelSelector = "#"+key+"Holder label[for='"+fieldID+"'] strong";
 			var defaultValue = EVC.DefaultData[key];
@@ -1045,14 +1058,14 @@ EVC.HTMLInteraction = {
 			}
 			//update fields
 			if(fieldID != currentID) {
-				jQuery("#"+fieldID).val(value).trigger("blur");
-			}
-			else {
-				this.hideDesc(key);
+				jQuery("#"+fieldID).val(value);
 			}
 			if(rangeFieldID != currentID) {
 				jQuery("#"+rangeFieldID).val(value);
 			}
+			var formattedValue = this.formatValue(key, value);
+			jQuery("#"+displayFieldID).text(formattedValue);
+			this.hideDesc(key);
 			//send to server
 			if(EVC.workableLinks()) {
 				jQuery.ajax({
@@ -1105,6 +1118,7 @@ EVC.HTMLInteraction = {
 			}
 		);
 		jQuery("div#"+key+"Holder").addClass("infocus");
+		return false;
 	},
 
 	updateScreen: function(){

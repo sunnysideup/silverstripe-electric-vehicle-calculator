@@ -21,9 +21,15 @@
 	fieldset * {}
 	.fieldHolder { padding: 1em 0; clear: both; border-top: 1px solid #ccc; overflow: hidden;}
 	.fieldHolder:last-child { border-bottom: 1px solid #ccc; }
+	.middleColumn {margin-top: 0.3em; position: relative;}
 	label, input {font-size: 12px;}
+	label strong {font-weight: 400; color: #999; cursor: pointer;}
+	label span.desc {color: orange;}
+	.fieldHolder.changed label strong {color: #222}
+
+
+	/****** INPUTS *********/
 	input {
-		margin-top: 0.5em;
 		width: 100%;
 		background-color: transparent;
 		border: none;
@@ -31,18 +37,42 @@
 		color: blue;
 		font-size: 21px;
 	}
-	input[type='text'] {
+	input[type=range] {
+		margin-top: 4.5em!important;
+	}
+	input[type=number] {
 		width: 150px;
 		float: right;
+		-wap-input-format: 'N';
+		font-size: 33px!important;
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
-	input[readonly='readonly'] {
+	input[readonly=readonly] {
 		cursor: pointer;
 	}
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	a.displayValue {text-align: right; width: 100%; display: block; border-bottom: none!important; }
 
-	.middleColumn {margin-top: 0.3em;}
-	label strong {font-weight: 400; color: #999}
-	label span.desc {color: orange;}
-	.fieldHolder.changed label strong {color: #222}
+	/* hide */
+	label span.desc {display: none; color: orange;}
+	input[type=range], input[type=number] {display: none; }
+	.fieldHolder.infocus label span.desc,
+	.fieldHolder.infocus input[type=range],
+	.fieldHolder.infocus input[type=number] {display: block;  }
+	.fieldHolder.infocus a.displayValue  {display: none;}
+
+	/* show more of influence */
+	.fieldHolder.infocus .influence {height: auto; color: #333;}
+	.fieldHolder.infocus .influence span {top:0; bottom: 0; height: auto;}
+	.fieldHolder.infocus .influence em {color: #777;}
+
+
 
 
 	/* results */
@@ -74,16 +104,6 @@
 	.influence {position: relative; background-color: #ccc; height: 3px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; border-top: 12px solid #fff;}
 	.influence span{position: absolute; top: 0; left: 0; background-color: #aaa; height: 3px; z-index: 1;}
 	.influence em{padding: 5px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
-
-	/* hide */
-	label span.desc {display: none; color: orange;}
-	input[type=range] {display: none; }
-	.fieldHolder.infocus label span.desc {display: block;}
-	.fieldHolder.infocus input[type=range] {display: block; }
-	.fieldHolder.infocus input[type=text] {font-size: 33px!important; }
-	.fieldHolder.infocus .influence {height: auto; color: #333;}
-	.fieldHolder.infocus .influence span {top:0; bottom: 0; height: auto;}
-	.fieldHolder.infocus .influence em {color: #777;}
 
 }
 
@@ -238,7 +258,7 @@ input[type=range]:focus::-ms-fill-upper {
   -o-transition: all 0.30s ease-in-out;
 }
 
-input[type=text], textarea {
+input[type=number] {
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
   -ms-transition: all 0.30s ease-in-out;
@@ -247,7 +267,7 @@ input[type=text], textarea {
   border: 1px solid transparent;
 }
 
-input[type=text]:focus, textarea:focus {
+input[type=number]:focus {
   box-shadow: inset 0 0 3px #ddd;
   border: 1px solid #ccc;
 }
