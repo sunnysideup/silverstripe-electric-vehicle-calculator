@@ -900,10 +900,6 @@ EVC.HTMLInteraction = {
 		for (var key in list) {
 			if (list.hasOwnProperty(key)) {
 				var type = list[key];
-				var stepHTML = "";
-				if(isMobile) {
-					stepHTML = "step=\""+step+"\"";
-				}
 				var labelVariableName = key + "Label";
 				var DescVariableName = key + "Desc";
 				var label = EVC.DataDescription.labels[key];
@@ -918,6 +914,7 @@ EVC.HTMLInteraction = {
 				var min = EVC.DefaultDataMinMax[key][0];
 				var max = EVC.DefaultDataMinMax[key][1];
 				var step = Math.round(((max - min) / 20)*100)/100;
+				var stepHTML = "step=\""+step+"\"";
 
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
@@ -937,7 +934,6 @@ EVC.HTMLInteraction = {
 	isMobileVar: null,
 
 	isMobile: function(){
-		return true;
 		if(this.isMobileVar === null) {
 			this.isMobileVar = false; //initiate as false
 			// device detection
