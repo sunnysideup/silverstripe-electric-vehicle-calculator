@@ -937,7 +937,6 @@ EVC.HTMLInteraction = {
 	isMobileVar: null,
 
 	isMobile: function(){
-		return true;
 		if(this.isMobileVar === null) {
 			this.isMobileVar = false; //initiate as false
 			// device detection
