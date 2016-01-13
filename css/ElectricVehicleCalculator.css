@@ -63,6 +63,9 @@
 	.fieldHolder.infocus label span.desc,
 	.fieldHolder.infocus input[type=range],
 	.fieldHolder.infocus input[type=number] {display: block;  }
+	.fieldHolder.infocus input[type=number] {right: 5px; top: 3px;}
+	.fieldHolder.infocus input[type=range] {margin-right: 10px; margin-top: 10px;}
+
 	.fieldHolder.infocus a.displayValue  {display: none;}
 	.fieldHolder.infocus .middleColumn  {float: none; width: 100%;}
 
@@ -108,11 +111,11 @@
 
 
 @media screen and (min-width: 480px) {
-	.fieldHolder.infocus .middleColumn  {width: 150px!important; float: right!important;}
+	.fieldHolder.infocus .middleColumn  {width: 160px!important; float: right!important;}
 	label {
-		width: -webkit-calc(100% - 160px);
-		width: -moz-calc(100% - 160px);
-		width: calc(100% - 160px);
+		width: -webkit-calc(100% - 170px);
+		width: -moz-calc(100% - 170px);
+		width: calc(100% - 170px);
 		float: left;
 	}
 	input {
