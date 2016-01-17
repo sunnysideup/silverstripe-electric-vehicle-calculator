@@ -59,10 +59,11 @@
 
 	/* hide */
 	label span.desc {display: none; color: orange;}
-	input[type=range], input[type=number] {display: none; }
+	input[type=range], input[type=number], .chartHolder {display: none; }
+	.fieldHolder.infocus {border: 3px solid orange; padding: 5px; border-radius: 7px; margin-bottom: 10px;}
 	.fieldHolder.infocus label span.desc,
 	.fieldHolder.infocus input[type=range],
-	.fieldHolder.infocus input[type=number] {display: block;  }
+	.fieldHolder.infocus input[type=number] {display: block; }
 	.fieldHolder.infocus input[type=number] {right: 5px; top: 3px;}
 	.fieldHolder.infocus input[type=range] {margin-right: 10px; margin-top: 10px;}
 
@@ -107,6 +108,9 @@
 	.influence span{position: absolute; top: 0; left: 0; background-color: #aaa; height: 3px; z-index: 1;}
 	.influence em{padding: 5px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
 
+	/* graph */
+	figure {margin: 0;}
+	figcaption ul {margin-top: 0; padding-left: 0; list-style: none;}
 }
 
 

@@ -720,6 +720,9 @@ EVC.HTMLInteraction = {
 						else if(format == "percentage") {
 							var formattedValue = numberValue.formatPercentage();
 						}
+						else if(format == "kmPerDay") {
+							var formattedValue = numberValue.kmPerYearFormat();
+						}
 						else {
 							var formattedValue = numberValue;
 						}
@@ -919,12 +922,16 @@ EVC.HTMLInteraction = {
 				//console.debug(key + "..." + fieldID + "..." + value)
 				html += "\n";
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder "+ type + "\">";
-				html += "\t<label for=\""+ rangeFieldID + "\"><strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong> <span class=\"desc\">"+desc+"</span></label>";
+				html += "\t<label for=\""+ rangeFieldID + "\">";
+				html += "\t\t<strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong>";
+				html += "\t\t<span class=\"desc\">"+desc+"</span>";
+				html += "\t</label>";
 				html += "\t<div class=\"middleColumn\">";
 				html += "\t\t<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
 				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
 				html += "\t\t<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" oninput=\"return  EVC.HTMLInteraction.startInput('"+key+"', this);\" id=\""+ fieldID + "\" onclick=\"return EVC.HTMLInteraction.clickInput('"+key+"', this);\" onfocus=\"return EVC.HTMLInteraction.inputReady('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
 				html += "\t</div>";
+				html += "\t<figure id=\""+key+"Chart\" class=\"chartHolder\"><canvas></canvas><figcaption></figcaption></figure>";
 				html += "</div>";
 			}
 		}
@@ -973,6 +980,9 @@ EVC.HTMLInteraction = {
 				break;
 			case "percentage":
 				value = value.formatPercentage();
+				break;
+			case "kmPerDay":
+				value = value.kmPerYearFormat();
 				break;
 			default:
 				value = value.formatMoney();
@@ -1118,17 +1128,14 @@ EVC.HTMLInteraction = {
 		}
 	},
 
-	hideDesc: function(key){
-		jQuery("div#"+key+"Holder").removeClass("infocus");
-	},
-
 	showDesc: function(key){
 		jQuery(".infocus").each(
 			function(i, el){
-				jQuery(el).removeClass("infocus");
+				jQuery(el).removeClass("infocus").find("figure").hide();
 			}
 		);
 		jQuery("div#"+key+"Holder").addClass("infocus");
+		EVC.graphMaker.makeGraph(key);
 		return false;
 	},
 
@@ -1180,13 +1187,82 @@ EVC.HTMLInteraction = {
 
 EVC.graphMaker = {
 
-	makeGraph: function(key, min, max, step) {
-		var ctx = document.getElementById(key + "Chart").getContext("2d");
-		var myNewChart = new Chart(ctx).Line(this.getData(), this.options);
+	currentGraph: false,
+
+	makeGraph: function(key) {
+		if(typeof this.currentGraph == "object") {
+			this.currentGraph.destroy();
+		}
+		var selector = "figure#" + key + "Chart";
+		var ctx = jQuery(selector).css("display", "block").children("canvas").get(0).getContext("2d");
+		//var ctx = document.getElementById().getContext("2d");
+		this.currentGraph = new Chart(ctx).Line(this.getData(key), this.options);
+		var legend = this.currentGraph.generateLegend();
+		jQuery("#" + key + "Chart figcaption").html(legend);
+		//important to return false...
+		return false;
 	},
 
-	numberOfPoints: 12,
+	steps: 10,
 
+
+	/**
+	 *
+	 * @return array
+	 */ 
+	getSteps: function(key){
+		if(EVC.DefaultDataMinMax[key].length === 2) {
+			var min = EVC.DefaultDataMinMax[key][0];
+			var max = EVC.DefaultDataMinMax[key][1];
+			EVC.DefaultDataMinMax[key][2] = [];
+			var difference = max - min;
+			if(difference > this.steps) {
+				var step = Math.round((difference / this.steps));
+			}
+			else {
+				var step = Math.round((difference / this.steps) * 100) / 100;
+			}
+			var k = 0;
+			for(var i = min; i <= max; i = i + step) {
+				EVC.DefaultDataMinMax[key][2][k] = i;
+				k++;
+			}
+		}
+		return EVC.DefaultDataMinMax[key][2];
+	},
+
+	getData: function(key) {
+		this.data = {
+			labels: [],
+			datasets: [{
+				label: "The result in profit / loss for possible entries for <u>"+EVC.DataDescription.labels[key]+"</u>",
+				fillColor: "rgba(220,220,220,0.2)",
+				strokeColor: "rgba(220,220,220,1)",
+				pointColor: "rgba(220,220,220,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(220,220,220,1)",
+				data: []
+			}]
+		};
+		
+		var currentValue = EVC.ActualData[key];
+		var defaultProfit = EVC.scenarios.fiveYearProfit();
+		var steps = this.getSteps(key);
+		for(var i= 0; i < steps.length; i++) {
+			EVC.ActualData[key] = steps[i];
+			var label = EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])
+			this.data.labels.push(label);
+			var value = EVC.scenarios.fiveYearProfit();
+			this.data.datasets[0].data.push(value);
+		}
+		//reset ...
+		this.options.tooltipTemplate =  "<%if (label){%><%=label%> = <%}%><%= value.formatMoney() %>",
+		EVC.ActualData[key] = currentValue;
+		return this.data;
+	},
+
+	
 	options: {
 		
 		// Boolean - Whether to animate the chart
@@ -1230,7 +1306,7 @@ EVC.graphMaker = {
 		scaleShowLabels: true,
 
 		// Interpolated JS string - can access value
-		scaleLabel: "<%=value%>",
+		scaleLabel: "<%= parseFloat(value).formatMoney() %>",
 
 		// Boolean - Whether the scale should stick to integers, not floats even if drawing space is there
 		scaleIntegersOnly: true,
@@ -1308,7 +1384,7 @@ EVC.graphMaker = {
 		tooltipXOffset: 10,
 
 		// String - Template string for single tooltips
-		tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+		tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value.formatMoney() %>",
 
 		// String - Template string for multiple tooltips
 		multiTooltipTemplate: "<%= value %>",
@@ -1324,98 +1400,56 @@ EVC.graphMaker = {
 		 *
 		 */ 
 
-    ///Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines : true,
+		///Boolean - Whether grid lines are shown across the chart
+		scaleShowGridLines : true,
 
-    //String - Colour of the grid lines
-    scaleGridLineColor : "rgba(0,0,0,.05)",
+		//String - Colour of the grid lines
+		scaleGridLineColor : "rgba(0,0,0,.05)",
 
-    //Number - Width of the grid lines
-    scaleGridLineWidth : 1,
+		//Number - Width of the grid lines
+		scaleGridLineWidth : 1,
 
-    //Boolean - Whether to show horizontal lines (except X axis)
-    scaleShowHorizontalLines: true,
+		//Boolean - Whether to show horizontal lines (except X axis)
+		scaleShowHorizontalLines: true,
 
-    //Boolean - Whether to show vertical lines (except Y axis)
-    scaleShowVerticalLines: true,
+		//Boolean - Whether to show vertical lines (except Y axis)
+		scaleShowVerticalLines: true,
 
-    //Boolean - Whether the line is curved between points
-    bezierCurve : true,
+		//Boolean - Whether the line is curved between points
+		bezierCurve : true,
 
-    //Number - Tension of the bezier curve between points
-    bezierCurveTension : 0.4,
+		//Number - Tension of the bezier curve between points
+		bezierCurveTension : 0.4,
 
-    //Boolean - Whether to show a dot for each point
-    pointDot : true,
+		//Boolean - Whether to show a dot for each point
+		pointDot : true,
 
-    //Number - Radius of each point dot in pixels
-    pointDotRadius : 4,
+		//Number - Radius of each point dot in pixels
+		pointDotRadius : 4,
 
-    //Number - Pixel width of point dot stroke
-    pointDotStrokeWidth : 1,
+		//Number - Pixel width of point dot stroke
+		pointDotStrokeWidth : 1,
 
-    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-    pointHitDetectionRadius : 20,
+		//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+		pointHitDetectionRadius : 20,
 
-    //Boolean - Whether to show a stroke for datasets
-    datasetStroke : true,
+		//Boolean - Whether to show a stroke for datasets
+		datasetStroke : true,
 
-    //Number - Pixel width of dataset stroke
-    datasetStrokeWidth : 2,
+		//Number - Pixel width of dataset stroke
+		datasetStrokeWidth : 2,
 
-    //Boolean - Whether to fill the dataset with a colour
-    datasetFill : true,
+		//Boolean - Whether to fill the dataset with a colour
+		datasetFill : true,
 
-    //String - A legend template
-    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+		//String - A legend template
+		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\">"
+		 +"<% for (var i=0; i<datasets.length; i++){%><li>"
+		 +"<span style=\"background-color:<%=datasets[i].strokeColor%>\"></span>"
+		 +"<%if(datasets[i].label){%><%=datasets[i].label%><%}%>"
+		 +"</li><%}%>"
+		 +"</ul>"
 		
-	},
-
-	/**
-	 *
-	 * @return array
-	 */ 
-	getSteps(key): function(){
-		if(typeof EVC.DefaultDataMinMax[key][2] == "undefined") {
-			var min = EVC.DefaultDataMinMax[key][0];
-			var max = EVC.DefaultDataMinMax[key][1];			
-			var difference = max - min;
-			var step = Math.round((difference / this.steps) * 100) / 100;
-			var k = 0;
-			for(var i = min; i <= max; i = i + step) {
-				EVC.DefaultDataMinMax[key][2][k] = i;
-				k++;
-			}
-		}
-		return EVC.DefaultDataMinMax[key][2];
-	},
-
-	getData: function(key) {
-		this.data = {
-			labels: [],
-			datasets: [{
-				label: EVC.DataDescription.labels[key],
-				fillColor: "rgba(220,220,220,0.2)",
-				strokeColor: "rgba(220,220,220,1)",
-				pointColor: "rgba(220,220,220,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(220,220,220,1)",
-				data: []
-			}]
-		};
-		
-		var currentValue = EVC.ActualData[key];
-		var defaultProfit = this.fiveYearProfit();
-		var steps = this.getSteps();
-		for(var i= 0; i < steps.length; i++)
-			EVC.ActualData[key] = steps[i];
-			this.data["data"][] = this.fiveYearProfit();;
-			this.data["labels"][] = EVC.ActualData[key];
-		}
-		//reset ...
-		EVC.ActualData[key] = currentValue;
-		return this.data;
 	}
 
 
@@ -1604,7 +1638,7 @@ EVC.DataDescription = {
 
 	keyAssumptionKeys: {
 		"CVValueToday":                         "currency",
-		"kmDrivenPerDay":                       "number"
+		"kmDrivenPerDay":                       "kmPerDay"
 	},
 
 	playAroundAssumptionKeys: {
@@ -1638,7 +1672,7 @@ EVC.DataDescription = {
 		"maintenanceCVPerTenThousandKm":        "currency",
 		"maintenanceEVPerTenThousandKm":        "currency",
 		"repairKMDivider":                      "number",
-		"maxCarValueForRepairs":                   "currency",
+		"maxCarValueForRepairs":                "currency",
 		"exponentialGrowthFactorForRepairs":    "number",
 		"valueDividerForRepairCalculation":     "number",
 		"depreciationRatePerYearCV":            "percentage",
@@ -1774,6 +1808,11 @@ Number.prototype.formatMoney = function(c, d, t){
 Number.prototype.formatPercentage = function(){
 	var n = this;
 	return n + "%";
+};
+
+Number.prototype.kmPerYearFormat = function(){
+	var n = this;
+	return n + "km (="+parseFloat(n*365).formatNumber()+"km. per year)";
 };
 
 Number.prototype.formatNumber = function() {
