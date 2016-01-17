@@ -15,7 +15,8 @@
 	],
 	"require":{
 		"silverstripe/framework": "~3.2",
-		"silverstripe/cms": "~3.2"
+		"silverstripe/cms": "~3.2",
+		"nnnick/chartjs": "dev-master"
 	},
 	"extra": {
 		"installer-name": "electric-vehicle-calculator"
