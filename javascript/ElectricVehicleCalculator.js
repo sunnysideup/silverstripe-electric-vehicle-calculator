@@ -32,6 +32,8 @@ var EVC = {
 
 	baseLink: "",
 
+	numberOfSteps: 10,
+
 	isReadyToCalculate: function(){
 		return EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0;
 	},
@@ -916,7 +918,7 @@ EVC.HTMLInteraction = {
 				var formattedValue = EVC.HTMLInteraction.getValueFromDefaultsOrSession(key, true);
 				var min = EVC.DefaultDataMinMax[key][0];
 				var max = EVC.DefaultDataMinMax[key][1];
-				var step = Math.round(((max - min) / 20)*100)/100;
+				var step = Math.round(((max - min) / EVC.numberOfSteps)*100)/100;
 				var stepHTML = "step=\""+step+"\"";
 
 				//console.debug(key + "..." + fieldID + "..." + value)
@@ -1122,25 +1124,41 @@ EVC.HTMLInteraction = {
 			}
 			//update HTML
 			if(updateScreen) {
-				this.updateScreen();
+				this.updateScreen(key);
 			}
 			this.updateInProgress = false;
 		}
 	},
 
 	showDesc: function(key){
+		var currentEl = jQuery("div#"+key+"Holder");
 		jQuery(".infocus").each(
 			function(i, el){
-				jQuery(el).removeClass("infocus").find("figure").hide();
+				if(jQuery(currentEl).attr("id") != jQuery(el).attr("id")) {
+					jQuery(el).removeClass("infocus").find("figure").hide();
+				}
+				else {
+					//do nothing
+				}
 			}
 		);
-		jQuery("div#"+key+"Holder").addClass("infocus");
-		EVC.graphMaker.makeGraph(key);
+		if(jQuery(currentEl).hasClass("infocus")) {
+			//do nothing
+		}
+		else {
+			currentEl.addClass("infocus");EVC.graphMaker.makeGraph(key);
+			jQuery('html, body').animate(
+				{scrollTop: $("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
+				},
+				200,
+				function() {}
+			);
+		}
 		return false;
 	},
 
-	updateScreen: function(){
-		console.debug("=========================");
+	updateScreen: function(key){
+		console.debug("== UPDATING SCREEN ==");
 		this.populateResultTable();
 		this.populateCalculations();
 		this.updateLinks();
@@ -1155,6 +1173,9 @@ EVC.HTMLInteraction = {
 		if(this.isMobile()) {
 			jQuery("#ProfitAndLoss p.good").show();
 			jQuery("#ProfitAndLoss p.warning").hide();
+		}
+		if(typeof key != "undefined") {
+			EVC.graphMaker.makeGraph(key);
 		}
 	},
 
@@ -1199,12 +1220,34 @@ EVC.graphMaker = {
 		this.currentGraph = new Chart(ctx).Line(this.getData(key), this.options);
 		var legend = this.currentGraph.generateLegend();
 		jQuery("#" + key + "Chart figcaption").html(legend);
+		if(this.indexBeforeCurrentValue >= 0) {
+			if(this.indexBeforeCurrentValue == this.indexAfterCurrentValue) {
+				var colour = "blue";
+			}
+			else {
+				var colour = "LightSkyBlue"
+			}
+			this.currentGraph.datasets[0].points[this.indexBeforeCurrentValue].fillColor =  colour;
+			this.currentGraph.datasets[0].points[this.indexBeforeCurrentValue].pointHighlightFill =  colour;
+			this.currentGraph.datasets[0].points[this.indexAfterCurrentValue].fillColor =  colour;
+			this.currentGraph.datasets[0].points[this.indexAfterCurrentValue].pointHighlightFill =  colour;
+		}
+		this.currentGraph.update();
 		//important to return false...
 		return false;
 	},
 
-	steps: 10,
+	indexBeforeCurrentValue: -1,
 
+	indexAfterCurrentValue: -1,
+
+	/**
+	 *
+	 * @return float
+	 */ 
+	getStep: function(key){
+
+	},
 
 	/**
 	 *
@@ -1214,15 +1257,17 @@ EVC.graphMaker = {
 		if(EVC.DefaultDataMinMax[key].length === 2) {
 			var min = EVC.DefaultDataMinMax[key][0];
 			var max = EVC.DefaultDataMinMax[key][1];
-			EVC.DefaultDataMinMax[key][2] = [];
 			var difference = max - min;
-			if(difference > this.steps) {
-				var step = Math.round((difference / this.steps));
+			if(difference > EVC.numberOfSteps) {
+				var step = Math.round((difference / EVC.numberOfSteps));
 			}
 			else {
-				var step = Math.round((difference / this.steps) * 100) / 100;
+				var step = Math.round((difference / EVC.numberOfSteps) * 100) / 100;
 			}
 			var k = 0;
+			var currentValue = EVC.ActualData[key];
+			var nextStep = currentValue + step;
+			EVC.DefaultDataMinMax[key][2] = [];
 			for(var i = min; i <= max; i = i + step) {
 				EVC.DefaultDataMinMax[key][2][k] = i;
 				k++;
@@ -1234,30 +1279,40 @@ EVC.graphMaker = {
 	getData: function(key) {
 		this.data = {
 			labels: [],
-			datasets: [{
-				label: "The result in profit / loss for possible entries for <u>"+EVC.DataDescription.labels[key]+"</u>",
-				fillColor: "rgba(220,220,220,0.2)",
-				strokeColor: "rgba(220,220,220,1)",
-				pointColor: "rgba(220,220,220,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(220,220,220,1)",
-				data: []
-			}]
+			datasets: [
+				{
+					label: "The result in profit / loss for possible entries for <u>"+EVC.DataDescription.labels[key]+"</u>",
+					fillColor: "rgba(220,220,220,0.2)",
+					strokeColor: "rgba(220,220,220,1)",
+					pointColor: "rgba(220,220,220,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(220,220,220,1)",
+					data: []
+				}
+			]
 		};
 		
 		var currentValue = EVC.ActualData[key];
-		var defaultProfit = EVC.scenarios.fiveYearProfit();
 		var steps = this.getSteps(key);
+		var step = steps[1] - steps[0];
 		for(var i= 0; i < steps.length; i++) {
-			EVC.ActualData[key] = steps[i];
-			var label = EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])
+			var label = steps[i];
+			if(label == currentValue) {
+				this.indexBeforeCurrentValue = i;
+				this.indexAfterCurrentValue = i;
+			}
+			if(label > currentValue && label < (currentValue + step)) {
+				this.indexBeforeCurrentValue = i-1;
+				this.indexAfterCurrentValue = i;
+			}
+			EVC.ActualData[key] = label;
+			var label = EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key]);
 			this.data.labels.push(label);
 			var value = EVC.scenarios.fiveYearProfit();
 			this.data.datasets[0].data.push(value);
 		}
 		//reset ...
-		this.options.tooltipTemplate =  "<%if (label){%><%=label%> = <%}%><%= value.formatMoney() %>",
 		EVC.ActualData[key] = currentValue;
 		return this.data;
 	},
@@ -1269,7 +1324,7 @@ EVC.graphMaker = {
 		animation: true,
 
 		// Number - Number of animation steps
-		animationSteps: 60,
+		animationSteps: 40,
 
 		// String - Animation easing effect
 		// Possible effects are:
@@ -1339,7 +1394,7 @@ EVC.graphMaker = {
 		customTooltips: false,
 
 		// Array - Array of string names to attach tooltip events
-		tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+		tooltipEvents: ["click", "touchstart", "touchmove"],
 
 		// String - Tooltip background colour
 		tooltipFillColor: "rgba(0,0,0,0.8)",
@@ -1360,7 +1415,7 @@ EVC.graphMaker = {
 		tooltipTitleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
 
 		// Number - Tooltip title font size in pixels
-		tooltipTitleFontSize: 14,
+		tooltipTitleFontSize: 10,
 
 		// String - Tooltip title font weight style
 		tooltipTitleFontStyle: "bold",
@@ -1384,7 +1439,7 @@ EVC.graphMaker = {
 		tooltipXOffset: 10,
 
 		// String - Template string for single tooltips
-		tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value.formatMoney() %>",
+		tooltipTemplate: "<%if (label){%><%=label%> = <%}%><%= value.formatMoney() %>",
 
 		// String - Template string for multiple tooltips
 		multiTooltipTemplate: "<%= value %>",
