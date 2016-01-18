@@ -294,6 +294,8 @@
 			<ul>
 				<li><a href="http://www.stuff.co.nz/national/9204870/Car-running-costs-lurch-ahead-for-Kiwi-drivers">NZ Car Running Cost</a></li>
 				<li><a href="http://www.electricheaven.nz/">Information on Electric Cars in New Zealand</a></li>
+				<li><a href="https://www.energywise.govt.nz/tools/fuel-economy/">EECA: Fuel Economy</a></li>
+				<li><a href="https://www.energywise.govt.nz/on-the-road/electric-vehicles/">EECA: Electric Vehicles</a></li>
 			</ul>
 
 			<h2>disclaimer</h2>
@@ -309,7 +311,11 @@
 				<li>add padding on top that is the same as fixed header</li>
 				<li>allow to change values from chart</li>
 				<li>review: https://www.quora.com/What-are-some-APIs-for-retrieving-car-value-data, http://www.programmableweb.com/api/kelley-blue-book-infodriver, http://developer.edmunds.com/faq.html#faq-2, https://developer.ibm.com/apimanagement/2014/10/31/whats-driving-apis-automotive/, http://www3.epa.gov/otaq/tcldata.htm, https://www.carvoyant.com/</li>
+				<li>set up form to select make and model</li>
+				<li></li>
+				<li>dont select current car value, but let user select car model and age ... </li>
 				<li>make it easier to understand save methods</li>
+				<li>move all content down by size of Header</li>
 			</ul>
 		</div>
 	</form>
