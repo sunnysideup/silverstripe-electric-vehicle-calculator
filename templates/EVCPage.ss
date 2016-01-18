@@ -312,7 +312,6 @@
 				<li>allow to change values from chart</li>
 				<li>review: https://www.quora.com/What-are-some-APIs-for-retrieving-car-value-data, http://www.programmableweb.com/api/kelley-blue-book-infodriver, http://developer.edmunds.com/faq.html#faq-2, https://developer.ibm.com/apimanagement/2014/10/31/whats-driving-apis-automotive/, http://www3.epa.gov/otaq/tcldata.htm, https://www.carvoyant.com/</li>
 				<li>set up form to select make and model</li>
-				<li></li>
 				<li>dont select current car value, but let user select car model and age ... </li>
 				<li>make it easier to understand save methods</li>
 				<li>move all content down by size of Header</li>
