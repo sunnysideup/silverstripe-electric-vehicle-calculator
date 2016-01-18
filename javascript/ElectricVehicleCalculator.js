@@ -1312,7 +1312,7 @@ EVC.graphMaker = {
 			var value = EVC.scenarios.fiveYearProfit();
 			this.data.datasets[0].data.push(value);
 		}
-		//reset ...
+		//IMPORTANT reset ...
 		EVC.ActualData[key] = currentValue;
 		return this.data;
 	},
