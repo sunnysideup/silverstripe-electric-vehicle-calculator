@@ -317,7 +317,8 @@
 				<li>move all content down by size of Header</li>
 				<li>make a list of links for each assumption / variable</li>
 				<li>see assumptions relevant to each section</li>
-				<li>ability to add uber / public transport / walking / cycling KMs...</li>
+				<li>ability to add uber / public transport / walking / train / long distance bus / flying / cycling KMs...</li>
+				<li>break down cost in </li>
 			</ul>
 		</div>
 	</form>
