@@ -107,7 +107,7 @@ class EVCSelectPage_Controller extends Page_Controller {
 
 
 	protected function getModels(){
-		$makeNiceName = $this->getValue("Model");
+		$makeNiceName = $this->getValue("Make");
 		if(!$makeNiceName) {
 			$makeNiceName = "audi";
 		}
