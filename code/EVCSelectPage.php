@@ -9,6 +9,7 @@ class EVCSelectPage extends Page {
 class EVCSelectPage_Controller extends Page_Controller {
 
 	private static $allowed_actions = array(
+		"SelectForm",
 		"nextstep"
 	);
 
@@ -31,9 +32,9 @@ class EVCSelectPage_Controller extends Page_Controller {
 	function SelectForm(){
 		$fieldList = new FieldList(
 			NumericField::create("Year", "Manufacturing Year"),
-			DropdownField::create("Make", "Make", array(0 => "-- no idea! --") + $this->getMakes()),
-			DropdownField::create("Model", "Model", array(0 => "-- no idea! --")),
-			DropdownField::create("Type", "Type", array(0 => "-- no idea! --")),
+			DropdownField::create("Make", "Make", array(0 => $this->pleaseSelectPhrase())),
+			DropdownField::create("Model", "Model", array(0 => $this->pleaseSelectPhrase())),
+			DropdownField::create("Type", "Type", array(0 => $this->pleaseSelectPhrase())),
 			NumericField::create("ODO", "Current Odometer (overall distance travelled - as shown in your dashboard")
 		);
 		$actions = new FieldList(
@@ -44,11 +45,16 @@ class EVCSelectPage_Controller extends Page_Controller {
 			"SelectForm", 
 			$fieldList, 
 			$actions, 
-			$required = RequiredFields::create(array("Year", "Make", "Model", "Type"))
+			$required = RequiredFields::create(array("Year", "Make", "Model", "Type", "ODO"))
 		);
 		return $form;
 	}
 
+	function doselectform($data, $form) {
+		$params = array();
+		print_r(EdmundsAPI::get_data("/api/tco/newtruecosttoownbystyleidandzip/".$data["Type"]."/90019", $params));
+		die("------------");
+	}
 
 
 	/**
@@ -75,7 +81,7 @@ class EVCSelectPage_Controller extends Page_Controller {
 		if($this->hasMethod($method)) {
 			return json_encode($this->$method());
 		}
-		return json_encode(array("error" => "could not find method $method"));
+		return json_encode(array("0" => "sorry an error occured with $method, please reload page ..."));
 		
 	}
 
@@ -92,41 +98,62 @@ class EVCSelectPage_Controller extends Page_Controller {
 
 
 	protected function getMakes(){
-		$params = array("view" => "full");
-		if($year = $this->getValue("Year")) {
+		$returnArray = array(0 => $this->pleaseSelectPhrase());
+		$year = $this->getValue("Year");
+		if($year) {
+			$params = array("view" => "full");
 			$params["year"] = $year;
-		}		
-		$makes = EdmundsAPI::get_data("/api/vehicle/v2/makes/count", $params);
-		$returnArray = array();
-		foreach($makes->makes as $make) {
-			$returnArray[$make->niceName] = $make->niceName;
+			$makes = EdmundsAPI::get_data("/api/vehicle/v2/makes/count", $params);
+			foreach($makes->makes as $make) {
+				$returnArray[$make->niceName] = $make->niceName;
+			}
+			asort($returnArray);
 		}
-		asort($returnArray);
 		return $returnArray;
 	}
 
 
 	protected function getModels(){
+		$returnArray = array(0 => $this->pleaseSelectPhrase());
 		$makeNiceName = $this->getValue("Make");
-		if(!$makeNiceName) {
-			$makeNiceName = "audi";
-		}
 		$year = $this->getValue("Year");
-		if($year < 1900 || $year > Date("Year", strtotime("Now"))) {
-			$year = 0;
-		}
-		$params = array();
-		if($year) {
+		if($makeNiceName && $year) {
+			$params = array();
 			$params["year"] = $year;
-		}		
-		$models = EdmundsAPI::get_data("/api/vehicle/v2/".$makeNiceName, $params);
-		$returnArray = array();
-		foreach($models->models as $model) {
-			$returnArray[$model->id] = $model->name;
+			$models = EdmundsAPI::get_data("/api/vehicle/v2/".$makeNiceName, $params);
+			foreach($models->models as $model) {
+				$returnArray[$model->niceName] = $model->name;
+			}
+			asort($returnArray);
+			
 		}
-		asort($returnArray);
 		return $returnArray;
 	}
 
+
+	protected function getTypes(){
+		$returnArray = array(0 => $this->pleaseSelectPhrase());
+		$year = $this->getValue("Year");
+		$makeNiceName = $this->getValue("Make");
+		$modelNiceName = $this->getValue("Model");
+		if($year && $makeNiceName && $modelNiceName) {
+			$params = array("view" => "full");
+			$params["year"] = $year;
+			$types = EdmundsAPI::get_data("/api/vehicle/v2/".$makeNiceName."/".$modelNiceName, $params);
+			foreach($types->years as $loopYear) {
+				if(intval($loopYear->year) == intval($year)) {
+					foreach($loopYear->styles as $style) {
+						$returnArray[$style->id] = $style->name;
+					}
+				}
+			}
+			asort($returnArray);
+		}
+		return $returnArray;
+	}
+
+	function pleaseSelectPhrase(){
+		return "-- please answer all previous questions --";
+	}
 
 }

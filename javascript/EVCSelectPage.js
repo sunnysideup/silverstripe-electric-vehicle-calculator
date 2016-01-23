@@ -23,7 +23,9 @@ var EVCSelectPage = {
 			var nameOfField = this.steps[i];
 			var selectorOfField = "#Form_SelectForm_"+nameOfField;
 			console.debug("setting up "+nameOfField);
-			jQuery(selectorOfField).css("border", "1px solid blue");
+			if(jQuery(selectorOfField).is("select")) {
+				jQuery(selectorOfField).attr("readonly", "readonly");
+			}
 			jQuery(selectorOfField).on(
 				"change",
 				function(){
@@ -32,6 +34,10 @@ var EVCSelectPage = {
 					var valueOfField = jQuery(selectorOfField).val();
 					var indexOfField = EVCSelectPage.steps.indexOf(nameOfField);
 					var nextFieldName = EVCSelectPage.steps[indexOfField+1];
+					var nextFieldSelector = "#Form_SelectForm_"+nextFieldName;
+					if(jQuery(nextFieldSelector).length && jQuery(nextFieldSelector).is("select")) {
+						jQuery(nextFieldSelector).parent().addClass("loading");
+					}
 					console.debug("changing "+nameOfField+" to "+valueOfField);
 					jQuery.ajax(
 						{
@@ -45,7 +51,7 @@ var EVCSelectPage = {
 							dataType: "json",
 							
 							error: function(){
-								window.location.reload();
+								//window.location.reload();
 							},
 							
 							beforeSend: function(){
@@ -55,18 +61,22 @@ var EVCSelectPage = {
 							},
 							
 							success: function( json ){
-								alert("SUCCESS");
 								if(typeof nextFieldName !== "undefined") {
-									var nextFieldSelector = "#Form_SelectForm_"+nextFieldName;
 									if(jQuery(nextFieldSelector).length && jQuery(nextFieldSelector).is("select")) {
 										jQuery(nextFieldSelector).empty();
+										jQuery(nextFieldSelector).attr("readonly", "readonly");
+										var count = 0;
 										jQuery.each(
 											json,
 											function(i, value) {
-												jQuery(nextFieldSelector).append($('<option>').text(value).attr('value', value));
+												count++;
+												jQuery(nextFieldSelector).append($('<option>').text(value).attr('value', i));
 											}
 										);
-										jQuery(nextFieldSelector).focus();
+										if(count > 1) {
+											jQuery(nextFieldSelector).removeAttr("readonly");
+										}
+										jQuery(nextFieldSelector).focus().parent().removeClass("loading");
 									}
 								}
 								else {
