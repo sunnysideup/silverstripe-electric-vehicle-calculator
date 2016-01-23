@@ -294,6 +294,8 @@
 			<ul>
 				<li><a href="http://www.stuff.co.nz/national/9204870/Car-running-costs-lurch-ahead-for-Kiwi-drivers">NZ Car Running Cost</a></li>
 				<li><a href="http://www.electricheaven.nz/">Information on Electric Cars in New Zealand</a></li>
+				<li><a href="https://www.energywise.govt.nz/tools/fuel-economy/">EECA: Fuel Economy</a></li>
+				<li><a href="https://www.energywise.govt.nz/on-the-road/electric-vehicles/">EECA: Electric Vehicles</a></li>
 			</ul>
 
 			<h2>disclaimer</h2>
@@ -306,18 +308,17 @@
 
 			<h2>to do</h2>
 			<ul>
-				<li>show years before and after switch in headers to make sense of data</li>
-				<li>show results table for actual years after switch but show five year result from first day of switch</li>
-				<li>show actual date for five years from now in total after after five years</li>
-				<li>listen to scroll to move results bar</li>
-				<li>formatting of total profit bar on smallest screen</li>
-				<li>add explanation at the top</li>
-				<li>create more space at the top for total profit bar</li>
-				<li>add settings for max electric car value</li>
-				<li>add settings for unexpected repair cost</li>
-				<li>create clearer separation between assumptions</li>
-				<li>remove key from on... methods and replace by lookup</li>
-				<li>add total year profit in table...</li>
+				<li>add padding on top that is the same as fixed header</li>
+				<li>allow to change values from chart</li>
+				<li>review: https://www.quora.com/What-are-some-APIs-for-retrieving-car-value-data, http://www.programmableweb.com/api/kelley-blue-book-infodriver, http://developer.edmunds.com/faq.html#faq-2, https://developer.ibm.com/apimanagement/2014/10/31/whats-driving-apis-automotive/, http://www3.epa.gov/otaq/tcldata.htm, https://www.carvoyant.com/</li>
+				<li>set up form to select make and model</li>
+				<li>dont select current car value, but let user select car model and age ... </li>
+				<li>make it easier to understand save methods</li>
+				<li>move all content down by size of Header</li>
+				<li>make a list of links for each assumption / variable</li>
+				<li>see assumptions relevant to each section</li>
+				<li>ability to add uber / public transport / walking / train / long distance bus / flying / cycling KMs...</li>
+				<li>break down cost in </li>
 			</ul>
 		</div>
 	</form>

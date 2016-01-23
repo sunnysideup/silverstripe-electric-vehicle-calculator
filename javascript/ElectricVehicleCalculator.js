@@ -1150,7 +1150,7 @@ EVC.HTMLInteraction = {
 			jQuery('html, body').animate(
 				{scrollTop: $("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
 				},
-				200,
+				500,
 				function() {}
 			);
 		}
@@ -1244,7 +1244,7 @@ EVC.graphMaker = {
 	/**
 	 *
 	 * @return float
-	 */ 
+	 */
 	getStep: function(key){
 
 	},
@@ -1252,7 +1252,7 @@ EVC.graphMaker = {
 	/**
 	 *
 	 * @return array
-	 */ 
+	 */
 	getSteps: function(key){
 		if(EVC.DefaultDataMinMax[key].length === 2) {
 			var min = EVC.DefaultDataMinMax[key][0];
@@ -1292,7 +1292,7 @@ EVC.graphMaker = {
 				}
 			]
 		};
-		
+
 		var currentValue = EVC.ActualData[key];
 		var steps = this.getSteps(key);
 		var step = steps[1] - steps[0];
@@ -1312,14 +1312,14 @@ EVC.graphMaker = {
 			var value = EVC.scenarios.fiveYearProfit();
 			this.data.datasets[0].data.push(value);
 		}
-		//reset ...
+		//IMPORTANT reset ...
 		EVC.ActualData[key] = currentValue;
 		return this.data;
 	},
 
-	
+
 	options: {
-		
+
 		// Boolean - Whether to animate the chart
 		animation: true,
 
@@ -1453,7 +1453,7 @@ EVC.graphMaker = {
 		/**
 		 * line specific
 		 *
-		 */ 
+		 */
 
 		///Boolean - Whether grid lines are shown across the chart
 		scaleShowGridLines : true,
@@ -1504,7 +1504,7 @@ EVC.graphMaker = {
 		 +"<%if(datasets[i].label){%><%=datasets[i].label%><%}%>"
 		 +"</li><%}%>"
 		 +"</ul>"
-		
+
 	}
 
 

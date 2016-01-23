@@ -48,6 +48,7 @@
 		-wap-input-format: 'N';
 		font-size: 33px!important;
 		margin-top: 1em;
+		margin-bottom: 1em;
 	}
 	input[readonly=readonly] {
 		cursor: pointer;
@@ -77,9 +78,9 @@
 	.fieldHolder.infocus .middleColumn  {float: none; width: 100%;}
 
 	/* show more of influence */
-	.fieldHolder.infocus .influence {height: auto; color: #333;}
+	.fieldHolder.infocus .influence {height: auto; color: #555;}
 	.fieldHolder.infocus .influence span {top:0; bottom: 0; height: auto;}
-	.fieldHolder.infocus .influence em {color: #777;}
+	.fieldHolder.infocus .influence em {color: #777; color: #555;}
 
 
 
@@ -110,14 +111,14 @@
 	#ProfitAndLoss p.warning a{float: right;}
 	/* influence */
 
-	.influence {position: relative; background-color: #ccc; height: 3px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; border-top: 12px solid #fff;}
-	.influence span{position: absolute; top: 0; left: 0; background-color: #aaa; height: 3px; z-index: 1;}
-	.influence em{padding: 5px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
+	.influence {position: relative; background-color: #fab387; height: 2px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; font-size: 12px;}
+	.influence span{position: absolute; top: 0; left: 0; background-color: LightSkyBlue; height: 3px; z-index: 1; font-style: normal;}
+	.influence em{padding: 9px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
 
 	/* graph */
 	figure {margin: 0;margin-left: auto; margin-right: auto; display: block;}
 	figcaption ul {margin-top: 0; padding-left: 0; list-style: none;}
-	figcaption ul li{text-align: center; font-size: 12px;}
+	figcaption ul li{text-align: center; font-size: 12px; color: #666}
 }
 
 
@@ -139,6 +140,7 @@
 		right: 0;
 		width: 140px;
 		margin-top: 0;
+		margin-bottom: 0em;
 	}
 	input[type=range] {
 		margin-top: 4.5em!important;
@@ -339,7 +341,7 @@ a.button {
 	-moz-box-shadow: inset 0px 1px 0 #D1066C;
 	-o-box-shadow: inset 0px 1px 0 #D1066C;
 	-khtml-box-shadow: inset 0px 1px 0 #D1066C;
-	box-shadow: inset 0px 1px 0 #D1066C;	
+	box-shadow: inset 0px 1px 0 #D1066C;
 }
 
 li.buttonWrapper a.button:hover, li.buttonWrapper a.button:active {
