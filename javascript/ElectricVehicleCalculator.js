@@ -1726,14 +1726,18 @@ EVC.scenarios = {
 					}
 				}
 			}
-			if(hasEntries = true) {
-				var html = "<div class=\"influencers\"><h3>mainly influenced by ...</h3><ul>";
+			if(hasEntries === true) {
+				var html = "<div class=\"influencers\"><h3>check the assumptions ...</h3><ul>";
 				for (var key in keys) {
 					if (list.hasOwnProperty(key)) {
-						html += "<li><a href=\"#"+key+"Holder\" onclick=\"jQuery('#"+key+"Display').click(); return false;\">"+EVC.DataDescription.labels[key]+" (currently set to: "+EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])+"</a>)</li>";
+						html += "<li><a href=\"#"+key+"Holder\" onclick=\"jQuery('#"+key+"Display').click(); return false;\">"+EVC.DataDescription.labels[key]+" (value: "+EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])+"</a>)</li>";
 					}
 				}
 				html += "</ul></div>";
+				jQuery(el).after(html);
+			}
+			else {
+				var html = "<div class=\"influencers\"><h3>no assumptions to check apart from the main values set ...</h3></div>";
 				jQuery(el).after(html);
 			}
 		}
