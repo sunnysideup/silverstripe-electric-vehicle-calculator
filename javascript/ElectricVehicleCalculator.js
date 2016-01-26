@@ -701,7 +701,7 @@ EVC.HTMLInteraction = {
 	populateResultTable: function() {
 		jQuery("#ResultTableHolder table th, #ResultTableHolder table td").each(
 			function(i, el) {
-				var method = jQuery(el).attr("data-fx");
+				var method = jQuery(el).parents("tr").attr("data-fx");
 				var carType = jQuery(el).attr("data-type");
 				if(method && carType) {
 					if(EVC.myData.hasCar(carType) == true) {
@@ -735,6 +735,11 @@ EVC.HTMLInteraction = {
 						//console.debug(method + "..." + carType + "..." + value + "... error");
 						jQuery(el).text("error");
 					}
+				}
+				if(jQuery(el).hasClass("detailHeader")) {
+					var text = jQuery(el).text();
+					var html = "<a href=\"#\" onclick=\"return EVC.scenarios.checkInfluenceForRowEntry(this, 'myData', '"+method+"');\">"+text+"</a>";
+					jQuery(el).html(html);
 				}
 			}
 		);
@@ -1594,98 +1599,145 @@ EVC.scenarios = {
 	checkInfluence: function(){
 		EVC.ActualData.influence = {};
 		var list = EVC.DataDescription.otherAssumptionKeys;
+		var holderID = "";
+		var influencerID = "";
+		var percentageTimesHundred = 0;
+		var html = "";
+		for (var key in list) {
+			if (list.hasOwnProperty(key)) {
+				holderID = key + "Holder";
+				influencerID = key + "Influence";				
+				//check influence
+				var outcome = this.checkInfluencePerKeyAndObjectMethod(key, "scenarios", "fiveYearProfit", 1.1);
+				if(outcome !== null) {
+					percentageTimesHundred = (outcome.percentage * 100);
+					html = "<div id="+influencerID+" class=\"influence\">";
+					html += "\t <em>you can change the overall outcome by "+Math.round(outcome.percentage * 100)+"% by changing this value "+outcome.changeDescription+"</em>";
+					html += "\t <span style=\"width: "+(percentageTimesHundred)+"%\"></span>";
+					html += "</div>";
+					jQuery("#" + influencerID).remove();
+					jQuery("#" + holderID).append(html);
+				}
+				else {
+					jQuery("#" + holderID).remove("#"+influencerID);
+				}
+			}
+		}
+	},
+
+	checkInfluencePerKeyAndObjectMethod: function(key, objectAsString, methodAsString, minimumPercentageChange, type) {
+		var outcome = false;
 		var startingFromZero = false;
-		var currentValue = 0;
 		var actualValueInc = 0;
 		var actualValueDec = 0;
 		var totalProfitInc = 0;
 		var totalProfitDec = 0;
 		var plusTenPercentMultiplier = 1.05;
 		var minusTenPercentMultiplier = (1 / (plusTenPercentMultiplier));
-		var defaultProfit = this.fiveYearProfit();
-		var holderID = "";
-		var influencerID = "";
-		var percentage = 0;
-		var html = "";
-		var changeDescription = "";
-		for (var key in list) {
-			if (list.hasOwnProperty(key)) {
-				holderID = key + "Holder";
-				influencerID = key + "Influence";
-				currentValue = EVC.ActualData[key];
-				if(currentValue != 0) {
-					startingFromZero = false;
-					if(currentValue == 0) {
-						startingFromZero = true;
-						var minValue = EVC.DefaultDataMinMax[key][0];
-						var maxValue = EVC.DefaultDataMinMax[key][1];
-						var avgValueTemp = 0 + (maxValue - minValue) / 2;
-						actualValueTempInc = avgValueTemp * plusTenPercentMultiplier;
-						actualValueTempDec = avgValueTemp * minusTenPercentMultiplier;
-						actualValueInc = actualValueTempInc - actualValueTempDec;
-						actualValueDec = 0;
-					}
-					else {
-						avgValue = currentValue;
-					}
-					actualValueInc = avgValue * plusTenPercentMultiplier;
-					actualValueDec = avgValue * minusTenPercentMultiplier;
-					//calculate +10%
-					EVC.ActualData[key] = actualValueInc;
-					totalProfitInc = this.fiveYearProfit();
-					//calculate +10%
-					EVC.ActualData[key] = actualValueDec;
-					totalProfitDec = this.fiveYearProfit();
-					// start reset #######################
-					EVC.ActualData[key] = currentValue;
-					// end reset #######################
-					//calculate results
-					percentage = Math.abs(totalProfitInc / totalProfitDec);
-					if(EVC.debug) {
-						var check = this.fiveYearProfit();
-						console.debug(key + "(" + Math.round(defaultProfit)+ ")" + "["+Math.round(actualValueDec)+","+Math.round(actualValueInc)+"]: " + Math.round(totalProfitDec)+", "+ Math.round(totalProfitInc)+ " = "+ Math.round(percentage * 100) / 100);
-						if(defaultProfit != check) {
-							console.debug("ERROR!: " + key + defaultProfit - check);
-						}
-					}
-					if(percentage > 1.1 || percentage < (1/1.1)) {
-						//make sure all are in the same direction ...
-						if(percentage < 1) {
-							percentage = 1 / percentage;
-						}
-						percentage--;
-						EVC.ActualData.influence[key] = [percentage];
-						percentageTimesHundred = (percentage * 100);
-						if(startingFromZero) {
-							changeDescription = " to around "+EVC.HTMLInteraction.formatValue(key, (actualValueInc-actualValueDec));
-						}
-						else {
-							changeDescription = " by "+(Math.round((plusTenPercentMultiplier-1)*100)*2)+"%";
-						}
-						html = "<div id="+influencerID+" class=\"influence\">";
-						html += "\t <em>you can change the overall outcome by "+Math.round(percentageTimesHundred)+"% by changing this value "+changeDescription+"</em>";
-						html += "\t <span style=\"width: "+(percentageTimesHundred)+"%\"></span>";
-						html += "</div>";
-						jQuery("#" + influencerID).remove();
-						jQuery("#" + holderID).append(html);
-					}
-				}
-				else {
-					jQuery("#" + key + "Holder").remove("#"+influencerID);
-				}
-				startingFromZero = false;
-				currentValue = 0;
-				actualValueInc = 0;
-				actualValueDec = 0;
-				totalProfitInc = 0;
-				totalProfitDec = 0;
-				holderID = "";
-				influencerID = "";
-				percentage = 0;
-				html = "";
-				changeDescription = "";
+		if(EVC.debug) {
+			var defaultProfit = EVC[objectAsString][methodAsString](type);
+		}
+		var currentValue = EVC.ActualData[key];
+		startingFromZero = false;
+		if(currentValue == 0) {
+			startingFromZero = true;
+			var minValue = EVC.DefaultDataMinMax[key][0];
+			var maxValue = EVC.DefaultDataMinMax[key][1];
+			var avgValueTemp = 0 + (maxValue - minValue) / 2;
+			actualValueTempInc = avgValueTemp * plusTenPercentMultiplier;
+			actualValueTempDec = avgValueTemp * minusTenPercentMultiplier;
+			actualValueInc = actualValueTempInc - actualValueTempDec;
+			actualValueDec = 0;
+			//console.debug("Min :"+minValue);
+			//console.debug("Max :"+maxValue);
+			//console.debug("Avg :"+avgValueTemp);
+			//console.debug("IncTEMP :"+actualValueTempInc);
+			//console.debug("DecTEMP :"+actualValueTempDec);
+			//console.debug("Inc :"+actualValueInc);
+		}
+		else {
+			avgValue = currentValue;
+			actualValueInc = avgValue * plusTenPercentMultiplier;
+			actualValueDec = avgValue * minusTenPercentMultiplier;
+		}
+		//calculate +10%
+		EVC.ActualData[key] = actualValueInc;
+		totalProfitInc = EVC[objectAsString][methodAsString](type);
+		//calculate +10%
+		EVC.ActualData[key] = actualValueDec;
+		totalProfitDec = EVC[objectAsString][methodAsString](type);
+		// start reset #######################
+		EVC.ActualData[key] = currentValue;
+		// end reset #######################
+		//calculate results
+		percentage = Math.abs(totalProfitInc / totalProfitDec);
+		if(EVC.debug) {
+			var check = EVC[objectAsString][methodAsString]();
+			console.debug(key + "(" + Math.round(defaultProfit)+ ")" + "["+Math.round(actualValueDec)+","+Math.round(actualValueInc)+"]: " + Math.round(totalProfitDec)+", "+ Math.round(totalProfitInc)+ " = "+ Math.round(percentage * 100) / 100);
+			if(defaultProfit != check) {
+				console.debug("ERROR!: " + key + defaultProfit - check);
 			}
 		}
+		if(percentage > minimumPercentageChange || percentage < ( 1 / minimumPercentageChange)) {
+			//make sure all are in the same direction ...
+			if(percentage < 1) {
+				percentage = 1 / percentage;
+			}
+			percentage--;
+			EVC.ActualData.influence[key] = [percentage];
+			if(startingFromZero) {
+				changeDescription = " to around "+EVC.HTMLInteraction.formatValue(key, (actualValueInc-actualValueDec));
+			}
+			else {
+				changeDescription = " by "+(Math.round((plusTenPercentMultiplier-1)*100)*2)+"%";
+			}
+			return {
+				"percentage": percentage,
+				"changeDescription": changeDescription,
+			};
+		}
+		return null;
+	},
+
+	checkInfluenceForRowEntry: function(el, objectAsString, methodAsString) {
+		var keys = {};
+		var list = EVC.DataDescription.otherAssumptionKeys;
+		var outcomeE = null;
+		var outcomeF = null;
+		var hasEntries = false;
+		if(jQuery(el).parent().find("div.influencers").length > 0) {
+			jQuery(el).parent().find("div.influencers").remove();
+		}
+		else {
+			for (var key in list) {
+				if (list.hasOwnProperty(key)) {
+					outcomeF = this.checkInfluencePerKeyAndObjectMethod(key, objectAsString, methodAsString, 1.001, "f");
+					outcomeE = this.checkInfluencePerKeyAndObjectMethod(key, objectAsString, methodAsString, 1.001, "e");
+					//console.debug(key+" in "+objectAsString+"."+methodAsString);
+					if(outcomeE !== null) {
+						hasEntries = true;
+						keys[key] = outcomeE.percentage;
+						console.debug(key+outcomeE.percentage);
+					}
+					if(outcomeF !== null) {
+						hasEntries = true;
+						keys[key] = outcomeF.percentage;
+						console.debug(key+outcomeF.percentage);
+					}
+				}
+			}
+			if(hasEntries = true) {
+				var html = "<div class=\"influencers\"><h3>mainly influenced by ...</h3><ul>";
+				for (var key in keys) {
+					if (list.hasOwnProperty(key)) {
+						html += "<li><a href=\"#"+key+"Holder\" onclick=\"jQuery('#"+key+"Display').click(); return false;\">"+EVC.DataDescription.labels[key]+" (currently set to: "+EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])+"</a>)</li>";
+					}
+				}
+				html += "</ul></div>";
+				jQuery(el).after(html);
+			}
+		}
+		return false;
 	}
 }
 

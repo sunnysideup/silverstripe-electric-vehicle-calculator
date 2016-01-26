@@ -90,7 +90,12 @@
 
 	tr.detail {display: none;}
 	tr.detail th, tr.detail td {color: #999; padding-top: 0; border-bottom: 1px solid #ddd; font-size: 0.9em}
-	tr.detail.excludedFromTotal th, tr.detail.excludedFromTotal td {color: orange;}
+	tr.detail th a, tr.detail td a {border-bottom: none; color: #999; text-decoration: none;}
+	tr.detail.excludedFromTotal th, tr.detail.excludedFromTotal td,
+	tr.detail.excludedFromTotal th a, tr.detail.excludedFromTotal td a {color: orange;}
+	tr.detail th div.influencers, tr.detail td div.influencers {padding: 1em;}
+	tr.detail th div.influencers, tr.detail td div.influencers,
+	tr.detail th div.influencers a, tr.detail td  div.influencers a {color: #871A4D; }
 
 	td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;text-align: right;}
 	th {padding: 0.9em 0 0.5em 0; vertical-align: top; text-align: left; font-weight: 400; font-weight: normal;}

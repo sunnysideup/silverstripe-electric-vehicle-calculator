@@ -73,160 +73,160 @@
 					</tr>
 				</tfoot>
 				<tbody>
-					<tr class="summary">
+					<tr class="summary" data-fx="totalUpFrontPayment" >
 						<th scope="row" class="totalHeader" id="SetUpCostRow"><a href="#SetUpCostRow" class="expandRows">setup</a></th>
-						<td class="total" data-fx="totalUpFrontPayment" data-type="f"></td>
-						<td class="total" data-fx="totalUpFrontPayment" data-type="e"></td>
+						<td class="total" data-type="f"></td>
+						<td class="total" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="setupCost">
 						<th scope="row" class="detailHeader">set up of infrastructure</th>
-						<td class="detail" data-fx="setupCost" data-type="f"></td>
-						<td class="detail" data-fx="setupCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="salePrice">
 						<th scope="row" class="detailHeader">sale price</th>
-						<td class="detail" data-fx="salePrice" data-type="f"></td>
-						<td class="detail" data-fx="salePrice" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="purchasePrice">
 						<th scope="row" class="detailHeader">purchase price</th>
-						<td class="detail" data-fx="purchasePrice" data-type="f"></td>
-						<td class="detail" data-fx="purchasePrice" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="costOfSwap">
 						<th scope="row" class="detailHeader">cost of sale and purchase</th>
-						<td class="detail" data-fx="costOfSwap" data-type="f"></td>
-						<td class="detail" data-fx="costOfSwap" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="summary">
+					<tr class="summary" data-fx="totalFinanceCost">
 						<th scope="row" class="totalHeader" id="FinanceCostRow"><a href="#FinanceCostRow" class="expandRows">finance</a></th>
-						<td class="total" data-fx="totalFinanceCost" data-type="f"></td>
-						<td class="total" data-fx="totalFinanceCost" data-type="e"></td>
+						<td class="total" data-type="f"></td>
+						<td class="total" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="valueStartOfTheYear">
 						<th scope="row" class="detailHeader">value at the start of the year</th>
-						<td class="detail" data-fx="valueStartOfTheYear" data-type="f"></td>
-						<td class="detail" data-fx="valueStartOfTheYear" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="valueAtTheEndOfTheYear">
 						<th scope="row" class="detailHeader">value at the end of the year</th>
-						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="f"></td>
-						<td class="detail" data-fx="valueAtTheEndOfTheYear" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="totalLoanAtStart">
 						<th scope="row" class="detailHeader">original amount of loan</th>
-						<td class="detail" data-fx="totalLoanAtStart" data-type="f"></td>
-						<td class="detail" data-fx="totalLoanAtStart" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="amountBorrowedAtStartOfTheYear">
 						<th scope="row" class="detailHeader">loan at start of the year</th>
-						<td class="detail" data-fx="amountBorrowedAtStartOfTheYear" data-type="f"></td>
-						<td class="detail" data-fx="amountBorrowedAtStartOfTheYear" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="interest">
 						<th scope="row" class="detailHeader">interest</th>
-						<td class="detail" data-fx="interest" data-type="f"></td>
-						<td class="detail" data-fx="interest" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="principalRepayment"">
 						<th scope="row" class="detailHeader">loan repayments</th>
-						<td class="detail" data-fx="principalRepayment" data-type="f"></td>
-						<td class="detail" data-fx="principalRepayment" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="amountBorrowedAtEndOfTheYear">
 						<th scope="row" class="detailHeader">loan at the end of the year</th>
-						<td class="detail" data-fx="amountBorrowedAtEndOfTheYear" data-type="f"></td>
-						<td class="detail" data-fx="amountBorrowedAtEndOfTheYear" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excluded excludedFromTotal">
+					<tr class="detail excluded excludedFromTotal" data-fx="cashLeftAfterSellingCar">
 						<th scope="row" class="detailHeader">cash left after hypothetical end-of-year car sale</th>
-						<td class="detail" data-fx="cashLeftAfterSellingCar" data-type="f"></td>
-						<td class="detail" data-fx="cashLeftAfterSellingCar" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="summary">
+					<tr class="summary" data-fx="totalFixedCost">
 						<th scope="row" class="totalHeader" id="FixCostRow"><a href="#FixCostRow" class="expandRows">fixed</a></th>
-						<td class="total" data-fx="totalFixedCost" data-type="f"></td>
-						<td class="total" data-fx="totalFixedCost" data-type="e"></td>
+						<td class="total" data-type="f"></td>
+						<td class="total" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="insuranceCost">
 						<th scope="row" class="detailHeader">insurance</th>
-						<td class="detail" data-fx="insuranceCost" data-type="f"></td>
-						<td class="detail" data-fx="insuranceCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="licensingAndWOFCost">
 						<th scope="row" class="detailHeader">licensing and WOF</th>
-						<td class="detail" data-fx="licensingAndWOFCost" data-type="f"></td>
-						<td class="detail" data-fx="licensingAndWOFCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="summary">
+					<tr class="summary" data-fx="totalOperatingCost">
 						<th scope="row" class="header" id="OperatingCostRow"><a href="#OperatingCostRow" class="expandRows">operating</a></th>
-						<td class="total" data-fx="totalOperatingCost" data-type="f"></td>
-						<td class="total" data-fx="totalOperatingCost" data-type="e"></td>
+						<td class="total" data-type="f"></td>
+						<td class="total" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="actualAnnualKms">
 						<th scope="row" class="detailHeader">actual KMs driven per year</th>
-						<td class="detail" data-fx="actualAnnualKms" data-type="f"></td>
-						<td class="detail" data-fx="actualAnnualKms" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="fuelCost">
 						<th scope="row" class="detailHeader">fuel</th>
-						<td class="detail" data-fx="fuelCost" data-type="f"></td>
-						<td class="detail" data-fx="fuelCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="fuelCostPerWeek">
 						<th scope="row" class="detailHeader">fuel per week</th>
-						<td class="detail" data-fx="fuelCostPerWeek" data-type="f"></td>
-						<td class="detail" data-fx="fuelCostPerWeek" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="maintenanceCost">
 						<th scope="row" class="detailHeader">maintenance and service</th>
-						<td class="detail" data-fx="maintenanceCost" data-type="f"></td>
-						<td class="detail" data-fx="maintenanceCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="tyreCost">
 						<th scope="row" class="detailHeader">tyres</th>
-						<td class="detail" data-fx="tyreCost" data-type="f"></td>
-						<td class="detail" data-fx="tyreCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="repairCost">
 						<th scope="row" class="detailHeader">unscheduled repairs</th>
-						<td class="detail" data-fx="repairCost" data-type="f"></td>
-						<td class="detail" data-fx="repairCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="costPerKM">
 						<th scope="row" class="detailHeader">total cost per KM</th>
-						<td class="detail" data-fx="costPerKM" data-type="f"></td>
-						<td class="detail" data-fx="costPerKM" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="summary">
+					<tr class="summary" data-fx="totalOtherCost">
 						<th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other</a></th>
-						<td class="total" data-fx="totalOtherCost" data-type="f"></td>
-						<td class="total" data-fx="totalOtherCost" data-type="e"></td>
+						<td class="total" data-type="f"></td>
+						<td class="total" data-type="e"></td>
 					</tr>
-					<tr class="detail excludedFromTotal">
+					<tr class="detail excludedFromTotal" data-fx="numberOfKMsWithRentalCar">
 						<th scope="row" class="detailHeader">car rental KMs driven</th>
-						<td class="detail" data-fx="numberOfKMsWithRentalCar" data-type="f"></td>
-						<td class="detail" data-fx="numberOfKMsWithRentalCar" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="carRentalCost">
 						<th scope="row" class="detailHeader">car rental</th>
-						<td class="detail" data-fx="carRentalCost" data-type="f"></td>
-						<td class="detail" data-fx="carRentalCost" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="carRentaFuel">
 						<th scope="row" class="detailHeader">car rental fuel</th>
-						<td class="detail" data-fx="carRentaFuel" data-type="f"></td>
-						<td class="detail" data-fx="carRentaFuel" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="subsidy">
 						<th scope="row" class="detailHeader">subsidies</th>
-						<td class="detail" data-fx="subsidy" data-type="f"></td>
-						<td class="detail" data-fx="subsidy" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal">
+					<tr class="detail includedInTotal" data-fx="personalContribution">
 						<th scope="row" class="detailHeader">personal contribution</th>
-						<td class="detail" data-fx="personalContribution" data-type="f"></td>
-						<td class="detail" data-fx="personalContribution" data-type="e"></td>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
 					</tr>
 				</tbody>
 			</table>

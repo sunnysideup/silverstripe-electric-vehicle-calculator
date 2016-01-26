@@ -44,8 +44,7 @@ class EVCSelectPage_Controller extends Page_Controller {
 			$this, 
 			"SelectForm", 
 			$fieldList, 
-			$actions, 
-			$required = RequiredFields::create(array("Year", "Make", "Model", "Type", "ODO"))
+			$actions
 		);
 		return $form;
 	}
