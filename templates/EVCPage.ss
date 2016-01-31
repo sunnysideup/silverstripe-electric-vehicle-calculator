@@ -66,10 +66,10 @@
 					</tr>
 				</thead>
 				<tfoot>
-					<tr class="superSummary summary">
+					<tr class="superSummary summary" data-fx="totalCombined">
 						<th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
-						<td class="total superTotal" data-fx="totalCombined" data-type="f"></td>
-						<td class="total superTotal" data-fx="totalCombined" data-type="e"></td>
+						<td class="total superTotal" data-type="f"></td>
+						<td class="total superTotal" data-type="e"></td>
 					</tr>
 				</tfoot>
 				<tbody>
