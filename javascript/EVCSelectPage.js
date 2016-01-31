@@ -92,3 +92,48 @@ var EVCSelectPage = {
 
 
 }
+
+var EVCSelectPage.currentValueCalculator {
+
+	year: 0,
+	newPrice: 0,
+	odoMeter: 0,
+
+	kmsPerYear: function(){
+		Math.round(this.odoMeter / this.year);
+	},
+
+	currentPrice: function(){
+		this.newPrice - (0.5 * this.yearsReduction()) - (0.5 * this.kmsReduction());
+	},
+
+	yearsOld: function() {
+		currentYear - this.year;
+	},
+
+	numberOfYearsToZero: function() {
+		this.mininimumYearsToZero + (this.newPrice / this.dividerOfNewValueYearsToZero)
+	},
+
+	numberOfKMsToZero: function() {
+		this.mininimumOdoToZero + (this.newPrice / this.dividerOfNewValueOdoToZero)
+	},
+
+	yearsReduction: function() {
+		(this.newPrice / this.numberOfYearsToZero()) * this.yearsOld();
+	},
+
+	kmsReduction: function() {
+		(this.odoMeter / this.numberOfKMsToZero()) * this.yearsOld() ;
+	},
+
+	mininimumYearsToZero: 12,
+	
+	dividerOfNewValueYearsToZero: 20000,
+
+	mininimumOdoToZero: 200000,
+	
+	dividerOfNewValueOdoToZero: 0.5
+
+
+}
