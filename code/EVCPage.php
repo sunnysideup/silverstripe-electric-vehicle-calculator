@@ -23,6 +23,7 @@ class EVCPage_Controller extends Page_Controller {
 		Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
 		Requirements::javascript("framework/thirdparty/jquery/jquery.js");
 		Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
+		
 	}
 
 	protected $evcDataSet = null;

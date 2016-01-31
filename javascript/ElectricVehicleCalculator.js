@@ -656,6 +656,10 @@ var EVCfx = function(
 
 EVC.HTMLInteraction = {
 
+	hasRangeSlider: true,
+
+	hasGraphs: true,
+
 	init: function(){
 		this.clear();
 		this.buildKeyAssumptionForm();
@@ -668,7 +672,12 @@ EVC.HTMLInteraction = {
 		this.populateLinks();
 		this.setupShowAndHideResultRows();
 		this.selectFirstInput();
+		if(this.hasRangeSlider) {
 
+		}
+		else {
+			this.makeGraphClickable();
+		}
 	},
 
 	clear: function(){
@@ -737,8 +746,18 @@ EVC.HTMLInteraction = {
 					}
 				}
 				if(jQuery(el).hasClass("detailHeader")) {
-					var text = jQuery(el).text();
-					var html = "<a href=\"#\" onclick=\"return EVC.scenarios.checkInfluenceForRowEntry(this, 'myData', '"+method+"');\">"+text+"</a>";
+					if(jQuery(el).children().length == 0) {
+						var text = jQuery(el).text();
+						var html = "<a href=\"#\" class=\"influencerLink\" onclick=\"return EVC.scenarios.checkInfluenceForRowEntry(this, 'myData', '"+method+"');\">"+text+"</a>";
+					}
+					else {
+						var influencersOpened = jQuery(el).find("a.hasInfluencersOpened").get(0);
+						if(influencersOpened) {
+							//click twice to remove and open it back up...
+							influencersOpened.click();
+							influencersOpened.click();
+						}
+					}
 					jQuery(el).html(html);
 				}
 			}
@@ -900,6 +919,18 @@ EVC.HTMLInteraction = {
 		);
 	},
 
+	makeGraphClickable: function(){
+		jQuery("canvas").on(
+			"click",
+			function(evt){
+				var activePoints1 = EVC.graphMaker.currentGraph.getPointsAtEvent(evt);
+				var newValue =  parseFloat(activePoints1[0]["label"].replace(/\$|,/g, ''));
+				var key = jQuery(this).attr("data-for");
+				jQuery("#"+key+"Field").val(newValue).change();
+			}
+		);
+	},
+
 	createFormFieldsFromList: function(list) {
 		var html = "";
 		var isMobile = this.isMobile();
@@ -927,18 +958,18 @@ EVC.HTMLInteraction = {
 				var stepHTML = "step=\""+step+"\"";
 
 				//console.debug(key + "..." + fieldID + "..." + value)
-				html += "\n";
 				html += "<div id=\""+holderID+"\" class=\"fieldHolder "+ type + "\">";
-				html += "\t<label for=\""+ rangeFieldID + "\">";
-				html += "\t\t<strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong>";
-				html += "\t\t<span class=\"desc\">"+desc+"</span>";
-				html += "\t</label>";
-				html += "\t<div class=\"middleColumn\">";
-				html += "\t\t<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
-				html += "\t\t<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";
-				html += "\t\t<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" oninput=\"return  EVC.HTMLInteraction.startInput('"+key+"', this);\" id=\""+ fieldID + "\" onclick=\"return EVC.HTMLInteraction.clickInput('"+key+"', this);\" onfocus=\"return EVC.HTMLInteraction.inputReady('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
-				html += "\t</div>";
-				html += "\t<figure id=\""+key+"Chart\" class=\"chartHolder\"><canvas></canvas><figcaption></figcaption></figure>";
+					html += "<p id=\""+key+"Modal\" class=\"modalP\"><a href=\"#"+holderID+"\" class=\"closeModal\" onclick=\"return EVC.HTMLInteraction.closeModal('"+key+"');\">close</a></p>";				
+					html += "<label for=\""+ rangeFieldID + "\">";
+						html += "<strong onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+label+"</strong>";
+						html += "<span class=\"desc\">"+desc+"</span>";
+					html += "</label>";
+					html += "<div class=\"middleColumn\">";
+						html += "<a href=\"#"+holderID+"\" class=\"displayValue\" id=\""+ displayFieldID + "\" onclick=\"return EVC.HTMLInteraction.showDesc('"+key+"');\">"+formattedValue+"</a>";
+						if(EVC.HTMLInteraction.hasRangeSlider) {html += "<input type=\"range\" tabindex=\"-1\" class=\""+ type + "\" id=\""+ rangeFieldID + "\" oninput=\"return  EVC.HTMLInteraction.showUpdatedValue('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\"  min=\""+min+"\" max=\""+max+"\" step=\""+step+"\" />";}
+						html += "<input type=\"number\" inputmode=\"numeric\" pattern=\"[0-9]*\"  class=\""+ type + "\" oninput=\"return  EVC.HTMLInteraction.startInput('"+key+"', this);\" id=\""+ fieldID + "\" onclick=\"return EVC.HTMLInteraction.clickInput('"+key+"', this);\" onfocus=\"return EVC.HTMLInteraction.inputReady('"+key+"', this);\" onchange=\"return EVC.HTMLInteraction.setValue('"+key+"', this);\" value=\""+unformattedValue+"\" "+readOnly+" min=\""+min+"\" max=\""+max+"\" "+stepHTML+" />";
+					html += "</div>";
+					if(EVC.HTMLInteraction.hasGraphs) {html += "<figure id=\""+key+"Chart\" class=\"chartHolder\"><figcaption></figcaption><canvas data-for=\""+key+"\"></canvas></figure>";}
 				html += "</div>";
 			}
 		}
@@ -1093,7 +1124,6 @@ EVC.HTMLInteraction = {
 			}
 			var formattedValue = this.formatValue(key, value);
 			jQuery("#"+displayFieldID).text(formattedValue);
-			//this.hideDesc(key);
 			//send to server
 			if(EVC.workableLinks()) {
 				jQuery.ajax({
@@ -1135,7 +1165,7 @@ EVC.HTMLInteraction = {
 		}
 	},
 
-	showDesc: function(key){
+	showDesc: function(key, modal){
 		var currentEl = jQuery("div#"+key+"Holder");
 		jQuery(".infocus").each(
 			function(i, el){
@@ -1151,13 +1181,21 @@ EVC.HTMLInteraction = {
 			//do nothing
 		}
 		else {
-			currentEl.addClass("infocus");EVC.graphMaker.makeGraph(key);
-			jQuery('html, body').animate(
-				{scrollTop: $("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
-				},
-				500,
-				function() {}
-			);
+			currentEl.addClass("infocus");
+			EVC.graphMaker.makeGraph(key);
+			if(modal) {
+				//do nothing
+			}
+			else {
+				jQuery('html, body').animate(
+					{scrollTop: $("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
+					},
+					500,
+					function() {
+
+					}
+				);
+			}
 		}
 		return false;
 	},
@@ -1206,6 +1244,19 @@ EVC.HTMLInteraction = {
 		var elemBottom = elemTop + $elem.height();
 
 		return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	},
+
+	openModal: function(key, el){
+		this.showDesc(key, true);
+		jQuery("body").addClass("modalMode");
+		jQuery("#"+key+"Holder").addClass("modal");		
+		return false;
+	},
+	
+	closeModal: function(key){
+		jQuery("body").removeClass("modalMode");
+		jQuery("#"+key+"Holder").removeClass("modal").removeClass("infocus");
+		return false;
 	}
 
 
@@ -1223,6 +1274,7 @@ EVC.graphMaker = {
 		var ctx = jQuery(selector).css("display", "block").children("canvas").get(0).getContext("2d");
 		//var ctx = document.getElementById().getContext("2d");
 		this.currentGraph = new Chart(ctx).Line(this.getData(key), this.options);
+	
 		var legend = this.currentGraph.generateLegend();
 		jQuery("#" + key + "Chart figcaption").html(legend);
 		if(this.indexBeforeCurrentValue >= 0) {
@@ -1259,6 +1311,7 @@ EVC.graphMaker = {
 	 * @return array
 	 */
 	getSteps: function(key){
+		console.debug(key);
 		if(EVC.DefaultDataMinMax[key].length === 2) {
 			var min = EVC.DefaultDataMinMax[key][0];
 			var max = EVC.DefaultDataMinMax[key][1];
@@ -1286,7 +1339,7 @@ EVC.graphMaker = {
 			labels: [],
 			datasets: [
 				{
-					label: "The result in profit / loss for possible entries for <u>"+EVC.DataDescription.labels[key]+"</u>",
+					label: "The result in profit / loss for possible entries of <u>"+EVC.DataDescription.labels[key]+"</u>:",
 					fillColor: "rgba(220,220,220,0.2)",
 					strokeColor: "rgba(220,220,220,1)",
 					pointColor: "rgba(220,220,220,1)",
@@ -1700,6 +1753,7 @@ EVC.scenarios = {
 	},
 
 	checkInfluenceForRowEntry: function(el, objectAsString, methodAsString) {
+		
 		var keys = {};
 		var list = EVC.DataDescription.otherAssumptionKeys;
 		var outcomeE = null;
@@ -1707,8 +1761,10 @@ EVC.scenarios = {
 		var hasEntries = false;
 		if(jQuery(el).parent().find("div.influencers").length > 0) {
 			jQuery(el).parent().find("div.influencers").remove();
+			jQuery(el).removeClass("hasInfluencersOpened");
 		}
 		else {
+			jQuery(el).addClass("hasInfluencersOpened");
 			for (var key in list) {
 				if (list.hasOwnProperty(key)) {
 					outcomeF = this.checkInfluencePerKeyAndObjectMethod(key, objectAsString, methodAsString, 1.001, "f");
@@ -1730,7 +1786,7 @@ EVC.scenarios = {
 				var html = "<div class=\"influencers\"><h3>check the assumptions ...</h3><ul>";
 				for (var key in keys) {
 					if (list.hasOwnProperty(key)) {
-						html += "<li><a href=\"#"+key+"Holder\" onclick=\"jQuery('#"+key+"Display').click(); return false;\">"+EVC.DataDescription.labels[key]+" (value: "+EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])+"</a>)</li>";
+						html += "<li><a href=\"#"+key+"Holder\" onclick=\"return EVC.HTMLInteraction.openModal('"+key+"');\">"+EVC.DataDescription.labels[key]+" (value: "+EVC.HTMLInteraction.formatValue(key, EVC.ActualData[key])+"</a>)</li>";
 					}
 				}
 				html += "</ul></div>";
