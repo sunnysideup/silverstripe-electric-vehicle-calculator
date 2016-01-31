@@ -1311,7 +1311,6 @@ EVC.graphMaker = {
 	 * @return array
 	 */
 	getSteps: function(key){
-		console.debug(key);
 		if(EVC.DefaultDataMinMax[key].length === 2) {
 			var min = EVC.DefaultDataMinMax[key][0];
 			var max = EVC.DefaultDataMinMax[key][1];
@@ -1769,16 +1768,13 @@ EVC.scenarios = {
 				if (list.hasOwnProperty(key)) {
 					outcomeF = this.checkInfluencePerKeyAndObjectMethod(key, objectAsString, methodAsString, 1.001, "f");
 					outcomeE = this.checkInfluencePerKeyAndObjectMethod(key, objectAsString, methodAsString, 1.001, "e");
-					//console.debug(key+" in "+objectAsString+"."+methodAsString);
 					if(outcomeE !== null) {
 						hasEntries = true;
 						keys[key] = outcomeE.percentage;
-						console.debug(key+outcomeE.percentage);
 					}
 					if(outcomeF !== null) {
 						hasEntries = true;
 						keys[key] = outcomeF.percentage;
-						console.debug(key+outcomeF.percentage);
 					}
 				}
 			}
