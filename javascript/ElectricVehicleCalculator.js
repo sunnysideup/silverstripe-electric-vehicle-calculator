@@ -152,6 +152,92 @@ var EVCfx = function(
 	};
 
 
+	yearOfManufacturing: 0,
+	newPrice: 0,
+	todaysOdoMeter: 0,
+
+	/**
+	 * if the car was worth $0.00 then
+	 * how long would it last?
+	 * @var int
+	 */ 
+	mininimumYearsToZero: 12,
+	
+	/**
+	 * e.g. if the new price of the car is $100,000
+	 * then the car will have an additional 5 years.
+	 * @var int
+	 */ 
+	dividerOfNewValueYearsToZero: 20000,
+
+	/**
+	 *
+	 * @var int
+	 */ 
+	mininimumOdoToZero: 200000,
+	
+	dividerOfNewValueYearsToZero: 100,
+	
+	dividerOfNewValueOdoToZero: 100,
+
+	/**
+	 * e.g. if new value = $200,000
+	 * then you can add another 200,000 to zero
+	 */ 
+	dividerOfNewValueOdoToZero: 1
+
+
+	expectedKmsPerYearBasedOnOdo: function(carType){
+		var actual = this.actualAnnualKmsPerDay(carType);
+		if(actual > 0) {
+			return actual;
+		}
+		else {
+			Math.round(EVC.ActualData.todaysOdoMeter / EVC.ActualData.yearOfManufacturing);
+		}
+	},
+
+	currentPrice: function(carType){
+		EVC.ActualData.newPrice - (0.5 * this.yearsReduction()) - (0.5 * this.kmsReduction());
+	},
+
+	calendarYearOfSwitch: function(carType) {
+		var d = new Date();
+		var year = d.getYear();
+		return year + EVC.ActualData.yearsBeforeSwitch;
+	},
+
+	kmsTravelledAtSwitch: function(carType) {
+		return EVC.ActualData.todaysOdoMeter + (yearsBeforeSwitch * this.expectedKmsPerYearBasedOnOdo("f"));
+	},
+
+	yearsOldAtSwitch: function(carType) {
+		this.calendarYearOfSwitch() - EVC.ActualData.yearOfManufacturing;
+	},
+
+	numberOfKMsToZero: function(carType) {
+		return EVC.ActualData.mininimumOdoToZero + (EVC.ActualData.newPrice / EVC.ActualData.dividerOfNewValueOdoToZero);
+	},
+
+	currentPriceBasedOnNewPrice: function(carType) {
+		var yearsOld = this.yearsOldAtSwitch() + yearsAfterSwitch;
+		var calcPrice = EVC.ActualData.newPrice;
+		var depreciationRate = this.depreciationRate(carType);
+		for(var y = 0; y <= yearsOld; y++) {
+			calcPrice = calcPrice - (calcPrice * (depreciationRate - (y / EVC.ActualData.dividerDeprPerValueYear)));
+		}
+		return calcPrice;
+	},
+
+	currentPriceBasedOnKms: function(carType) {
+		var kmsDone = this.kmsTravelledAtSwitch(carType) + (yearsAfterSwitch * this.expectedKmsPerYearBasedOnOdo(carType));
+		var startPrice = EVC.ActualData.newPrice;
+		var kmsToZero = this.numberOfKMsToZero();
+		var percentageDone = kmsDone / kmsToZero;
+		return startPrice - (startPrice * percentageDone);
+	},
+
+
 	this.setupCost = function(carType){
 		if(yearsAfterSwitch == 0) {
 			if(carType == "e") {
@@ -172,10 +258,10 @@ var EVCfx = function(
 	 */
 	this.depreciationRate = function(carType) {
 		if(carType == "e") {
-			var rate = EVC.ActualData.depreciationRatePerYearEV;
+			var rate = EVC.ActualData.depreciationRatePerYearEV - (EVC.ActualData.newPrice / EVC.ActualData.dividerOfNewValueYearsToZero);
 		}
 		else {
-			var rate = EVC.ActualData.depreciationRatePerYearCV;
+			var rate = EVC.ActualData.depreciationRatePerYearCV - (EVC.ActualData.newPrice / EVC.ActualData.dividerOfNewValueYearsToZero);
 		}
 		return rate;
 	}
@@ -333,6 +419,9 @@ var EVCfx = function(
 		return valueStartOfTheYear - (valueStartOfTheYear * rate);
 	};
 
+	this.replacementSaving = function(carType) {
+		return 9999;
+	}
 
 	/**
 	 * what was the total size of the car loan at the time of the switch?
@@ -554,7 +643,7 @@ var EVCfx = function(
 	};
 
 	this.totalFinanceCost = function(carType) {
-		return this.interest(carType) + this.principalRepayment(carType);
+		return this.interest(carType) + this.principalRepayment(carType) + this.replacementSaving(carType);
 	};
 
 	this.totalFixedCost = function(carType) {

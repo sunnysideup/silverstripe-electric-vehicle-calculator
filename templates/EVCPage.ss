@@ -128,8 +128,13 @@
 						<td class="detail" data-type="f"></td>
 						<td class="detail" data-type="e"></td>
 					</tr>
-					<tr class="detail includedInTotal" data-fx="principalRepayment"">
+					<tr class="detail includedInTotal" data-fx="principalRepayment">
 						<th scope="row" class="detailHeader">loan repayments</th>
+						<td class="detail" data-type="f"></td>
+						<td class="detail" data-type="e"></td>
+					</tr>
+					<tr class="detail includedInTotal" data-fx="replacementSaving">
+						<th scope="row" class="detailHeader">saving for eventual replacement</th>
 						<td class="detail" data-type="f"></td>
 						<td class="detail" data-type="e"></td>
 					</tr>
