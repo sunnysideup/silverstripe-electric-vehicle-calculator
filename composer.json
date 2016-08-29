@@ -1,24 +1,30 @@
 {
-	"name": "sunnysideup/electric-vehicle-calculator",
-	"type": "silverstripe-module",
-	"description": "Silverstripe module that works out when it makes financial sense to switch to an electric vehicle",
-	"homepage": "https://github.com/sunnysideup/silverstripe-electric-vehicle-calculator",
-	"keywords":  ["silverstripe", "EV", "electric", "vehicle", "environment", "clean", "javascript"],
-	"license": "Not available for public use yet",
-	"authors":[
-		{
-			"name": "Nicolaas Francken",
-			"homepage": "https://github.com/sunnysideup",
-			"email" : "modules@sunnysideup.co.nz",
-			"role" : "lead developer"
-		}
-	],
-	"require":{
-		"silverstripe/framework": "~3.2",
-		"silverstripe/cms": "~3.2",
-		"nnnick/chartjs": "dev-master"
-	},
-	"extra": {
-		"installer-name": "electric-vehicle-calculator"
-	}
+    "name": "sunnysideup/electric-vehicle-calculator",
+    "type": "silverstripe-module",
+    "description": "Silverstripe module that works out when it makes financial sense to switch to an electric vehicle",
+    "keywords": [
+        "silverstripe",
+        "EV",
+        "electric",
+        "vehicle",
+        "environment",
+        "clean",
+        "javascript"
+    ],
+    "license": "Not available for public use yet",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "silverstripe/framework": "~3.2",
+        "silverstripe/cms": "~3.2",
+        "nnnick/chartjs": "dev-master"
+    },
+    "extra": {
+        "installer-name": "electric-vehicle-calculator"
+    }
 }
