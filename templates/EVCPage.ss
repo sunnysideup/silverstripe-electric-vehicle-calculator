@@ -32,6 +32,8 @@
         <% include ECVPagePreviousCalculations %>
     </div>
     <% else %>
+    <form id="start-up-screen">
+    </form>
     <form id="ElectricVehicleCalculator">
 
         <h1>$Title <% if IsLocked %><span class="locked">(customised)</span><% end_if %></h1>
