@@ -34,6 +34,7 @@ var EVC = {
 
     numberOfSteps: 10,
 
+
     isReadyToCalculate: function(){
         return EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0;
     },
@@ -751,8 +752,16 @@ EVC.HTMLInteraction = {
 
     hasGraphs: true,
 
+    isTouchScreen: true,
+
     init: function(){
         this.clear();
+        this.isTouchScreen = this.isTouchScreenTest();
+        if(this.isTouchScreen) {
+            this.hasRangeSlider = true;
+        } else {
+            this.hasRangeSlider = false;
+        }
         this.buildKeyAssumptionForm();
         this.buildPlayAroundAssumptionForm();
         this.buildOtherAssumptionsForm();
@@ -778,6 +787,11 @@ EVC.HTMLInteraction = {
         jQuery("#OtherAssumptions").html("");
         jQuery("tr.detail").hide();
         jQuery("a.expandRows").unbind("click");
+    },
+
+    isTouchScreenTest: function() {
+        return 'ontouchstart' in window        // works on most browsers
+            || navigator.maxTouchPoints;       // works on IE10/11 and Surface
     },
 
     buildKeyAssumptionForm: function() {

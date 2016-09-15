@@ -22,7 +22,7 @@
     fieldset * {}
     .fieldHolder { padding: 1em 0; clear: both; border-top: 1px solid #ccc; overflow: hidden;}
     .fieldHolder:last-child { border-bottom: 1px solid #ccc; }
-    .middleColumn {position: relative; overflow: hidden; float: right; width: auto;}
+    .middleColumn {position: relative; overflow: visible; float: right; width: auto;}
     label, input {font-size: 12px;}
     label strong {font-weight: 400; color: #999; cursor: pointer;}
     label span.desc {color: orange;}
@@ -71,7 +71,7 @@
     .fieldHolder.infocus label span.desc,
     .fieldHolder.infocus input[type=range],
     .fieldHolder.infocus input[type=number] {display: block; }
-    .fieldHolder.infocus input[type=number] {right: 5px; top: 3px;}
+    .fieldHolder.infocus input[type=number] {right: 5px; top: 3px; position: inherit;}
     .fieldHolder.infocus input[type=range] {margin-right: 10px; margin-top: 10px;}
 
     .fieldHolder.infocus a.displayValue  {display: none;}
