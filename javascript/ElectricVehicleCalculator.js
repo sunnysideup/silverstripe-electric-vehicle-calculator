@@ -96,6 +96,7 @@ var EVC = {
         this.myData = new EVCfx(yearsBeforeSwitchTempVar, yearsAfterSwitchTempVar, kmDrivenPerDayTempVar);
         //now we have the data, we can show it ...
         EVC.HTMLInteraction.init();
+        EVC.HTMLInteraction.updateScreen();
     },
 
     cloneObject: function(obj) {
@@ -419,7 +420,7 @@ var EVCfx = function(
     };
 
     this.replacementSaving = function(carType) {
-        return 9999;
+        return 100;
     }
 
     /**
@@ -748,11 +749,13 @@ var EVCfx = function(
 
 EVC.HTMLInteraction = {
 
+    isStartup: true,
+
     hasRangeSlider: true,
 
     hasGraphs: true,
 
-    isTouchScreen: true,
+    isTouchScreen: null,
 
     init: function(){
         this.clear();
@@ -771,13 +774,29 @@ EVC.HTMLInteraction = {
         //this.setupLinks();
         this.populateLinks();
         this.setupShowAndHideResultRows();
-        this.selectFirstInput();
         if(this.hasRangeSlider) {
 
         }
         else {
             this.makeGraphClickable();
         }
+        if( EVC.isReadyToCalculate()) {
+            this.hideStartup();
+            this.selectFirstInput();
+        } else {
+            this.hideDetails();
+            window.setTimeout(
+                function(){
+                    if( EVC.isReadyToCalculate()) {
+                        EVC.HTMLInteraction.hideStartup();
+                        EVC.HTMLInteraction.selectFirstInput();
+                    }
+                },
+                500
+            );
+        }
+
+
     },
 
     clear: function(){
@@ -790,8 +809,11 @@ EVC.HTMLInteraction = {
     },
 
     isTouchScreenTest: function() {
-        return 'ontouchstart' in window        // works on most browsers
-            || navigator.maxTouchPoints;       // works on IE10/11 and Surface
+        if(this.isTouchScreen === null) {
+            this.isTouchScreen = 'ontouchstart' in window        // works on most browsers
+                || navigator.maxTouchPoints;       // works on IE10/11 and Surface
+        }
+        return this.isTouchScreen;
     },
 
     buildKeyAssumptionForm: function() {
@@ -877,12 +899,19 @@ EVC.HTMLInteraction = {
                     //console.debug(method);
                     var value = EVC.scenarios[method]();
                     var numberValue = parseFloat(value);
-                    var formattedValue = numberValue.formatMoney();
-                    if(value < 0) {
-                        var htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
-                    }
-                    else {
-                        var htmlValue = "<span class=\"positiveNumber\">+"+formattedValue+"</span>";
+                    var htmlValue = 'error';
+                    if(method !== 'fiveYearProfit') {
+                        var formattedValue = numberValue.formatMoney();
+                        if(value < 0) {
+                            htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
+                        }
+                        else {
+                            htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
+                        }
+                    } else {
+                        numberValue = Math.abs(numberValue);
+                        var formattedValue = numberValue.formatMoney();
+                        htmlValue = formattedValue;
                     }
                     if(typeof numberValue === "number") {
                         jQuery(el).html(htmlValue);
@@ -1014,6 +1043,79 @@ EVC.HTMLInteraction = {
         );
     },
 
+    hideStartup: function() {
+        jQuery('#start-up-screen').hide();
+        jQuery('#ElectricVehicleCalculator').show();
+    },
+
+    hideDetails: function() {
+        jQuery('#ElectricVehicleCalculator').hide();
+        jQuery('#HowMuchDoWeSave a').click(
+            function(e) {
+                EVC.HTMLInteraction.transitionFromStartupToResults();
+                return false;
+            }
+        );
+        window.setTimeout(
+            function(){
+                jQuery('input[name="startup-car-value"]').focus();
+            },
+            300
+        );
+    },
+
+    transitionFromStartupToResults: function() {
+        jQuery('body').addClass('loading');
+        var carValue = jQuery('input[name="startup-car-value"]').val();
+        var odo = jQuery('input[name="startup-odo"]').val();
+        var next = true;
+        if(parseInt(odo) > 5) {
+        } else {
+            jQuery('input[name="startup-odo"]').focus();
+            next = false;
+        }
+        if(parseInt(carValue) > 50) {
+
+        } else {
+            jQuery('input[name="startup-car-value"]').focus();
+            next = false;
+        }
+
+        if(next) {
+            EVC.HTMLInteraction.setValue('CVValueToday', carValue);
+            EVC.HTMLInteraction.setValue('kmDrivenPerDay', odo);
+            jQuery('#start-up-screen').slideUp(
+                function() {
+                    jQuery('#ElectricVehicleCalculator').slideDown(
+                        function() {
+                            window.setTimeout(
+                                function(){
+                                    jQuery('#CVValueTodayField').change();
+                                    jQuery('body').removeClass('loading');
+                                    jQuery('#ProfitAndLoss').addClass('full-screen');
+                                },
+                                500
+                            );
+                            jQuery('#ViewDetailsNow a').click(
+                                function(e) {
+                                    EVC.HTMLInteraction.transitionFromResultsToDetails();
+                                    return false;
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+        }
+        return false;
+    },
+
+    transitionFromResultsToDetails: function() {
+        jQuery('#ViewDetailsNow').remove();
+        jQuery('#ProfitAndLoss').removeClass('full-screen');
+        return false;
+    },
+
     selectFirstInput: function(){
         //we have to wait until HTML is registered...
         window.setTimeout(
@@ -1038,9 +1140,8 @@ EVC.HTMLInteraction = {
 
     createFormFieldsFromList: function(list) {
         var html = "";
-        var isMobile = this.isMobile();
         var readOnly = "";
-        if(isMobile){
+        if( this.isTouchScreenTest()){
             readOnly = " readonly=\"readonly\" ";
         }
         for (var key in list) {
@@ -1084,18 +1185,6 @@ EVC.HTMLInteraction = {
         return html;
     },
 
-    isMobileVar: null,
-
-    isMobile: function(){
-        if(this.isMobileVar === null) {
-            this.isMobileVar = false; //initiate as false
-            // device detection
-            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-             this.isMobileVar = true;// some code..
-            }
-        }
-        return this.isMobileVar;
-    },
 
     getValueFromDefaultsOrSession: function(key, formatted){
         //todo - get from session here ...
@@ -1159,7 +1248,7 @@ EVC.HTMLInteraction = {
 
     startInput: function(key, elOrValue){
         jQuery("#ProfitAndLoss .calcVal").text("calculating ...");
-        if(this.isMobile()) {
+        if(this.isTouchScreenTest()) {
             jQuery("#ProfitAndLoss p.good").hide();
             jQuery("#ProfitAndLoss p.warning").show();
         }
@@ -1295,11 +1384,11 @@ EVC.HTMLInteraction = {
             }
             else {
                 jQuery('html, body').animate(
-                    {scrollTop: $("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
+                    {scrollTop: jQuery("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
                     },
                     500,
                     function() {
-
+                        jQuery("#"+key+"Holder").find('input[type="number"]').focus();
                     }
                 );
             }
@@ -1318,7 +1407,7 @@ EVC.HTMLInteraction = {
     },
 
     updateScreen: function(key){
-        console.debug("== UPDATING SCREEN ==");
+        if(EVC.debug) {console.debug("== UPDATING SCREEN ==");}
         this.populateResultTable();
         this.populateCalculations();
         this.updateLinks();
@@ -1330,7 +1419,7 @@ EVC.HTMLInteraction = {
             jQuery("#EVCWrapper").removeClass("ready").addClass("notReady");
         }
         jQuery("#ProfitAndLoss").addClass("fixed");
-        if(this.isMobile()) {
+        if(this.isTouchScreenTest()) {
             jQuery("#ProfitAndLoss p.good").show();
             jQuery("#ProfitAndLoss p.warning").hide();
         }
@@ -1736,12 +1825,27 @@ EVC.scenarios = {
 
     switchDate: function(){
         var now = new Date();
-        var maturityDate = new Date();
-        maturityDate.setYear(now.getFullYear() + EVC.ActualData.yearsBeforeSwitch);
-        var day = maturityDate.getDate();
-        var monthIndex = maturityDate.getMonth();
-        var year = maturityDate.getFullYear();
-        return " in " + this.monthNames[monthIndex].substring(0,3) + ". " + year;
+        var switchDate = new Date();
+        switchDate.setYear(now.getFullYear() + EVC.ActualData.yearsBeforeSwitch);
+        var day = switchDate.getDate();
+        var monthIndex = switchDate.getMonth();
+        var year = switchDate.getFullYear();
+        if(
+            monthIndex === now.getMonth() &&
+            year === now.getFullYear()
+        ) {
+            return 'this month';
+        } else {
+            return "in " + this.monthNames[monthIndex].substring(0,3) + ". " + year;
+        }
+    },
+
+    betterOrWorseOff: function() {
+        if(this.fiveYearProfit() > 0) {
+            return 'will have saved';
+        } else {
+            return 'will have paid an additional';
+        }
     },
 
     profitLossDate: function(){
@@ -1751,7 +1855,14 @@ EVC.scenarios = {
         var day = maturityDate.getDate();
         var monthIndex = maturityDate.getMonth();
         var year = maturityDate.getFullYear();
-        return " in " + this.monthNames[monthIndex].substring(0,3) + " " + year;
+        if(
+            monthIndex === now.getMonth() &&
+            year === now.getFullYear() + 5
+        ) {
+            return 'in five years';
+        } else {
+            return "by " + this.monthNames[monthIndex].substring(0,3) + ". " + year;
+        }
         //return " on " + day + " " + this.monthNames[monthIndex] + " " + year;
     },
 
@@ -2014,7 +2125,7 @@ EVC.DataDescription = {
 
     desc: {
         /* key assumptions s */
-        CVValueToday:                           "The price at which you can sell your current car today.",
+        CVValueToday:                           "The price at which you can sell your current car today. If unsure, you can visit tradme.co.nz and search for cars of your make, model, and age.",
         kmDrivenPerDay:                         "Approximate kilometers you drive per day or per year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
         /* play around assumptions */
         daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week). On these big days you will rent a car so that you can cover larger distances.",
@@ -2072,8 +2183,6 @@ EVC.DataDescription = {
     }
 };
 
-
-
 Number.prototype.formatMoney = function(c, d, t){
     var n = this,
     c = isNaN(c = Math.abs(c)) ? (Math.abs(n) < 5  && n != 0? 2 : 0) : c,
@@ -2101,7 +2210,6 @@ Number.prototype.formatNumber = function() {
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
 /**
  * DATA
  *
@@ -2109,8 +2217,6 @@ Number.prototype.formatNumber = function() {
  *
  *
  */
-
-
 
 
 EVC.DefaultData = {

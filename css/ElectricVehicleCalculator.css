@@ -1,6 +1,10 @@
 @media screen and (min-width: 0px) {
     /* general */
     body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222;}
+    .loading-screen {display: none;}
+    body.loading  {overflow: hidden;}
+    body.loading .loading-screen {background-color: #FF5D9F; position: fixed; top: 0; bottom: 0; right: 0; left: 0; z-index: 999; display: block;}
+    body.loading .loading-screen span {display: block; color: #fff; font-size: 40px; text-align: center; margin: 0; position: absolute; top: 40%; width: 100%; }
     * {font-weight: 400;}
     strong {font-weight: 700;}
     a {border-bottom: 1px solid #ccc; text-decoration: none; color: black;}
@@ -24,7 +28,7 @@
     .fieldHolder:last-child { border-bottom: 1px solid #ccc; }
     .middleColumn {position: relative; overflow: visible; float: right; width: auto;}
     label, input {font-size: 12px;}
-    label strong {font-weight: 400; color: #999; cursor: pointer;}
+    label strong {font-weight: 400; color: #999; cursor: pointer; color: #000;}
     label span.desc {color: orange;}
     .fieldHolder.changed label strong {color: #222}
 
@@ -49,6 +53,8 @@
         font-size: 33px!important;
         margin-top: 1em;
         margin-bottom: 1em;
+        border-radius: 5px;
+        padding: 5px;
     }
     input[readonly=readonly] {
         cursor: pointer;
@@ -130,6 +136,27 @@
     #ProfitAndLoss p span.calcVal{border-bottom: none;}
     #ProfitAndLoss p.warning {display: none; font-size: 21px;}
     #ProfitAndLoss p.warning a{float: right;}
+
+    #ProfitAndLoss.full-screen { bottom: 0;}
+    #ProfitAndLoss.full-screen p, #ProfitAndLoss.full-screen span  {font-size: 40px;}
+    #ProfitAndLoss ul.actions{
+        display: none;
+    }
+    #ProfitAndLoss.full-screen ul.actions{
+        display: block;
+    }
+    #ProfitAndLoss.full-screen #ViewDetailsNow {
+        float: none;
+        margin: 0 auto 0 auto;
+        width: 175px;
+        bottom: 0;
+        margin-left: -87px;
+        left: 50%;
+        position: absolute;
+    }
+
+
+
     /* influence */
 
     .influence {position: relative; background-color: #fab387; height: 2px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; font-size: 12px;}
@@ -143,15 +170,23 @@
     figcaption ul li{text-align: center; font-size: 12px; color: #666; margin-bottom: 0; padding-bottom: 0;}
     canvas{margin-left: auto; margin-right: auto;	display: block; }
 
+    #EVCWrapper #start-up-screen p.question {font-size: 24px;}
+    #EVCWrapper #start-up-screen p.question span {color: #FF5D9F;}
+    #EVCWrapper #start-up-screen .field {clear: both; height: 90px; position: relative;}
+    #EVCWrapper #start-up-screen .field label {float: none; width: 100%; display: block; padding: 5px;}
+    #EVCWrapper #start-up-screen .field .middleColumn {position: absolute; width: 100%; top: 0;}
+    #EVCWrapper #start-up-screen .field .middleColumn  input {display: block;position: relative; box-shadow: inset 0 0 3px #ddd; width: 100%;}
+    #EVCWrapper #start-up-screen #HowMuchDoWeSave {padding: 0; float: right;}
+
 }
 
 
 @media screen and (min-width: 480px) {
     .fieldHolder.infocus .middleColumn  {width: 160px!important; float: right!important;}
     label {
-        width: -webkit-calc(100% - 170px);
-        width: -moz-calc(100% - 170px);
-        width: calc(100% - 170px);
+        width: -webkit-calc(100% - 210px);
+        width: -moz-calc(100% - 210px);
+        width: calc(100% - 210px);
         float: left;
     }
     input {
@@ -165,6 +200,7 @@
         width: 140px;
         margin-top: 0;
         margin-bottom: 0em;
+        float: right;
     }
     input[type=range] {
         margin-top: 4.5em!important;
@@ -322,10 +358,11 @@ input[type=number] {
   -o-transition: all 0.30s ease-in-out;
   outline: none;
   border: 1px solid transparent;
+  box-shadow: inset 0 0 3px #ddd;
 }
 
 input[type=number]:focus {
-  box-shadow: inset 0 0 3px #ddd;
+
   border: 1px solid #ccc;
 }
 

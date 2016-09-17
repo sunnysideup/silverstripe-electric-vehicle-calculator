@@ -24,6 +24,7 @@
 </head>
 
 <body>
+    <div class='loading-screen'><span>calculating your results ... </span></div>
 <div id="EVCWrapper">
 
     <% if PreviousCalculations %>
@@ -33,6 +34,30 @@
     </div>
     <% else %>
     <form id="start-up-screen">
+        <p class="question">
+            If you trade-in your car for an electric vehicle &#8212; what will it cost you?
+            <span>Answer the two questions below and we will tell you ... you might be suprised, it will not cost the earth:</span>
+        </p>
+
+        <div class="field">
+            <label for="startup-car-value">What is the value of your current car?</label>
+            <div class="middleColumn">
+                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
+            </div>
+        </div>
+        <div class="field">
+            <label for="startup-odo">How many kilometres do you drive per day or year?</label>
+            <div class="middleColumn">
+                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="startup-odo" />
+            </div>
+        </div>
+        <ul class="actions">
+            <li id="HowMuchDoWeSave" class="buttonWrapper">
+                <a href="#ProfitAndLoss" class="button">View Answer</a>
+            </li>
+        </ul>
+
+        <div id="startup-form-result"></div>
     </form>
     <form id="ElectricVehicleCalculator">
 
@@ -46,10 +71,18 @@
                 <a href="#" class="button" onclick="return false;">get updated results ...</a>
             </p>
             <p class="message good">
-                If you switch to an Electric Car <span class="straightFillers" data-fx="switchDate">today</span>,
-                your wealth, <span class="straightFillers" data-fx="profitLossDate">five years from now</span>,
-                will change by: <span class="calcVal" data-fx="fiveYearProfit">calculating ...</span>
+                We estimate that if you switch to an electric car
+                <span class="straightFillers" data-fx="switchDate">this month</span>
+                then, <span class="straightFillers" data-fx="profitLossDate">in five years</span>,
+                you <span class="straightFillers" data-fx="betterOrWorseOff">save</span>
+                <span class="calcVal" data-fx="fiveYearProfit">calculating ...</span>
             </p>
+            <ul class="actions">
+                <li id="ViewDetailsNow" class="buttonWrapper">
+                    <a href="#ResultTableHolder" class="button">view details ...</a>
+                </li>
+            </ul>
+
         </div>
 
         <fieldset id="ResultTableHolder" class="mainDetailedSections">
