@@ -1067,11 +1067,15 @@ EVC.HTMLInteraction = {
     transitionFromStartupToResults: function() {
         jQuery('body').addClass('loading');
         var carValue = jQuery('input[name="startup-car-value"]').val();
-        var odo = jQuery('input[name="startup-odo"]').val();
+        carValue = parseFloat(carValue.replace(/[^0-9.]/g, ''));
+        var petrolSpentPerWeek = jQuery('input[name="petrol-spent-per-week"]').val();
+        petrolSpentPerWeek = parseFloat(petrolSpentPerWeek.replace(/[^0-9.]/g, ''));
+        var litresBoughtPerWeek = petrolSpentPerWeek / EVC.DefaultData.costOfPetrolPerLitre;
+        var odoPerDay = (EVC.DefaultData.fuelEfficiencyCV *  litresBoughtPerWeek) / 7;
         var next = true;
-        if(parseInt(odo) > 5) {
+        if(parseInt(odoPerDay) > 5) {
         } else {
-            jQuery('input[name="startup-odo"]').focus();
+            jQuery('input[name="petrol-spent-per-week"]').focus();
             next = false;
         }
         if(parseInt(carValue) > 50) {
@@ -1083,7 +1087,7 @@ EVC.HTMLInteraction = {
 
         if(next) {
             EVC.HTMLInteraction.setValue('CVValueToday', carValue);
-            EVC.HTMLInteraction.setValue('kmDrivenPerDay', odo);
+            EVC.HTMLInteraction.setValue('kmDrivenPerDay', odoPerDay);
             jQuery('#start-up-screen').slideUp(
                 function() {
                     jQuery('#ElectricVehicleCalculator').slideDown(
@@ -1291,6 +1295,8 @@ EVC.HTMLInteraction = {
             else {
                 var value = elOrValue;
             }
+            //generic rounding ...
+            value = Math.round(value * 100) / 100;
             var labelValue = EVC.DataDescription.labels[key];
             if(value != defaultValue) {
                 if(defaultValue > 0) {
@@ -2097,7 +2103,7 @@ EVC.DataDescription = {
         principalRepaymentsPerYearPercentage:   "Principal Repayments per Year",
         costOfPetrolPerLitre:                   "Petrol per Litre",
         costOfElectricityPerKwH:                "Electricity per KwH",
-        fuelEfficiencyCV:                       "Current Car: KMs per Litre of Petrol",
+        fuelEfficiencyCV:                       "Current Car: KMs per litre of Petrol",
         fuelEfficiencyEV:                       "Electric Car: KMs per KwH",
         fuelEfficiencyRentalCar:                "Rental Car: KMs per Litre of Petrol",
         insuranceBaseCost:                      "Insurance Base Price",
@@ -2244,7 +2250,7 @@ EVC.DefaultData = {
     principalRepaymentsPerYearPercentage:   20,
     costOfPetrolPerLitre:                 2.00,
     costOfElectricityPerKwH:              0.20,
-    fuelEfficiencyCV:                       12,
+    fuelEfficiencyCV:                       10,
     fuelEfficiencyEV:                        5,
     fuelEfficiencyRentalCar:                12,
     insuranceBaseCost:                     200,

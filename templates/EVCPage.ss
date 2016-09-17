@@ -46,9 +46,9 @@
             </div>
         </div>
         <div class="field">
-            <label for="startup-odo">How many kilometres do you drive per day or year?</label>
+            <label for="petrol-spent-per-week">How much do you spend on petrol per week?</label>
             <div class="middleColumn">
-                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="startup-odo" />
+                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
             </div>
         </div>
         <ul class="actions">
