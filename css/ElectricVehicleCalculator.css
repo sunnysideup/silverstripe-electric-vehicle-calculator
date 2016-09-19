@@ -1,6 +1,11 @@
 @media screen and (min-width: 0px) {
+    html {
+        background: #000;
+        background-image: url(https://upload.wikimedia.org/wikipedia/commons/6/67/Apollo_17_Image_Of_Earth_From_Space.jpeg);
+        background-position: center;
+    }
     /* general */
-    body {margin: 10px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222;}
+    body {margin: 0px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222; background-color: rgba(255, 255, 255, 0.9);}
     .loading-screen {display: none;}
     body.loading  {overflow: hidden;}
     body.loading .loading-screen {background-color: #FF5D9F; position: fixed; top: 0; bottom: 0; right: 0; left: 0; z-index: 999; display: block;}

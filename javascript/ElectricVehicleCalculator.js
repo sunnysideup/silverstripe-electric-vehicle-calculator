@@ -900,18 +900,17 @@ EVC.HTMLInteraction = {
                     var value = EVC.scenarios[method]();
                     var numberValue = parseFloat(value);
                     var htmlValue = 'error';
+                    var originalNumber = numberValue;
+                    var calculatedNumber = numberValue;
                     if(method !== 'fiveYearProfit') {
-                        var formattedValue = numberValue.formatMoney();
-                        if(value < 0) {
-                            htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
-                        }
-                        else {
-                            htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
-                        }
-                    } else {
-                        numberValue = Math.abs(numberValue);
-                        var formattedValue = numberValue.formatMoney();
-                        htmlValue = formattedValue;
+                        var calculatedNumber = Math.abs(numberValue);
+                    }
+                    var formattedValue = calculatedNumber.formatMoney();
+                    if(value < 0) {
+                        htmlValue = "<span class=\"negativeNumber\">"+formattedValue+"</span>";
+                    }
+                    else {
+                        htmlValue = "<span class=\"positiveNumber\">"+formattedValue+"</span>";
                     }
                     if(typeof numberValue === "number") {
                         jQuery(el).html(htmlValue);
@@ -1024,6 +1023,10 @@ EVC.HTMLInteraction = {
         else {
             jQuery(".saveLink.hideWithoutServerInteraction").hide();
         }
+    },
+
+    listOfYears: function() {
+
     },
 
     setupShowAndHideResultRows: function(){
