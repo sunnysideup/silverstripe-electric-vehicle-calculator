@@ -71,9 +71,10 @@
                 <a href="#" class="button" onclick="return false;">get updated results ...</a>
             </p>
             <p class="message good">
-                We estimate that if you switch to an electric car
+                We estimate that if you <a href="#switch-explain" class="inline-expand">switch</a>
+                <span id="switch-explain" class="hide">(trade-in without any upfront cost) to an electric car</span>
                 <span class="straightFillers" data-fx="switchDate">this month</span>
-                then, <span class="straightFillers" data-fx="profitLossDate">in five years</span>,
+                then, <span class="straightFillers years-ahead" data-fx="profitLossDate">in five years</span>,
                 you <span class="straightFillers" data-fx="betterOrWorseOff">save</span>
                 <span class="calcVal" data-fx="fiveYearProfit">calculating ...</span>
             </p>
@@ -90,6 +91,9 @@
                 detailed results for one year <span class="straightFillers" data-fx="resultsTableYear"></span>:
                 <span class="calcVal" data-fx="totalProfit"></span>
             </h2>
+            <p id="financial-years">
+
+            </p>
             <table>
                 <thead>
                     <tr class="header summary">

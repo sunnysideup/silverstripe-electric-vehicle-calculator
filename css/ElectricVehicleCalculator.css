@@ -2,10 +2,10 @@
     html {
         background: #000;
         background-image: url(https://upload.wikimedia.org/wikipedia/commons/6/67/Apollo_17_Image_Of_Earth_From_Space.jpeg);
-        background-position: center;
+        background-position: center 100px;
     }
     /* general */
-    body {margin: 0px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222; background-color: rgba(255, 255, 255, 0.9);}
+    body {margin: 0px; padding: 0px; font-family: Montserrat; font-size: 0.7em; color: #222; background-color: rgba(255, 255, 255, 0.93);}
     .loading-screen {display: none;}
     body.loading  {overflow: hidden;}
     body.loading .loading-screen {background-color: #FF5D9F; position: fixed; top: 0; bottom: 0; right: 0; left: 0; z-index: 999; display: block;}
@@ -23,10 +23,10 @@
     ul.actions {list-style: none; padding: 0; margin: 0; overflow: hidden;}
     ul.actions li {list-style: none; float: left; padding: 0em 1.5em 1.5em 0;}
     footer {margin-top: 10em; color: #555; height: 10em; clear: both; border-top: 1px solid #ccc;}
-
+    .hide {display: none;}
     /* form */
     #EVCWrapper {width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; position: relative;}
-    form {margin-top: 7em;}
+    form {padding-top: 7em;}
     fieldset {border: none; padding: 0.5em 0; outline: none; clear: both;}
     fieldset * {}
     .fieldHolder { padding: 1em 0; clear: both; border-top: 1px solid #ccc; overflow: hidden;}
@@ -44,7 +44,7 @@
         background-color: transparent;
         border: none;
         text-align: right;
-        color: blue;
+        color: #2196F3;
         font-size: 21px;
     }
     input[type=range] {
@@ -126,6 +126,8 @@
 
     td {padding: 0.9em 0 0.5em 0; vertical-align: top; width: 7em;text-align: right;}
     th {padding: 0.9em 0 0.5em 0; vertical-align: top; text-align: left; font-weight: 400; font-weight: normal;}
+    .expandRows:before{content: '+ ';}
+    .expandRows.show:before{content: '- ';}
     thead th, tfoot th, tfoot td {text-align: right; border-bottom: 1px solid #ccc;border-top: 1px solid #ccc;font-weight: 700;}
     table tr th a.show {display: block;}
 
@@ -140,7 +142,7 @@
     #ProfitAndLoss p {padding: 1em!important; margin: 0; overflow: hidden;}
     #ProfitAndLoss p span.calcVal{border-bottom: none;}
     #ProfitAndLoss p.warning {display: none; font-size: 21px;}
-    #ProfitAndLoss p.warning a{float: right;}
+    #ProfitAndLoss p.warning a {float: right;}
 
     #ProfitAndLoss.full-screen { bottom: 0;}
     #ProfitAndLoss.full-screen p, #ProfitAndLoss.full-screen span  {font-size: 40px;}
@@ -159,13 +161,14 @@
         left: 50%;
         position: absolute;
     }
-
+    #ProfitAndLoss a.inline-expand {color: green;}
+    #ProfitAndLoss .years-ahead {color: white;}
 
 
     /* influence */
 
     .influence {position: relative; background-color: #fab387; height: 2px; overflow: hidden; width: 100%; clear: both; border-radius: 5px; font-size: 12px;}
-    .influence span{position: absolute; top: 0; left: 0; background-color: LightSkyBlue; height: 3px; z-index: 1; font-style: normal;}
+    .influence span{position: absolute; top: 0; left: 0; background-color: #64B5F6; height: 3px; z-index: 1; font-style: normal;}
     .influence em{padding: 9px; display: block; position: relative; z-index: 2; top: 0; left: 0; bottom: 0;color: transparent; }
 
     /* graph */
@@ -298,7 +301,7 @@ input[type=range]::-moz-range-thumb {
     height: 26px;
     width: 26px;
     border-radius: 50%;
-    background: blue;
+    background: #0D47A1;
 }
 
 /*hide the outline behind the border*/
@@ -334,7 +337,7 @@ input[type=range]::-ms-thumb {
     height: 26px;
     width: 26px;
     border-radius: 50%;
-    background: blue;
+    background: #0D47A1;
 }
 input[type=range]:focus::-ms-fill-lower {
     background: #888;

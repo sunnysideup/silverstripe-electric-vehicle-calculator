@@ -14,7 +14,7 @@ jQuery(document).ready(
 
 var EVC = {
 
-    debug: true,
+    debug: false,
 
     myData: {},
 
@@ -774,6 +774,7 @@ EVC.HTMLInteraction = {
         //this.setupLinks();
         this.populateLinks();
         this.setupShowAndHideResultRows();
+        this.inlineExpandListener();
         if(this.hasRangeSlider) {
 
         }
@@ -902,7 +903,7 @@ EVC.HTMLInteraction = {
                     var htmlValue = 'error';
                     var originalNumber = numberValue;
                     var calculatedNumber = numberValue;
-                    if(method !== 'fiveYearProfit') {
+                    if(method === 'fiveYearProfit') {
                         var calculatedNumber = Math.abs(numberValue);
                     }
                     var formattedValue = calculatedNumber.formatMoney();
@@ -1472,6 +1473,19 @@ EVC.HTMLInteraction = {
         jQuery("body").removeClass("modalMode");
         jQuery("#"+key+"Holder").removeClass("modal").removeClass("infocus");
         return false;
+    },
+
+    inlineExpandListener: function(){
+        jQuery('.inline-expand').on(
+            'click',
+            function(e){
+                e.preventDefault();
+                var link = jQuery(this).attr('href');
+                var id = link.substring(link.indexOf('#'));
+                jQuery(id).toggle('slow');
+                return false;
+            }
+        )
     }
 
 
@@ -2243,9 +2257,9 @@ EVC.DefaultData = {
     /* other assumptions */
     amountOfCurrentCarAsLoan:                0,
     minimumCostElectricVehicle:          18000,
-    maximumCostElectricVehicle:          36000,
+    maximumCostElectricVehicle:         200000,
     upgradeCostToGoElectric:                30,
-    EVValueImprovementPerYearPercentage:     5,
+    EVValueImprovementPerYearPercentage:    20,
     setupChargeStation:                    300,
     saleCostForCarInPercentage:              7,
     purchaseCostForCarInPercentage:          3,
