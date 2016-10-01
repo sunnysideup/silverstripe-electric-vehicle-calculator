@@ -40,7 +40,7 @@
         </p>
 
         <div class="field">
-            <label for="startup-car-value">What is the value of your current car?</label>
+            <label for="startup-car-value">What is the value of your current car (in NZD)?</label>
             <div class="middleColumn">
                 <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
             </div>
@@ -334,7 +334,7 @@
 
             <h2>feedback</h2>
             <p>
-                Please send us an e-mail: <a href='m&#97;ilt&#111;&#58;evs&#64;&#115;%&#55;5&#110;n%&#55;&#57;side%75p&#46;co&#46;&#110;z'>evs&#64;sun&#110;ysideu&#112;&#46;co&#46;&#110;z</a>, if you have any comments.
+                Please send us an e-mail: <a href='m&#97;ilt&#111;&#58;evs&#64;&#115;%&#55;5&#110;n%&#55;&#57;side%75p&#46;co&#46;&#110;z'>evs&#64;sun&#110;ysideu&#112;&#46;co&#46;&#110;z</a> if you have any comments.
                 Thank you.
             </p>
 
@@ -344,6 +344,7 @@
                 <li><a href="http://www.electricheaven.nz/">Information on Electric Cars in New Zealand</a></li>
                 <li><a href="https://www.energywise.govt.nz/tools/fuel-economy/">EECA: Fuel Economy</a></li>
                 <li><a href="https://www.energywise.govt.nz/on-the-road/electric-vehicles/">EECA: Electric Vehicles</a></li>
+                <li><a href="http://www.leadingthecharge.org.nz">Leading the Charge</a></li>
             </ul>
 
             <h2>disclaimer</h2>
@@ -356,17 +357,9 @@
 
             <h2>to do</h2>
             <ul>
-                <li>add padding on top that is the same as fixed header</li>
-                <li>allow to change values from chart</li>
                 <li>review: https://www.quora.com/What-are-some-APIs-for-retrieving-car-value-data, http://www.programmableweb.com/api/kelley-blue-book-infodriver, http://developer.edmunds.com/faq.html#faq-2, https://developer.ibm.com/apimanagement/2014/10/31/whats-driving-apis-automotive/, http://www3.epa.gov/otaq/tcldata.htm, https://www.carvoyant.com/</li>
-                <li>set up form to select make and model</li>
-                <li>dont select current car value, but let user select car model and age ... </li>
                 <li>make it easier to understand save methods</li>
-                <li>move all content down by size of Header</li>
                 <li>make a list of links for each assumption / variable</li>
-                <li>see assumptions relevant to each section</li>
-                <li>ability to add uber / public transport / walking / train / long distance bus / flying / cycling KMs...</li>
-                <li>break down cost in </li>
             </ul>
         </div>
     </form>
