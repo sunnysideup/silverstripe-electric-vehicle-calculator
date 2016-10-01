@@ -2,24 +2,56 @@
  * @author Nicolaas @ sunnysideup.co.nz
  *
  *
+ */
+/**
+ * general notes:
+ * -------------
+ *
+ *  # always change data through EVC.HTMLInteraction.setValue()
+ *    to make the caching work.
+ *
+ *  #
+ *
  *
  */
 
 
+/**
+ * kick start into action!
+ */
 jQuery(document).ready(
     function(){
         EVC.init();
     }
 );
 
+/**
+ * main object holdering main variables
+ */
 var EVC = {
 
+    /**
+     * debug the application
+     * @type {Boolean}
+     */
     debug: false,
 
+    /**
+     * current data set
+     * @type {Object}
+     */
     myData: {},
 
+    /**
+     * years before switching to EV
+     * @type {Number}
+     */
     yearsBeforeSwitch: -1,
 
+    /**
+     * years after switch to EV
+     * @type {Number}
+     */
     yearsAfterSwitch: -1,
 
     kmDrivenPerDay: -1,
@@ -683,6 +715,10 @@ var EVCfx = function(
         return this.totalCombined("f") - this.totalCombined("e");
     };
 
+    this.totalProfitWithEquity = function(){
+        return this.totalProfit() + this.equityImprovementAtEndOfYear();
+    };
+
     this.debug = function(){
         var methodArray = [
             "hasCar",
@@ -812,7 +848,7 @@ EVC.HTMLInteraction = {
     isTouchScreenTest: function() {
         if(this.isTouchScreen === null) {
             this.isTouchScreen = 'ontouchstart' in window        // works on most browsers
-                || navigator.maxTouchPoints;       // works on IE10/11 and Surface
+                || navigator.maxTouchPoints;                     // works on IE10/11 and Surface
         }
         return this.isTouchScreen;
     },
@@ -929,9 +965,12 @@ EVC.HTMLInteraction = {
         jQuery(".straightFillers").each(
             function(i, el) {
                 var method = jQuery(el).attr("data-fx");
-                //console.debug(method);
-                var value = EVC.scenarios[method]();
-                jQuery(el).text(value);
+                if(method) {
+                    var value = EVC.scenarios[method]();
+                    jQuery(el).html(value);
+                } else {
+                    console.error('Could not find method on element')
+                }
             }
         )
     },
@@ -1024,10 +1063,6 @@ EVC.HTMLInteraction = {
         else {
             jQuery(".saveLink.hideWithoutServerInteraction").hide();
         }
-    },
-
-    listOfYears: function() {
-
     },
 
     setupShowAndHideResultRows: function(){
@@ -1264,9 +1299,13 @@ EVC.HTMLInteraction = {
 
     updateInProgress: false,
 
-    setValue: function(key, elOrValue){
+    setValue: function(key, elOrValue, forceUpdate){
+        if(forceUpdate !== true) {
+            forceUpdate = false;
+        }
         if(this.updateInProgress) {
-            return true;
+            console.error('Application can not be updated right now.');
+            return false;
             //do nothing
         }
         else {
@@ -1297,6 +1336,10 @@ EVC.HTMLInteraction = {
                 }
             }
             else {
+                if(forceUpdate) {
+                    EVC.isChanged = true;
+                    updateScreen = true;
+                }
                 var value = elOrValue;
             }
             //generic rounding ...
@@ -1369,6 +1412,7 @@ EVC.HTMLInteraction = {
                 this.updateScreen(key);
             }
             this.updateInProgress = false;
+            return false;
         }
     },
 
@@ -1808,25 +1852,8 @@ EVC.scenarios = {
         return EVC.myData.totalProfit() + EVC.myData.equityImprovementAtEndOfYear();
     },
 
-    threeYearProfit: function(){
-        var start = parseInt(EVC.ActualData.yearsAfterSwitch) - 0;
-        var year1 = new EVCfx(-1, 0 + start, EVC.ActualData.kmDrivenPerDay);
-        var year2 = new EVCfx(-1, 1 + start, EVC.ActualData.kmDrivenPerDay);
-        var year3 = new EVCfx(-1, 2 + start, EVC.ActualData.kmDrivenPerDay);
-        var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit();
-        var restValue = year3.equityImprovementAtEndOfYear();
-        return totalProfit + restValue;
-    },
-
     fiveYearProfit: function(){
-        var year1 = new EVCfx(-1, 0, EVC.ActualData.kmDrivenPerDay);
-        var year2 = new EVCfx(-1, 1, EVC.ActualData.kmDrivenPerDay);
-        var year3 = new EVCfx(-1, 2, EVC.ActualData.kmDrivenPerDay);
-        var year4 = new EVCfx(-1, 3, EVC.ActualData.kmDrivenPerDay);
-        var year5 = new EVCfx(-1, 4, EVC.ActualData.kmDrivenPerDay);
-        var totalProfit = year1.totalProfit() + year2.totalProfit() + year3.totalProfit() + year4.totalProfit() + year5.totalProfit();
-        var restValue = year5.equityImprovementAtEndOfYear();
-        return totalProfit + restValue;
+        return this.totalProfitManyYears();
     },
 
     plusFiveThousand: function(){
@@ -1840,10 +1867,25 @@ EVC.scenarios = {
         return year1.totalProfit();
     },
 
-    inThreeYearsTime: function(){
-        var year1 = new EVCfx(3 + parseInt(EVC.ActualData.yearsBeforeSwitch), -1, parseFloat(EVC.ActualData.kmDrivenPerDay));
-        //return year1.debug();
-        return year1.totalProfit();
+
+    breakEvenYearsFromNow: function(){
+        var yearsBeforeSwitch = 0;
+        var totalProfit = 0;
+        while(totalProfit <= 0 && yearsBeforeSwitch < 13) {
+            totalProfit = this.totalProfitManyYears(
+                yearsBeforeSwitch
+            );
+            yearsBeforeSwitch++;
+        }
+        yearsBeforeSwitch--;
+        return yearsBeforeSwitch;
+    },
+
+    breakEvenYear: function() {
+        var yearsBeforeSwitch = this.breakEvenYearsFromNow();
+        var now = new Date();
+        var year = now.getFullYear();
+        return year + yearsBeforeSwitch;
     },
 
     switchDate: function(){
@@ -1865,10 +1907,13 @@ EVC.scenarios = {
 
     betterOrWorseOff: function() {
         if(this.fiveYearProfit() > 0) {
-            return 'will have saved';
+            var msg = 'will have saved';
         } else {
-            return 'will have paid an additional';
+            var msg = 'will have paid an additional ';
+            msg += '<span class="switch-year">(switching from '+this.breakEvenYear()+' will start to be profitable)</span>';
         }
+        return msg;
+
     },
 
     profitLossDate: function(){
@@ -2045,166 +2090,57 @@ EVC.scenarios = {
             }
         }
         return false;
-    }
+    },
+
+    /**
+     * [function description]
+     * @param  {integer} yearsBeforeSwitch
+     * @param  {integer} yearsAfterSwitch
+     * @param  {integer} kmDrivenPerDay
+     * @param  {integer} numberOfYears     number of years to combine
+     * @return {float}                     return the total profit including sales value
+     */
+    totalProfitManyYears: function(yearsBeforeSwitch, yearsAfterSwitch, kmDrivenPerDay, numberOfYears) {
+        if(typeof yearsBeforeSwitch === 'undefined') {
+            yearsBeforeSwitch = -1;
+        }
+        if(typeof yearsAfterSwitch === 'undefined') {
+            yearsAfterSwitch = 0;
+        }
+        if(typeof kmDrivenPerDay === 'undefined') {
+            kmDrivenPerDay = EVC.ActualData.kmDrivenPerDay;
+        }
+        if(typeof numberOfYears === 'undefined') {
+            numberOfYears = 5;
+        }
+        var year = 0;
+        var totalProfit = 0;
+        for(year = 0; year < 5; year++) {
+            var yearDefinition = new EVCfx(yearsBeforeSwitch, yearsAfterSwitch + year, kmDrivenPerDay);
+            totalProfit += yearDefinition.totalProfit();
+        }
+        totalProfit += yearDefinition.equityImprovementAtEndOfYear();
+        return totalProfit;
+    },
+
+
+    listOfYears: function() {
+        var now = new Date();
+        var startYear = now.getFullYear() + EVC.ActualData.yearsBeforeSwitch;
+        var yearsAfterSwitch = EVC.ActualData.yearsAfterSwitch;
+        var i = 0;
+        var currentYear = startYear;
+        var html = '';
+        for(i = 0; i < 5; i++) {
+            currentYear = startYear + i;
+            var cssClas = (i === yearsAfterSwitch) ? 'current' : 'link';
+            html += '<li><a href="#financial-years" onclick="return EVC.HTMLInteraction.setValue(\'yearsAfterSwitch\', '+i+', true);" class="'+cssClas+'">'+currentYear+'</a></li>';
+        }
+        return html;
+    },
+
 }
 
-EVC.DataDescription = {
-
-    keyAssumptionKeys: {
-        "CVValueToday":                         "currency",
-        "kmDrivenPerDay":                       "kmPerDay"
-    },
-
-    playAroundAssumptionKeys: {
-        "daysWithContinuousTripsOver100Km":     "number",
-        "yearsBeforeSwitch":                    "number",
-        "yearsAfterSwitch":                     "number"
-    },
-
-    otherAssumptionKeys: {
-        "minimumCostElectricVehicle":           "currency",
-        "maximumCostElectricVehicle":           "currency",
-        "upgradeCostToGoElectric":              "percentage",
-        "EVValueImprovementPerYearPercentage":  "percentage",
-        "setupChargeStation":                   "currency",
-        "saleCostForCarInPercentage":           "percentage",
-        "purchaseCostForCarInPercentage":       "percentage",
-        "financingCostInPercentage":            "percentage",
-        "principalRepaymentsPerYearPercentage": "percentage",
-        "costOfPetrolPerLitre":                 "currency",
-        "costOfElectricityPerKwH":              "currency",
-        "fuelEfficiencyCV":                     "number",
-        "fuelEfficiencyEV":                     "number",
-        "fuelEfficiencyRentalCar":              "number",
-        "insuranceBaseCost":                    "currency",
-        "insuranceCostPerThousand":             "currency",
-        "averageKmsPerTyre":                    "number",
-        "tyreCostCV":                           "currency",
-        "tyreCostEV":                           "currency",
-        "licenseWOFCostCVPerYear":              "currency",
-        "licenseWOFCostEVPerYear":              "currency",
-        "maintenanceCVPerTenThousandKm":        "currency",
-        "maintenanceEVPerTenThousandKm":        "currency",
-        "repairKMDivider":                      "number",
-        "maxCarValueForRepairs":                "currency",
-        "exponentialGrowthFactorForRepairs":    "number",
-        "valueDividerForRepairCalculation":     "number",
-        "depreciationRatePerYearCV":            "percentage",
-        "depreciationRatePerYearEV":            "percentage",
-        "costPerDayRentalCar":                  "currency",
-        "kilometresPerDayForLongTrips":         "number",
-        "subsidyPaymentFixed":                  "currency",
-        "subsidyPaymentPerKM":                  "currency",
-        "personalContributionFixed":            "currency",
-        "personalContributionPerKM":            "currency"
-    },
-
-    labels: {
-        /* key assumptions s */
-        CVValueToday:                           "* Current Car Value",
-        kmDrivenPerDay:                         "* Average Kilometers Driven per Day",
-        /* play around assumptions */
-        yearsBeforeSwitch:                      "Number of Years Before Switch",
-        yearsAfterSwitch:                       "Number of Years after Switch",
-        daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
-        /* other assumptions */
-        amountOfCurrentCarAsLoan:               "Current Car: Borrowed Amount",
-        minimumCostElectricVehicle:             "Electric Car: Minimum Purchase Price",
-        maximumCostElectricVehicle:             "Electric Car: Maximum Purchase Price",
-        upgradeCostToGoElectric:                "Premium for Electrical Car",
-        EVValueImprovementPerYearPercentage:    "Relative Value Improvement per Year for Electric Cars",
-        setupChargeStation:                     "Infrastructure Set Up",
-        saleCostForCarInPercentage:             "Sale Related Costs",
-        purchaseCostForCarInPercentage:         "Purchase Related Costs",
-        financingCostInPercentage:              "Interest Rate",
-        principalRepaymentsPerYearPercentage:   "Principal Repayments per Year",
-        costOfPetrolPerLitre:                   "Petrol per Litre",
-        costOfElectricityPerKwH:                "Electricity per KwH",
-        fuelEfficiencyCV:                       "Current Car: KMs per litre of Petrol",
-        fuelEfficiencyEV:                       "Electric Car: KMs per KwH",
-        fuelEfficiencyRentalCar:                "Rental Car: KMs per Litre of Petrol",
-        insuranceBaseCost:                      "Insurance Base Price",
-        insuranceCostPerThousand:               "Insurance per $1000 Car Value",
-        averageKmsPerTyre:                      "Average KMs per Tyre",
-        tyreCostCV:                             "Current Car: one Tyre",
-        tyreCostEV:                             "Electric Car: one Tyre",
-        licenseWOFCostCVPerYear:                "Current Car: License and WOF per Year",
-        licenseWOFCostEVPerYear:                "Electric Car: License and WOF per Year",
-        maintenanceCVPerTenThousandKm:          "Current Car: Service per 10,000kms",
-        maintenanceEVPerTenThousandKm:          "Electric Car: Service per 10,000kms",
-        repairKMDivider:                        "KM divider for unexpected repairs",
-        maxCarValueForRepairs:                  "Car value where unexpected repairs start",
-        exponentialGrowthFactorForRepairs:      "Exponential unexpected repairs growth factor",
-        valueDividerForRepairCalculation:       "Inverse value unexpected value divider",
-        depreciationRatePerYearCV:              "Current Car: Depreciation rate per Year",
-        depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year",
-        costPerDayRentalCar:                    "Cost per Day for Rental Car",
-        kilometresPerDayForLongTrips:           "KMs per Day for Long Trips",
-        subsidyPaymentFixed:                    "Fixed Subsidy",
-        subsidyPaymentPerKM:                    "KM Subsidy",
-        personalContributionFixed:              "Personal Contribution per Year",
-        personalContributionPerKM:              "Personal Contribution per KM"
-    },
-
-    desc: {
-        /* key assumptions s */
-        CVValueToday:                           "The price at which you can sell your current car today. If unsure, you can visit tradme.co.nz and search for cars of your make, model, and age.",
-        kmDrivenPerDay:                         "Approximate kilometers you drive per day or per year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
-        /* play around assumptions */
-        daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week). On these big days you will rent a car so that you can cover larger distances.",
-        yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
-        yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
-        /* other assumptions */
-        amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
-        minimumCostElectricVehicle:             "Minimum price for an electric vehicle at the moment. Because electric cars are relatively new, there are few older models and depreciated cars, therefore a minimum price may apply.",
-        maximumCostElectricVehicle:             "Maximum price for an electric vehicle at the moment. In general, the calculator tries to match your current car with an electric car of a similar value, but this number is limited up to the new price of an electric vehicle.",
-        upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
-        EVValueImprovementPerYearPercentage:    "The expected amount of relative cost improvements of electric vehicles as compared to conventional cars powered by oil based fuel for each year.",
-        setupChargeStation:                     "The cost of setting up a charging station at your home (or work) to charge your electric car. If your home has a garage with a plug then the cost could be zero.",
-        saleCostForCarInPercentage:             "The cost of selling a vehicle. Included are advertising costs, commissions, auction fees, government registration fees, etc... This is basically the difference between the buy and sell price of a car (i.e. the profit of the car sales person).",
-        purchaseCostForCarInPercentage:         "Any costs associated with purchasing a car that is paid by the purchaser.",
-        financingCostInPercentage:              "Interest rate charged on car loans.  It may be a good idea to increase this a little bit to cover any finance fees that are charged by most lenders. ",
-        principalRepaymentsPerYearPercentage:   "The percentage of the value of the car (at the time of purchase) used to calculate any loan repayments.  For example, if you purchase a $10,000 vehicle and you pay $1000 per year (excluding interest) then the amount entered here is 10%.  In general, the payments should satisfy the basic requirement that a sale of the car today would ensure that the total outstanding amount of the loan can be met.",
-        costOfPetrolPerLitre:                   "Cost of oil based fuel (diesel / petrol) per litre.",
-        costOfElectricityPerKwH:                "Cost of the electricity used to charge your Electric Car, per Kilowatt Hour.  This is usuall between $0.10 and $0.40cents.  You may be able to apply a special night rate for this, if you are able to charge your car at night.",
-        fuelEfficiencyCV:                       "Average number of kilometers you can drive on one litre of petrol in your current car.",
-        fuelEfficiencyEV:                       "Average number of kilometers you expect to drive on one Kilowatt Hour in an electric car.",
-        fuelEfficiencyRentalCar:                "Average number of kilometers you expect to drive on one litre of petrol for a rental car.",
-        insuranceBaseCost:                      "A minimum insurance fee per year",
-        insuranceCostPerThousand:               "Additional insurance fee per year per $1000 of the total value of your car.",
-        averageKmsPerTyre:                      "The average number of kilometers you expect to drive before the average tyre needs to be replaced.",
-        tyreCostCV:                             "Cost per tyre for your current car.",
-        tyreCostEV:                             "Cost per tyre for your electric car.  This may be slightly different from a conventional car as an electric car may use a fuel efficient type of tyre.",
-        licenseWOFCostCVPerYear:                "The total amount of licensing and testing charges and fees for your current car, per year.",
-        licenseWOFCostEVPerYear:                "The total amount of licensing and testing charges and fees for an electric car, per year.",
-        maintenanceCVPerTenThousandKm:          "The total service cost for your current car per 10,000km.  For this, you may include the replacements of parts that are expected in older parts (e.g. Cam Belt, Radiator, etc...)",
-        maintenanceEVPerTenThousandKm:          "The total service cost for your electric car per 10,000km. ",
-        repairKMDivider:                        "A number used to divide the number of KMs per year. From there this number is used as a unexpected repair multiplier to basically ensure that the more you drive, the more unexpected repair cost you may have.  A typical value is 40,000.",
-        maxCarValueForRepairs:                  "The value of the car when unexpected repairs start.  For example, if set to $5,000, unexpected repairs start once the car is worth less than $5,000.",
-        exponentialGrowthFactorForRepairs:      "This is a number between 1 and 3 that is used to exponentially increase the unexpected repair cost as the value of the car decreases.",
-        valueDividerForRepairCalculation:       "When working out the unexpected repair cost for the car, we take the inverse value of the car relative to the maximum value at which repairs start.  Thus, for example, if the maximum value at which unexpected repairs start is $5000, then the inverse value increases from $0 to $5000 as the value of the car lowers from $5000 to $0.  The divider value entered here is used to divide this inverse value to get an idea of the unexpected repair value.",
-        depreciationRatePerYearCV:              "The value reduction per year for your current car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
-        depreciationRatePerYearEV:              "The value reduction per year for your an electric car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
-        costPerDayRentalCar:                    "How much does it cost to rent a similar vehicle per day, including a full insurance package.",
-        kilometresPerDayForLongTrips:           "What are the average number of KMs you will drive on any days that you will use a rental car?",
-        subsidyPaymentFixed:                    "Any subsidies as a percentage of the purchase cost from the government and/or your employer you will receive when purchasing an electric vehicle. This only applies at the time of purchase.  It is not a yearly payment.",
-        subsidyPaymentPerKM:                    "Any per kilometer subsidies (government / employer) payments you will receive when driving an electric vehicle.",
-        personalContributionFixed:              "Any yearly personal payments or value you would like to add to the total purchase price of your electric vehicle to account for your reduced emissions. This only applies at the time of purchase.  It is not a yearly payment.",
-        personalContributionPerKM:              "Any per kilometer, personal, payments or value you would like to add when driving an electric vehicle. This could, for example, be equal to the carbon credits you receive based on your reduced emissions."
-    },
-
-    alternativeFormatsForFxs: {
-        "actualAnnualKms":                      "number",
-        "actualAnnualKmsPerDay":                "number",
-        "numberOfKMsWithRentalCar":             "number"
-    },
-
-    headerTitles: {
-        keyAssumptions:                         "your current situation",
-        playAroundAssumptions:                  "play around",
-        otherAssumptions:                       "tweak assumptions",
-    }
-};
 
 Number.prototype.formatMoney = function(c, d, t){
     var n = this,
@@ -2240,6 +2176,164 @@ Number.prototype.formatNumber = function() {
  *
  *
  */
+
+ EVC.DataDescription = {
+
+     keyAssumptionKeys: {
+         "CVValueToday":                         "currency",
+         "kmDrivenPerDay":                       "kmPerDay"
+     },
+
+     playAroundAssumptionKeys: {
+         "daysWithContinuousTripsOver100Km":     "number",
+         "yearsBeforeSwitch":                    "number",
+         "yearsAfterSwitch":                     "number"
+     },
+
+     otherAssumptionKeys: {
+         "minimumCostElectricVehicle":           "currency",
+         "maximumCostElectricVehicle":           "currency",
+         "upgradeCostToGoElectric":              "percentage",
+         "EVValueImprovementPerYearPercentage":  "percentage",
+         "setupChargeStation":                   "currency",
+         "saleCostForCarInPercentage":           "percentage",
+         "purchaseCostForCarInPercentage":       "percentage",
+         "financingCostInPercentage":            "percentage",
+         "principalRepaymentsPerYearPercentage": "percentage",
+         "costOfPetrolPerLitre":                 "currency",
+         "costOfElectricityPerKwH":              "currency",
+         "fuelEfficiencyCV":                     "number",
+         "fuelEfficiencyEV":                     "number",
+         "fuelEfficiencyRentalCar":              "number",
+         "insuranceBaseCost":                    "currency",
+         "insuranceCostPerThousand":             "currency",
+         "averageKmsPerTyre":                    "number",
+         "tyreCostCV":                           "currency",
+         "tyreCostEV":                           "currency",
+         "licenseWOFCostCVPerYear":              "currency",
+         "licenseWOFCostEVPerYear":              "currency",
+         "maintenanceCVPerTenThousandKm":        "currency",
+         "maintenanceEVPerTenThousandKm":        "currency",
+         "repairKMDivider":                      "number",
+         "maxCarValueForRepairs":                "currency",
+         "exponentialGrowthFactorForRepairs":    "number",
+         "valueDividerForRepairCalculation":     "number",
+         "depreciationRatePerYearCV":            "percentage",
+         "depreciationRatePerYearEV":            "percentage",
+         "costPerDayRentalCar":                  "currency",
+         "kilometresPerDayForLongTrips":         "number",
+         "subsidyPaymentFixed":                  "currency",
+         "subsidyPaymentPerKM":                  "currency",
+         "personalContributionFixed":            "currency",
+         "personalContributionPerKM":            "currency"
+     },
+
+     labels: {
+         /* key assumptions s */
+         CVValueToday:                           "* Current Car Value",
+         kmDrivenPerDay:                         "* Average Kilometers Driven per Day",
+         /* play around assumptions */
+         yearsBeforeSwitch:                      "Number of Years Before Switch",
+         yearsAfterSwitch:                       "Number of Years after Switch",
+         daysWithContinuousTripsOver100Km:       "Big Trip Days Per Year",
+         /* other assumptions */
+         amountOfCurrentCarAsLoan:               "Current Car: Borrowed Amount",
+         minimumCostElectricVehicle:             "Electric Car: Minimum Purchase Price",
+         maximumCostElectricVehicle:             "Electric Car: Maximum Purchase Price",
+         upgradeCostToGoElectric:                "Premium for Electrical Car",
+         EVValueImprovementPerYearPercentage:    "Relative Value Improvement per Year for Electric Cars",
+         setupChargeStation:                     "Infrastructure Set Up",
+         saleCostForCarInPercentage:             "Sale Related Costs",
+         purchaseCostForCarInPercentage:         "Purchase Related Costs",
+         financingCostInPercentage:              "Interest Rate",
+         principalRepaymentsPerYearPercentage:   "Principal Repayments per Year",
+         costOfPetrolPerLitre:                   "Petrol per Litre",
+         costOfElectricityPerKwH:                "Electricity per KwH",
+         fuelEfficiencyCV:                       "Current Car: KMs per litre of Petrol",
+         fuelEfficiencyEV:                       "Electric Car: KMs per KwH",
+         fuelEfficiencyRentalCar:                "Rental Car: KMs per Litre of Petrol",
+         insuranceBaseCost:                      "Insurance Base Price",
+         insuranceCostPerThousand:               "Insurance per $1000 Car Value",
+         averageKmsPerTyre:                      "Average KMs per Tyre",
+         tyreCostCV:                             "Current Car: one Tyre",
+         tyreCostEV:                             "Electric Car: one Tyre",
+         licenseWOFCostCVPerYear:                "Current Car: License and WOF per Year",
+         licenseWOFCostEVPerYear:                "Electric Car: License and WOF per Year",
+         maintenanceCVPerTenThousandKm:          "Current Car: Service per 10,000kms",
+         maintenanceEVPerTenThousandKm:          "Electric Car: Service per 10,000kms",
+         repairKMDivider:                        "KM divider for unexpected repairs",
+         maxCarValueForRepairs:                  "Car value where unexpected repairs start",
+         exponentialGrowthFactorForRepairs:      "Exponential unexpected repairs growth factor",
+         valueDividerForRepairCalculation:       "Inverse value unexpected value divider",
+         depreciationRatePerYearCV:              "Current Car: Depreciation rate per Year",
+         depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year",
+         costPerDayRentalCar:                    "Cost per Day for Rental Car",
+         kilometresPerDayForLongTrips:           "KMs per Day for Long Trips",
+         subsidyPaymentFixed:                    "Fixed Subsidy",
+         subsidyPaymentPerKM:                    "KM Subsidy",
+         personalContributionFixed:              "Personal Contribution per Year",
+         personalContributionPerKM:              "Personal Contribution per KM"
+     },
+
+     desc: {
+         /* key assumptions s */
+         CVValueToday:                           "The price at which you can sell your current car today. If unsure, you can visit tradme.co.nz and search for cars of your make, model, and age.",
+         kmDrivenPerDay:                         "Approximate kilometers you drive per day or per year - you can enter either.  There are many ways to work this out, but one of them is to look at Oil Change Stickers in your car which often contain a date and the overall KMs driven by the car up to that date.",
+         /* play around assumptions */
+         daysWithContinuousTripsOver100Km:       "Any trip where you drive more than 150km in one go and days that you are away on such a trip (e.g. enter seven if you drive to far away holiday destination where you will be away for a week). On these big days you will rent a car so that you can cover larger distances.",
+         yearsBeforeSwitch:                      "The number of years you will wait before you make the switch.  Zero means that you make the switch today.",
+         yearsAfterSwitch:                       "See the results for the set number of years after you make the switch. For example, if you enter two here, then you will see the results for the year starting two year after you make the switch.",
+         /* other assumptions */
+         amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
+         minimumCostElectricVehicle:             "Minimum price for an electric vehicle at the moment. Because electric cars are relatively new, there are few older models and depreciated cars, therefore a minimum price may apply.",
+         maximumCostElectricVehicle:             "Maximum price for an electric vehicle at the moment. In general, the calculator tries to match your current car with an electric car of a similar value, but this number is limited up to the new price of an electric vehicle.",
+         upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
+         EVValueImprovementPerYearPercentage:    "The expected amount of relative cost improvements of electric vehicles as compared to conventional cars powered by oil based fuel for each year.",
+         setupChargeStation:                     "The cost of setting up a charging station at your home (or work) to charge your electric car. If your home has a garage with a plug then the cost could be zero.",
+         saleCostForCarInPercentage:             "The cost of selling a vehicle. Included are advertising costs, commissions, auction fees, government registration fees, etc... This is basically the difference between the buy and sell price of a car (i.e. the profit of the car sales person).",
+         purchaseCostForCarInPercentage:         "Any costs associated with purchasing a car that is paid by the purchaser.",
+         financingCostInPercentage:              "Interest rate charged on car loans.  It may be a good idea to increase this a little bit to cover any finance fees that are charged by most lenders. ",
+         principalRepaymentsPerYearPercentage:   "The percentage of the value of the car (at the time of purchase) used to calculate any loan repayments.  For example, if you purchase a $10,000 vehicle and you pay $1000 per year (excluding interest) then the amount entered here is 10%.  In general, the payments should satisfy the basic requirement that a sale of the car today would ensure that the total outstanding amount of the loan can be met.",
+         costOfPetrolPerLitre:                   "Cost of oil based fuel (diesel / petrol) per litre.",
+         costOfElectricityPerKwH:                "Cost of the electricity used to charge your Electric Car, per Kilowatt Hour.  This is usuall between $0.10 and $0.40cents.  You may be able to apply a special night rate for this, if you are able to charge your car at night.",
+         fuelEfficiencyCV:                       "Average number of kilometers you can drive on one litre of petrol in your current car.",
+         fuelEfficiencyEV:                       "Average number of kilometers you expect to drive on one Kilowatt Hour in an electric car.",
+         fuelEfficiencyRentalCar:                "Average number of kilometers you expect to drive on one litre of petrol for a rental car.",
+         insuranceBaseCost:                      "A minimum insurance fee per year",
+         insuranceCostPerThousand:               "Additional insurance fee per year per $1000 of the total value of your car.",
+         averageKmsPerTyre:                      "The average number of kilometers you expect to drive before the average tyre needs to be replaced.",
+         tyreCostCV:                             "Cost per tyre for your current car.",
+         tyreCostEV:                             "Cost per tyre for your electric car.  This may be slightly different from a conventional car as an electric car may use a fuel efficient type of tyre.",
+         licenseWOFCostCVPerYear:                "The total amount of licensing and testing charges and fees for your current car, per year.",
+         licenseWOFCostEVPerYear:                "The total amount of licensing and testing charges and fees for an electric car, per year.",
+         maintenanceCVPerTenThousandKm:          "The total service cost for your current car per 10,000km.  For this, you may include the replacements of parts that are expected in older parts (e.g. Cam Belt, Radiator, etc...)",
+         maintenanceEVPerTenThousandKm:          "The total service cost for your electric car per 10,000km. ",
+         repairKMDivider:                        "A number used to divide the number of KMs per year. From there this number is used as a unexpected repair multiplier to basically ensure that the more you drive, the more unexpected repair cost you may have.  A typical value is 40,000.",
+         maxCarValueForRepairs:                  "The value of the car when unexpected repairs start.  For example, if set to $5,000, unexpected repairs start once the car is worth less than $5,000.",
+         exponentialGrowthFactorForRepairs:      "This is a number between 1 and 3 that is used to exponentially increase the unexpected repair cost as the value of the car decreases.",
+         valueDividerForRepairCalculation:       "When working out the unexpected repair cost for the car, we take the inverse value of the car relative to the maximum value at which repairs start.  Thus, for example, if the maximum value at which unexpected repairs start is $5000, then the inverse value increases from $0 to $5000 as the value of the car lowers from $5000 to $0.  The divider value entered here is used to divide this inverse value to get an idea of the unexpected repair value.",
+         depreciationRatePerYearCV:              "The value reduction per year for your current car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
+         depreciationRatePerYearEV:              "The value reduction per year for your an electric car.  For this, we do not take into account kms driven. Instead, we use a relatively high, linear depreciation rate that may be applied by insurance companies and car financing companies.",
+         costPerDayRentalCar:                    "How much does it cost to rent a similar vehicle per day, including a full insurance package.",
+         kilometresPerDayForLongTrips:           "What are the average number of KMs you will drive on any days that you will use a rental car?",
+         subsidyPaymentFixed:                    "Any subsidies as a percentage of the purchase cost from the government and/or your employer you will receive when purchasing an electric vehicle. This only applies at the time of purchase.  It is not a yearly payment.",
+         subsidyPaymentPerKM:                    "Any per kilometer subsidies (government / employer) payments you will receive when driving an electric vehicle.",
+         personalContributionFixed:              "Any yearly personal payments or value you would like to add to the total purchase price of your electric vehicle to account for your reduced emissions. This only applies at the time of purchase.  It is not a yearly payment.",
+         personalContributionPerKM:              "Any per kilometer, personal, payments or value you would like to add when driving an electric vehicle. This could, for example, be equal to the carbon credits you receive based on your reduced emissions."
+     },
+
+     alternativeFormatsForFxs: {
+         "actualAnnualKms":                      "number",
+         "actualAnnualKmsPerDay":                "number",
+         "numberOfKMsWithRentalCar":             "number"
+     },
+
+     headerTitles: {
+         keyAssumptions:                         "your current situation",
+         playAroundAssumptions:                  "play around",
+         otherAssumptions:                       "tweak assumptions",
+     }
+ };
 
 
 EVC.DefaultData = {

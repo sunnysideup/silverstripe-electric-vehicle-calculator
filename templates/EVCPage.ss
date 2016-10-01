@@ -91,9 +91,11 @@
                 detailed results for one year <span class="straightFillers" data-fx="resultsTableYear"></span>:
                 <span class="calcVal" data-fx="totalProfit"></span>
             </h2>
-            <p id="financial-years">
-
-            </p>
+            <div class="financial-years">
+                <ul class="straightFillers" data-fx='listOfYears'>
+                    <li></li>
+                </ul>
+            </div>
             <table>
                 <thead>
                     <tr class="header summary">

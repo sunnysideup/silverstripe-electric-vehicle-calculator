@@ -113,8 +113,13 @@
 
 
     /* results */
+    .financial-years ul, .financial-years ul li {margin: 0; padding: 0; text-align: right;}
+    .financial-years ul li {list-style: none; display: inline;}
+    .financial-years ul li:before { content: ' | '; color: #ccc;}
+    .financial-years ul li:first-child:before { content: '';}
+    .financial-years ul li a { border-bottom: none; color: #ccc;}
+    .financial-years ul li a.current { border-bottom: none; color: green;}
     table {width: 100%; }
-
     tr.detail {display: none;}
     tr.detail th, tr.detail td {color: #999; padding-top: 0; border-bottom: 1px solid #ddd; font-size: 0.9em}
     tr.detail th a, tr.detail td a {border-bottom: none; color: #999; text-decoration: none;}
@@ -161,8 +166,9 @@
         left: 50%;
         position: absolute;
     }
-    #ProfitAndLoss a.inline-expand {color: green;}
-    #ProfitAndLoss .years-ahead {color: white;}
+    #ProfitAndLoss a.inline-expand {color: green; border-bottom: 1px solid #FFF59D;}
+    #ProfitAndLoss .years-ahead {color: #FFF59D;}
+    #ProfitAndLoss .switch-year {font-size: 10px; display: block;}
 
 
     /* influence */
