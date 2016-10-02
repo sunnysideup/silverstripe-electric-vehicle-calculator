@@ -1438,6 +1438,7 @@ EVC.HTMLInteraction = {
     },
 
     updateScreen: function(key){
+        jQuery('body').addClass('loading');
         if(EVC.debug) {console.debug("== UPDATING SCREEN ==");}
         this.populateResultTable();
         this.populateCalculations();
@@ -1457,6 +1458,7 @@ EVC.HTMLInteraction = {
         if(typeof key !== "undefined") {
             EVC.graphMaker.makeGraph(key);
         }
+        jQuery('body').removeClass('loading');
     },
 
     setMyValue: function(key, item){
