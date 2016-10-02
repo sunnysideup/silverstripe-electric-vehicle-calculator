@@ -54,71 +54,48 @@ var EVC = {
      */
     yearsAfterSwitch: -1,
 
+    /**
+     * km driven per day
+     * @type {Number}
+     */
     kmDrivenPerDay: -1,
 
+    /**
+     * the key under which the details are saved.
+     * @type {String}
+     */
     serverKey: "",
 
+    /**
+     * has the data been saved and is therefore locke?
+     * @type {Boolean}
+     */
     isLocked: false,
 
+    /**
+     * has the data been cahnged?
+     * @type {Boolean}
+     */
     isChanged: false,
 
+    /**
+     * link to page so that data can be saved
+     * @type {String}
+     */
     baseLink: "",
 
+    /**
+     * number of steps between Min and Max values for variables
+     * @type {Number}
+     */
     numberOfSteps: 10,
 
-
+    /**
+     * do we have enough information to calculate an answer.
+     * @return {boolean}
+     */
     isReadyToCalculate: function(){
         return EVC.ActualData.CVValueToday > 0 && EVC.ActualData.kmDrivenPerDay > 0;
-    },
-
-    workableLinks: function(){
-        //console.debug(this.baseLink + "|" + this.serverKey)
-        if(this.baseLink !== "" && this.serverKey !== "") {
-            return true;
-        }
-        return false;
-    },
-
-    saveLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"save/"+this.serverKey+"/";
-        }
-        return "";
-    },
-
-    showLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"show/"+this.serverKey+"/";
-        }
-        return "";
-    },
-
-    retrieveLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"retrieve/"+this.serverKey+"/";
-        }
-        return "";
-    },
-
-    lockLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"lock/"+this.serverKey+"/";
-        }
-        return "";
-    },
-
-    listLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"all/";
-        }
-        return "";
-    },
-
-    resetLink: function(){
-        if(this.workableLinks()) {
-            return this.baseLink+"reset/";
-        }
-        return "";
     },
 
     init: function() {
@@ -988,7 +965,7 @@ EVC.HTMLInteraction = {
                 var el = this;
                 var newLink = "";
                 var mustReplaceLink = jQuery(el).attr("data-replace-link");
-                var workableLinks = EVC.workableLinks();
+                var workableLinks = EVC.links.workableLinks();
                 //have to replace but can not replace
                 if(workableLinks !== true && mustReplaceLink == "yes") {
                     alert("Could not save data ... please try again");
@@ -1057,7 +1034,7 @@ EVC.HTMLInteraction = {
     },
 
     updateLinks: function() {
-        if(EVC.workableLinks() == true && EVC.isReadyToCalculate() == true) {
+        if(EVC.links.workableLinks() == true && EVC.isReadyToCalculate() == true) {
             jQuery(".saveLink.hideWithoutServerInteraction").show();
         }
         else {
@@ -1375,7 +1352,7 @@ EVC.HTMLInteraction = {
             var formattedValue = this.formatValue(key, value);
             jQuery("#"+displayFieldID).text(formattedValue);
             //send to server
-            if(EVC.workableLinks()) {
+            if(EVC.links.workableLinks()) {
                 jQuery.ajax({
                     method: "GET",
                     url: EVC.saveLink(),
@@ -2137,6 +2114,88 @@ EVC.scenarios = {
             html += '<li><a href="#financial-years" onclick="return EVC.HTMLInteraction.setValue(\'yearsAfterSwitch\', '+i+', true);" class="'+cssClas+'">'+currentYear+'</a></li>';
         }
         return html;
+    },
+
+}
+
+EVC.links = {
+
+    /**
+     * Do we have links to save stuff and interact with server?
+     * @return {boolean}
+     */
+    workableLinks: function(){
+        //console.debug(this.baseLink + "|" + this.serverKey)
+        if(this.baseLink !== "" && this.serverKey !== "") {
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     * link to save data, if any
+     * @return {string}
+     */
+    saveLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"save/"+this.serverKey+"/";
+        }
+        return "";
+    },
+
+    /**
+     * the link to show the data, if any
+     * @return {string}
+     */
+    showLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"show/"+this.serverKey+"/";
+        }
+        return "";
+    },
+
+    /**
+     * link to save, if any
+     * @return {link}
+     */
+    retrieveLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"retrieve/"+this.serverKey+"/";
+        }
+        return "";
+    },
+
+    /**
+     * link to lock, if any
+     * @return {string}
+     */
+    lockLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"lock/"+this.serverKey+"/";
+        }
+        return "";
+    },
+
+    /**
+     * list to show options
+     * @return {string}
+     */
+    listLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"all/";
+        }
+        return "";
+    },
+
+    /**
+     * reset link
+     * @return {string}
+     */
+    resetLink: function(){
+        if(EVC.links.workableLinks()) {
+            return this.baseLink+"reset/";
+        }
+        return "";
     },
 
 }
