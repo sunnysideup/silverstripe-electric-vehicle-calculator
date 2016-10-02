@@ -965,7 +965,7 @@ EVC.HTMLInteraction = {
                 var el = this;
                 var newLink = "";
                 var mustReplaceLink = jQuery(el).attr("data-replace-link");
-                var workableLinks = EVC.links.workableLinks();
+                var workableLinks = EVC.serverInteraction.workableLinks();
                 //have to replace but can not replace
                 if(workableLinks !== true && mustReplaceLink == "yes") {
                     alert("Could not save data ... please try again");
@@ -980,7 +980,7 @@ EVC.HTMLInteraction = {
                         else {
                             var answer = "ignore";
                         }
-                        var lockLink = EVC.lockLink();
+                        var lockLink = EVC.serverInteraction.lockLink();
                         if(answer === null) {
                             if(EVC.debug) {console.debug("cancelled");}
                             return false;
@@ -1034,7 +1034,7 @@ EVC.HTMLInteraction = {
     },
 
     updateLinks: function() {
-        if(EVC.links.workableLinks() == true && EVC.isReadyToCalculate() == true) {
+        if(EVC.serverInteraction.workableLinks() == true && EVC.isReadyToCalculate() == true) {
             jQuery(".saveLink.hideWithoutServerInteraction").show();
         }
         else {
@@ -1352,10 +1352,10 @@ EVC.HTMLInteraction = {
             var formattedValue = this.formatValue(key, value);
             jQuery("#"+displayFieldID).text(formattedValue);
             //send to server
-            if(EVC.links.workableLinks()) {
+            if(EVC.serverInteraction.workableLinks()) {
                 jQuery.ajax({
                     method: "GET",
-                    url: EVC.saveLink(),
+                    url: EVC.serverInteraction.saveLink(),
                     data: { key: key, value: value },
                     cache: false
                 })
@@ -2118,7 +2118,7 @@ EVC.scenarios = {
 
 }
 
-EVC.links = {
+EVC.serverInteraction = {
 
     /**
      * Do we have links to save stuff and interact with server?
@@ -2137,7 +2137,7 @@ EVC.links = {
      * @return {string}
      */
     saveLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"save/"+this.serverKey+"/";
         }
         return "";
@@ -2148,7 +2148,7 @@ EVC.links = {
      * @return {string}
      */
     showLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"show/"+this.serverKey+"/";
         }
         return "";
@@ -2159,7 +2159,7 @@ EVC.links = {
      * @return {link}
      */
     retrieveLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"retrieve/"+this.serverKey+"/";
         }
         return "";
@@ -2170,7 +2170,7 @@ EVC.links = {
      * @return {string}
      */
     lockLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"lock/"+this.serverKey+"/";
         }
         return "";
@@ -2181,7 +2181,7 @@ EVC.links = {
      * @return {string}
      */
     listLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"all/";
         }
         return "";
@@ -2192,7 +2192,7 @@ EVC.links = {
      * @return {string}
      */
     resetLink: function(){
-        if(EVC.links.workableLinks()) {
+        if(EVC.serverInteraction.workableLinks()) {
             return this.baseLink+"reset/";
         }
         return "";
