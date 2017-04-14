@@ -1,14 +1,13 @@
 <?php
 
 
-class EVCPage extends Page {
-
-
+class EVCPage extends Page
+{
 }
 
 
-class EVCPage_Controller extends Page_Controller {
-
+class EVCPage_Controller extends Page_Controller
+{
     private static $allowed_actions = array(
         "show" => true,
         "save" => true,
@@ -18,7 +17,8 @@ class EVCPage_Controller extends Page_Controller {
         "lock" => true
     );
 
-    function init(){
+    public function init()
+    {
         parent::init();
         Requirements::themedCSS('ElectricVehicleCalculator.min', 'electric-vehicle-calculator');
         Requirements::javascript("framework/thirdparty/jquery/jquery.js");
@@ -27,44 +27,50 @@ class EVCPage_Controller extends Page_Controller {
         } else {
             Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.js");
         }
+        Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
     }
 
     protected $evcDataSet = null;
 
-    function index(){
+    public function index()
+    {
         $code = Session::get("EVCLastCode");
         $this->evcDataSet = EVCDataSet::find_or_create($code, true);
-        if(!$code) {
+        if (!$code) {
             $code = $this->evcDataSet->Code;
             Session::set("EVCLastCode", $code);
         }
         return $this->redirect($this->evcDataSet->MyLink($this, "show"));
     }
 
-    public function HasCustomTitle() {
-        if($this->evcDataSet && $this->evcDataSet->Title) {
+    public function HasCustomTitle()
+    {
+        if ($this->evcDataSet && $this->evcDataSet->Title) {
             return true;
         }
     }
 
-    function Title(){
-        if($this->HasCustomTitle()){
+    public function Title()
+    {
+        if ($this->HasCustomTitle()) {
             return Convert::raw2xml(urldecode($this->evcDataSet->Title));
         }
         return Convert::raw2xml($this->Title);
     }
 
-    function MetaTitle(){
-        if($this->HasCustomTitle()){
+    public function MetaTitle()
+    {
+        if ($this->HasCustomTitle()) {
             return Convert::raw2xml(urldecode($this->evcDataSet->Title));
         }
         return Convert::raw2xml($this->MetaTitle);
     }
 
-    function show($request){
+    public function show($request)
+    {
         $code = $request->param("ID");
         $this->evcDataSet = EVCDataSet::find_or_create($code, false);
-        if($this->evcDataSet && $this->evcDataSet->exists()) {
+        if ($this->evcDataSet && $this->evcDataSet->exists()) {
             Requirements::javascript('electric-vehicle-calculator/javascript/ElectricVehicleCalculator.js');
 
             //Requirements::javascript("assets/evc/translations.js");
@@ -74,8 +80,7 @@ class EVCPage_Controller extends Page_Controller {
             ", "EVCSetBasics");
             Requirements::customScript($this->evcDataSet->returnValuesAsJS(), "EVCreturnValuesAsJS");
             return array();
-        }
-        else {
+        } else {
             return $this->httpError(404);
         }
     }
@@ -85,33 +90,35 @@ class EVCPage_Controller extends Page_Controller {
      * ajax method ...
      * @return string
      */
-    function save($request){
+    public function save($request)
+    {
         $code = $request->param("ID");
         $this->evcDataSet = EVCDataSet::find_or_create($code, true);
         //save it
         $key = Convert::raw2sql($request->getVar("key"));
         $value = Convert::raw2sql($request->getVar("value"));
-        if($newCode = $this->evcDataSet->setValue($key, $value)) {
+        if ($newCode = $this->evcDataSet->setValue($key, $value)) {
             Session::set("EVCLastCode", $newCode);
             Session::save();
             return $newCode;
         }
     }
 
-    function retrieve($request){
+    public function retrieve($request)
+    {
         $code = $request->param("ID");
         $this->evcDataSet = EVCDataSet::find_or_create($code, false);
-        if($this->evcDataSet && $this->evcDataSet->exists() && $this->evcDataSet->Data) {
+        if ($this->evcDataSet && $this->evcDataSet->exists() && $this->evcDataSet->Data) {
             Session::set("EVCLastCode", $this->evcDataSet->Code);
             Session::save();
             return $this->redirect($this->evcDataSet->MyLink($this, "show"));
-        }
-        else {
+        } else {
             return $this->httpError(404);
         }
     }
 
-    function reset($request){
+    public function reset($request)
+    {
         Session::set("EVCLastCode", "");
         Session::clear("EVCLastCode");
         Session::save();
@@ -122,15 +129,15 @@ class EVCPage_Controller extends Page_Controller {
      * ajax method ...
      *
      */
-    function lock($request){
+    public function lock($request)
+    {
         $code = $request->param("ID");
         $this->evcDataSet = EVCDataSet::find_or_create($code, false);
         $title = $request->getVar("title");
-        if($title && $this->evcDataSet && $this->evcDataSet->exists()) {
-            if($title == "ignore") {
+        if ($title && $this->evcDataSet && $this->evcDataSet->exists()) {
+            if ($title == "ignore") {
                 //no need to do anything
-            }
-            else {
+            } else {
                 $this->evcDataSet = $this->evcDataSet->getCopyIfNeeded();
                 $this->evcDataSet->Locked = true;
                 $this->evcDataSet->Title = Convert::raw2sql(urldecode($title));
@@ -141,25 +148,28 @@ class EVCPage_Controller extends Page_Controller {
         return "ERROR!";
     }
 
-    function EVCDataSet(){
+    public function EVCDataSet()
+    {
         return $this->evcDataSet;
     }
 
-    function IsLocked(){
+    public function IsLocked()
+    {
         return $this->evcDataSet->Locked;
     }
 
 
     protected $previousCalculations = null;
 
-    function previous($request){
+    public function previous($request)
+    {
         $this->previousCalculations = PaginatedList::create(EVCDataSet::get()->filter(array("Locked" => 1))->where("Title IS NOT NULL AND Title <> ''"));
         $this->previousCalculations->setPageLength(100);
         return array();
     }
 
-    function PreviousCalculations(){
+    public function PreviousCalculations()
+    {
         return $this->previousCalculations;
     }
-
 }
