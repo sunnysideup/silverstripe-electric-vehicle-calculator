@@ -1089,17 +1089,15 @@ EVC.HTMLInteraction = {
         var litresBoughtPerWeek = petrolSpentPerWeek / EVC.DefaultData.costOfPetrolPerLitre;
         var odoPerDay = (EVC.DefaultData.fuelEfficiencyCV *  litresBoughtPerWeek) / 7;
         var next = true;
-        if(parseInt(odoPerDay) > 5) {
-        } else {
+        if(parseInt(odoPerDay) === 0) {
             jQuery('input[name="petrol-spent-per-week"]').focus();
             next = false;
-        }
-        if(parseInt(carValue) > 50) {
-
         } else {
-            jQuery('input[name="startup-car-value"]').focus();
-            next = false;
         }
+        if(parseInt(carValue) === 0) {
+            jQuery('input[name="startup-car-value"]').focus();
+            alert('')
+        } 
 
         if(next) {
             EVC.HTMLInteraction.setValue('CVValueToday', carValue);
@@ -1126,6 +1124,8 @@ EVC.HTMLInteraction = {
                     );
                 }
             );
+        } else {
+            jQuery('body').removeClass('loading');
         }
         return false;
     },

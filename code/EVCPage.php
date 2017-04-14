@@ -20,10 +20,13 @@ class EVCPage_Controller extends Page_Controller {
 
     function init(){
         parent::init();
-        Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
+        Requirements::themedCSS('ElectricVehicleCalculator.min', 'electric-vehicle-calculator');
         Requirements::javascript("framework/thirdparty/jquery/jquery.js");
-        Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
-
+        if(Director::isLive()) {
+            Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
+        } else {
+            Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.js");
+        }
     }
 
     protected $evcDataSet = null;
