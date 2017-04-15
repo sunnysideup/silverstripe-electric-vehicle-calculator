@@ -941,6 +941,7 @@ a.button {
     -o-box-shadow: inset 0px 1px 0 #D1066C;
     -khtml-box-shadow: inset 0px 1px 0 #D1066C;
     box-shadow: inset 0px 1px 0 #D1066C;
+    border-bottom: none!important;
 }
 
 li.buttonWrapper a.button:hover, li.buttonWrapper a.button:active {
