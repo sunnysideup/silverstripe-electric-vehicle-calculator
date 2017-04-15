@@ -72,7 +72,7 @@
     h2 {
         margin-top: 3em;
         clear: both;
-        color: #FF5D9F;
+        color: #833052;
     }
 
     #RightCol {
@@ -141,7 +141,7 @@
     }
 
     .fieldHolder {
-        padding: 1em 0;
+        padding: 1.5em;
         clear: both;
         border-top: 1px solid #ccc;
         overflow: hidden;
@@ -170,7 +170,7 @@
     }
 
     label span.desc {
-        color: orange;
+        color: #833052;
     }
 
     .fieldHolder.changed label strong {
@@ -242,9 +242,9 @@
     }
 
     .fieldHolder.infocus {
-        border: 2px solid #ccc;
+        border-top: 2px solid #ccc;
+        border-bottom: 2px solid #ccc;
         background-color: #e5e5e5;
-        padding: 5px;
         border-radius: 7px;
         margin-bottom: 10px;
         width: -webkit-calc(100% - 16px);
@@ -327,7 +327,7 @@
     .financial-years ul, .financial-years ul li {
         margin: 0;
         padding: 0;
-        text-align: right;
+        text-align: left;
     }
 
     .financial-years ul li {
@@ -337,7 +337,7 @@
 
     .financial-years ul li:before {
         content: ' | ';
-        color: #ccc;
+        color: #999;
     }
 
     .financial-years ul li:first-child:before {
@@ -346,12 +346,12 @@
 
     .financial-years ul li a {
         border-bottom: none;
-        color: #ccc;
+        color: #999;
     }
 
     .financial-years ul li a.current {
         border-bottom: none;
-        color: green;
+        color: #00A260;
     }
 
     table {
@@ -363,7 +363,6 @@
     }
 
     tr.detail th, tr.detail td {
-        color: #999;
         padding-top: 0;
         border-bottom: 1px solid #ddd;
         font-size: 0.9em;
@@ -371,13 +370,12 @@
 
     tr.detail th a, tr.detail td a {
         border-bottom: none;
-        color: #999;
         text-decoration: none;
     }
 
     tr.detail.excludedFromTotal th, tr.detail.excludedFromTotal td,
     tr.detail.excludedFromTotal th a, tr.detail.excludedFromTotal td a {
-        color: orange;
+        color: #999;
     }
 
     tr.detail th div.influencers, tr.detail td div.influencers {
@@ -386,7 +384,7 @@
 
     tr.detail th div.influencers, tr.detail td div.influencers,
     tr.detail th div.influencers a, tr.detail td  div.influencers a {
-        color: #871A4D;
+        color: #999;
     }
 
     td {
@@ -431,8 +429,8 @@
     /* calcVals */
     .calcVal {
         font-weight: 700;
-        color: green;
-        border-bottom: 1px solid #FFF59D;
+        color: #00A260;
+        border-bottom: 1px solid #FF5D9F;
         display: block;
         float: right;
         font-size: 21px;
@@ -443,10 +441,9 @@
     .calcVal .negativeNumber {
         color: red;
     }
-
     #ProfitAndLoss {
-        background-color: orange;
-        color: green;
+        background-color: #833052;
+        color: #fff;
     }
 
     #ProfitAndLoss.fixed {
@@ -464,7 +461,7 @@
     }
 
     #ProfitAndLoss p span.calcVal {
-        border-bottom: 1px solid #FFF59D;
+        border-bottom: 1px solid #FF5D9F;
     }
 
     #ProfitAndLoss p.warning {
@@ -503,8 +500,8 @@
     }
 
     #ProfitAndLoss a.inline-expand {
-        color: green;
-        border-bottom: 1px solid #FFF59D;
+        color: #fff;
+        border-bottom: 1px solid #FF5D9F;
     }
 
     #ProfitAndLoss .years-ahead {
@@ -515,7 +512,6 @@
         font-size: 10px!important;
         display: block;
         position: absolute;
-        margin-top: 1em;
         width: calc(100% - 10em);
     }
 
@@ -696,7 +692,7 @@
     .calcVal {
         font-size: auto;
         width: auto;
-        border-bottom: 1px solid #FFF59D;
+        border-bottom: 1px solid #FF5D9F;
     }
 
     .fieldHolder.infocus .graphShower {
@@ -725,7 +721,6 @@
     }
 
     #ProfitAndLoss .switch-year {
-        font-size: 20px!important;
     }
 
     input[type='text'] {

@@ -93,14 +93,19 @@
 
         <fieldset id="ResultTableHolder" class="mainDetailedSections">
             <h2>
-                detailed results for one year <span class="straightFillers" data-fx="resultsTableYear"></span>:
-                <span class="calcVal" data-fx="totalProfit"></span>
+                detailed results per year:
             </h2>
+            <p>
+                Total savings for one year
+                <span class="straightFillers" data-fx="resultsTableYear"></span>:
+                <span class="calcVal" data-fx="totalProfit"></span>
+            </p>
             <div class="financial-years">
                 <ul class="straightFillers" data-fx='listOfYears'>
                     <li></li>
                 </ul>
             </div>
+
             <table>
                 <thead>
                     <tr class="header summary">
@@ -111,7 +116,7 @@
                 </thead>
                 <tfoot>
                     <tr class="superSummary summary" data-fx="totalCombined">
-                        <th scope="row" class="superTotalHeader totalHeader">TOTAL</th>
+                        <th scope="row" class="superTotalHeader totalHeader">TOTAL COST</th>
                         <td class="total superTotal" data-type="f"></td>
                         <td class="total superTotal" data-type="e"></td>
                     </tr>
@@ -212,18 +217,8 @@
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>
-                    <tr class="detail excludedFromTotal" data-fx="actualAnnualKms">
-                        <th scope="row" class="detailHeader">actual KMs driven per year</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
-                    </tr>
                     <tr class="detail includedInTotal" data-fx="fuelCost">
                         <th scope="row" class="detailHeader">fuel</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
-                    </tr>
-                    <tr class="detail excludedFromTotal" data-fx="fuelCostPerWeek">
-                        <th scope="row" class="detailHeader">fuel per week</th>
                         <td class="detail" data-type="f"></td>
                         <td class="detail" data-type="e"></td>
                     </tr>
@@ -247,15 +242,20 @@
                         <td class="detail" data-type="f"></td>
                         <td class="detail" data-type="e"></td>
                     </tr>
+                    <tr class="detail excludedFromTotal" data-fx="actualAnnualKms">
+                        <th scope="row" class="detailHeader">actual KMs driven per year</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
+                    <tr class="detail excludedFromTotal" data-fx="fuelCostPerWeek">
+                        <th scope="row" class="detailHeader">fuel per week</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
                     <tr class="summary" data-fx="totalOtherCost">
                         <th scope="row" class="header" id="OtherCostRow"><a href="#OtherCostRow" class="expandRows">other</a></th>
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
-                    </tr>
-                    <tr class="detail excludedFromTotal" data-fx="numberOfKMsWithRentalCar">
-                        <th scope="row" class="detailHeader">car rental KMs driven</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
                     </tr>
                     <tr class="detail includedInTotal" data-fx="carRentalCost">
                         <th scope="row" class="detailHeader">car rental</th>
@@ -274,6 +274,11 @@
                     </tr>
                     <tr class="detail includedInTotal" data-fx="personalContribution">
                         <th scope="row" class="detailHeader">personal contribution</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
+                    <tr class="detail excludedFromTotal" data-fx="numberOfKMsWithRentalCar">
+                        <th scope="row" class="detailHeader">car rental KMs driven</th>
                         <td class="detail" data-type="f"></td>
                         <td class="detail" data-type="e"></td>
                     </tr>
