@@ -35,8 +35,13 @@
     <% else %>
     <form id="start-up-screen">
         <p class="question">
-            If you trade-in your car for an electric vehicle &#8212; what will it cost you?
-            <span>Answer the two questions below and we will tell you ... you might be suprised, it will not cost the earth:</span>
+            If you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
+            similar car) for an <strong>Electric Vehicle</strong> equivalent
+            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>) &#8212; what will it cost you?
+            <span>
+                Answer the two questions below and we will tell you ...
+                you might be suprised, it will not cost the earth:
+            </span>
         </p>
 
         <div class="field">
@@ -364,7 +369,7 @@
         </div>
     </form>
     <% end_if %>
-    <footer><p>&copy; 2016 Sunny Side Up Ltd.</p></footer>
+    <footer><p>&copy; 2017 <a href="http://www.sunnysideup.co.nz">Sunny Side Up</a> Ltd.</p></footer>
 </div>
 
 </body>

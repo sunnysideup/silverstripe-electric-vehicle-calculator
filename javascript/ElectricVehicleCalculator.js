@@ -1096,8 +1096,7 @@ EVC.HTMLInteraction = {
         }
         if(parseInt(carValue) === 0) {
             jQuery('input[name="startup-car-value"]').focus();
-            alert('')
-        } 
+        }
 
         if(next) {
             EVC.HTMLInteraction.setValue('CVValueToday', carValue);
@@ -1125,6 +1124,7 @@ EVC.HTMLInteraction = {
                 }
             );
         } else {
+            alert('Please answer both questions.')
             jQuery('body').removeClass('loading');
         }
         return false;
@@ -1505,7 +1505,9 @@ EVC.HTMLInteraction = {
                 e.preventDefault();
                 var link = jQuery(this).attr('href');
                 var id = link.substring(link.indexOf('#'));
-                jQuery(id).toggle('slow');
+                jQuery(id).toggle(
+                    'slow'
+                );
                 return false;
             }
         )

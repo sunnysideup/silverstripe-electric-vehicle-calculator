@@ -20,14 +20,18 @@ class EVCPage_Controller extends Page_Controller
     public function init()
     {
         parent::init();
-        Requirements::themedCSS('ElectricVehicleCalculator.min', 'electric-vehicle-calculator');
         Requirements::javascript("framework/thirdparty/jquery/jquery.js");
         if(Director::isLive()) {
+            Requirements::themedCSS('ElectricVehicleCalculator.min', 'electric-vehicle-calculator');
+            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js");
             Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
+            Requirements::javascript("electric-vehicle-calculator/javascript/ElectricVehicleCalculator.min.js");
         } else {
-            Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.js");
+            Requirements::themedCSS('ElectricVehicleCalculator', 'electric-vehicle-calculator');
+            Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
+            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js");
+            Requirements::javascript("electric-vehicle-calculator/javascript/ElectricVehicleCalculator.js");
         }
-        Requirements::javascript("electric-vehicle-calculator/thirdparty/chartjs/Chart.min.js");
     }
 
     protected $evcDataSet = null;

@@ -1,7 +1,10 @@
+/*
+    green: 00A260
+*/
+
 @media screen and (min-width: 0px) {
     html {
-        background: #000;
-        background-position: center 100px;
+        background-color: rgba(255, 255, 255, 1);
     }
     /* general */
     body {
@@ -9,8 +12,8 @@
         padding: 0px;
         font-family: Montserrat;
         font-size: 0.7em;
-        color: #222;
-        background-color: rgba(255, 255, 255, 0.93);
+        color: #333;
+        background-color: rgba(255, 255, 255, 1);
     }
 
     .loading-screen {
@@ -65,9 +68,11 @@
         margin-bottom: 1.7em;
     }
 
+    h1,
     h2 {
         margin-top: 3em;
         clear: both;
+        color: #FF5D9F;
     }
 
     #RightCol {
@@ -184,11 +189,13 @@
     }
 
     input::selection{
-        background: yellow;
+        background: #FF5D9F;
+        color: #fff;
     }
 
     input::-moz-selection{
-        background: yellow;
+        background: #FF5D9F;
+        color: #fff;
     }
 
     input[type=range] {
@@ -235,7 +242,8 @@
     }
 
     .fieldHolder.infocus {
-        border: 3px solid orange;
+        border: 2px solid #ccc;
+        background-color: #e5e5e5;
         padding: 5px;
         border-radius: 7px;
         margin-bottom: 10px;
@@ -424,7 +432,7 @@
     .calcVal {
         font-weight: 700;
         color: green;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #FFF59D;
         display: block;
         float: right;
         font-size: 21px;
@@ -456,7 +464,7 @@
     }
 
     #ProfitAndLoss p span.calcVal {
-        border-bottom: none;
+        border-bottom: 1px solid #FFF59D;
     }
 
     #ProfitAndLoss p.warning {
@@ -497,11 +505,10 @@
     #ProfitAndLoss a.inline-expand {
         color: green;
         border-bottom: 1px solid #FFF59D;
-        color: #FFF59D;
     }
 
     #ProfitAndLoss .years-ahead {
-        color: #FFF59D;
+        font-weight: bold;
     }
 
     #ProfitAndLoss .switch-year {
@@ -681,14 +688,15 @@
         font-size: 21px;
     }
 
-    tr.detail th, tr.detail td {
+    tr.detail th,
+    tr.detail td {
         border-bottom: 1px solid transparent;
     }
 
     .calcVal {
         font-size: auto;
         width: auto;
-        border-bottom: 0;
+        border-bottom: 1px solid #FFF59D;
     }
 
     .fieldHolder.infocus .graphShower {
