@@ -678,6 +678,27 @@ var EVCfx = function(
         }
     };
 
+
+    this.totalCostYear1 = function(carType) { return this.totalCostPerYear(carType, 0);},
+    this.totalCostYear2 = function(carType) { return this.totalCostPerYear(carType, 1);},
+    this.totalCostYear3 = function(carType) { return this.totalCostPerYear(carType, 2);},
+    this.totalCostYear4 = function(carType) { return this.totalCostPerYear(carType, 3);},
+    this.totalCostYear5 = function(carType) { return this.totalCostPerYear(carType, 4);},
+
+    this.totalCostPerYear = function(carType, tempYear)
+    {
+        var myYear = yearsAfterSwitch;
+        yearsAfterSwitch = tempYear;
+        var returnValue = this.totalCombined(carType);
+        yearsAfterSwitch = myYear;
+        return returnValue;
+    },
+
+    this.totalCombinedFiveYears = function(carType)
+    {
+        return  this.totalCostYear1(carType) + this.totalCostYear2(carType) + this.totalCostYear3(carType) + this.totalCostYear4(carType) + this.totalCostYear5(carType);
+    },
+
     this.totalCombined = function(carType) {
         return parseFloat(this.totalUpFrontPayment(carType)) + parseFloat(this.totalFinanceCost(carType)) + parseFloat(this.totalFixedCost(carType)) + parseFloat(this.totalOperatingCost(carType)) + parseFloat(this.totalOtherCost(carType));
     };
@@ -851,7 +872,7 @@ EVC.HTMLInteraction = {
     },
 
     populateResultTable: function() {
-        jQuery("#ResultTableHolder table th, #ResultTableHolder table td").each(
+        jQuery("#ResultTableHolder table th, #ResultTableHolder table td, #SummaryResultHolder table th, #SummaryResultHolder table td").each(
             function(i, el) {
                 var method = jQuery(el).parents("tr").attr("data-fx");
                 var carType = jQuery(el).attr("data-type");
@@ -2120,23 +2141,8 @@ EVC.scenarios = {
             html += '<li><a href="#financial-years" onclick="return EVC.HTMLInteraction.setValue(\'yearsAfterSwitch\', '+i+', true);" class="'+cssClas+'">'+currentYear+'</a></li>';
         }
         return html;
-    },
-
-    totalCostPerYear: function()
-    {
-        var now = new Date();
-        var startYear = now.getFullYear() + EVC.ActualData.yearsBeforeSwitch;
-        var yearsAfterSwitch = EVC.ActualData.yearsAfterSwitch;
-        var i = 0;
-        var currentYear = startYear;
-        var html = '';
-        for(i = 0; i < 5; i++) {
-            currentYear = startYear + i;
-            var cssClas = (i === yearsAfterSwitch) ? 'current' : 'link';
-            html += '<li><a href="#financial-years" onclick="return EVC.HTMLInteraction.setValue(\'yearsAfterSwitch\', '+i+', true);" class="'+cssClas+'">'+currentYear+'</a></li>';
-        }
-        return html;        
     }
+
 
 }
 

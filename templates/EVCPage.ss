@@ -111,7 +111,7 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr class="superSummary summary" data-fx="totalCombined">
+                    <tr class="superSummary summary" data-fx="totalCombinedFiveYears">
                         <th scope="row" class="superTotalHeader totalHeader">TOTAL COST</th>
                         <td class="total superTotal" data-type="f"></td>
                         <td class="total superTotal" data-type="e"></td>
@@ -124,22 +124,22 @@
                         <td class="total" data-type="e"></td>
                     </tr>
                     <tr class="summary" data-fx="totalCostYear2">
-                        <th scope="row" class="totalHeader" id="totalCostYear2">Year 1</th>
+                        <th scope="row" class="totalHeader" id="totalCostYear2">Year 2</th>
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>
                     <tr class="summary" data-fx="totalCostYear3">
-                        <th scope="row" class="totalHeader" id="totalCostYear3">Year 1</th>
+                        <th scope="row" class="totalHeader" id="totalCostYear3">Year 3</th>
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>
                     <tr class="summary" data-fx="totalCostYear4">
-                        <th scope="row" class="totalHeader" id="totalCostYear4">Year 1</th>
+                        <th scope="row" class="totalHeader" id="totalCostYear4">Year 4</th>
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>
                     <tr class="summary" data-fx="totalCostYear5">
-                        <th scope="row" class="totalHeader" id="totalCostYear5">Year 1</th>
+                        <th scope="row" class="totalHeader" id="totalCostYear5">Year 5</th>
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>

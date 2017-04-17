@@ -55,14 +55,6 @@ purple: #833052
         width: 100%;
     }
 
-    * {
-        font-weight: 400;
-    }
-
-    strong {
-        font-weight: 700;
-    }
-
     a {
         border-bottom: 1px solid #ccc;
         text-decoration: none;
@@ -444,6 +436,7 @@ purple: #833052
         font-size: 21px;
         width: 100%;
         text-align: right;
+        font-weight: 700;
     }
 
     .calcVal .negativeNumber {
