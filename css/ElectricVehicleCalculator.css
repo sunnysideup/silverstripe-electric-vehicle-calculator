@@ -5,7 +5,7 @@ purple: #833052
 
 @media screen and (min-width: 0px) {
     html {
-        background-color: rgba(255, 255, 255, 1);
+        background-color: #000;
     }
     /* general */
     body {
@@ -69,11 +69,18 @@ purple: #833052
         margin-bottom: 1.7em;
     }
 
+    h1 {
+        color: #FF5D9F;
+    }
+
+    h2 {
+        color: #833052;
+    }
     h1,
     h2 {
         margin-top: 3em;
         clear: both;
-        color: #833052;
+
     }
 
     #RightCol {
@@ -111,7 +118,7 @@ purple: #833052
         color: #555;
         height: 10em;
         clear: both;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid #555;
     }
 
     .hide {
@@ -590,9 +597,19 @@ purple: #833052
         padding-top: 1vh;
     }
 
+    body.ready form#start-up-screen  {
+        display: none;
+    }
+
+    body.not-ready form#start-up-screen h1 {
+
+    }
+
     #EVCWrapper #start-up-screen p.question,
-    #EVCWrapper #start-up-screen h2
+    #EVCWrapper #start-up-screen h1
     {
+        margin-top: 0;
+        padding-top: 0;
         font-size: 24px;
     }
 
@@ -639,7 +656,7 @@ purple: #833052
 
 @media screen and (min-width: 480px) {
     body.not-ready form#start-up-screen {
-        padding-top: 2vh;
+        padding-top: 4vh;
     }
 
     body.loading .loading-screen span,
@@ -715,7 +732,7 @@ purple: #833052
 
 @media screen and (min-width: 700px) {
     body.not-ready form#start-up-screen {
-        padding-top: 3vh;
+        padding-top: 8vh;
     }
 
     body.loading .loading-screen span,

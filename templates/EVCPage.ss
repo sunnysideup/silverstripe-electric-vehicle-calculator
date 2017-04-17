@@ -35,12 +35,12 @@
     </div>
     <% else %>
     <form id="start-up-screen">
-        <h2>Can you reduce climate change and save money doing it?</h2>
+        <h1>Can you reduce climate change and save money doing it?</h1>
         <p class="question">
             Imagine you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
             similar car) for an <strong>Electric Vehicle</strong> equivalent
             (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>)
-            &#8212; will you save money?
+            &#8212; what does this mean for your wallet?
             <br />
             <br />
             <span>
