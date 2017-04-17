@@ -37,10 +37,9 @@
     <form id="start-up-screen">
         <h1>Can you reduce climate change and save money doing it?</h1>
         <p class="question">
-            Imagine you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
+            You might be able to do so if you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
             similar car) for an <strong>Electric Vehicle</strong> equivalent
-            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>)
-            &#8212; what does this mean for your wallet?
+            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>).
             <br />
             <br />
             <span>
@@ -99,7 +98,7 @@
 
         <fieldset id="SummaryResultHolder" class="mainSummarySection">
             <h2>
-                total cost
+                total cost comparison
             </h2>
 
             <table>
@@ -347,7 +346,6 @@
             </table>
         </fieldset>
 
-
         <div id="InteractCol" class="mainDetailedSections">
 
             <fieldset id="PlayAroundAssumptions" class="mainDetailedSections"></fieldset>
@@ -368,8 +366,6 @@
 
             <fieldset id="OtherAssumptions"></fieldset>
 
-            <h2>purchase your electric vehicle</h2>
-            <p>More information to come ... </p>
         </div>
 
 

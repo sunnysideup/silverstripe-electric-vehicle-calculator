@@ -429,9 +429,7 @@ var EVCfx = function(
     };
 
     this.replacementSaving = function(carType) {
-        var a = this.valueStartOfTheYear('f') - this.valueAtTheEndOfTheYear('f');
-        var b = this.valueStartOfTheYear('e') - this.valueAtTheEndOfTheYear('e');
-        return Math.round((a + b) / 2)
+        return Math.round(EVC.ActualData.CVValueToday * (this.depreciationRate(carType)/150));
     }
 
     /**
@@ -1071,12 +1069,13 @@ EVC.HTMLInteraction = {
             function(e){
                 e.preventDefault();
                 jQuery(this).toggleClass("show");
-                var parentTR = jQuery(this).parents("tr");
-                jQuery(parentTR).nextUntil("tr.summary").each(
-                    function(i, el) {
-                        jQuery(el).toggle();
-                    }
-                );
+                var parentTR = jQuery(this).closest("tr")
+                    .toggleClass('expanded')
+                    .nextUntil("tr.summary").each(
+                        function(i, el) {
+                            jQuery(el).toggle();
+                        }
+                    );
                 return false;
             }
         );
@@ -1438,11 +1437,12 @@ EVC.HTMLInteraction = {
             }
             else {
                 jQuery('html, body').animate(
-                    {scrollTop: jQuery("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 10)
+                    {scrollTop: jQuery("#"+key+"Holder").offset().top - (jQuery("#ProfitAndLoss").height() + 20)
                     },
                     500,
                     function() {
                         jQuery("#"+key+"Holder").find('input[type="number"]').focus();
+                        jQuery("#"+key+"Holder").find('.graphShower').show();
                     }
                 );
             }
@@ -2353,7 +2353,7 @@ Number.prototype.formatNumber = function() {
          exponentialGrowthFactorForRepairs:      "Exponential unexpected repairs growth factor",
          valueDividerForRepairCalculation:       "Inverse value unexpected value divider",
          depreciationRatePerYearCV:              "Current Car: Depreciation rate per Year",
-         depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year",
+         depreciationRatePerYearEV:              "Electric Car: Depreciation rate per Year. Set a bit higher to account for battery replacement.",
          costPerDayRentalCar:                    "Cost per Day for Rental Car",
          kilometresPerDayForLongTrips:           "KMs per Day for Long Trips",
          subsidyPaymentFixed:                    "Fixed Subsidy",
@@ -2374,7 +2374,7 @@ Number.prototype.formatNumber = function() {
          amountOfCurrentCarAsLoan:               "How much of your current car cost have you borrowed? If you paid for your current car with money you saved up then enter 0.",
          minimumCostElectricVehicle:             "Minimum price for an electric vehicle at the moment. Because electric cars are relatively new, there are few older models and depreciated cars, therefore a minimum price may apply.",
          maximumCostElectricVehicle:             "Maximum price for an electric vehicle at the moment. In general, the calculator tries to match your current car with an electric car of a similar value, but this number is limited up to the new price of an electric vehicle.",
-         upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of purchasing a trade-in car.",
+         upgradeCostToGoElectric:                "The additional amount you will have to pay to purchase an electric car similar to your current vehicle. Excluding the standard costs of trading-in your car.",
          EVValueImprovementPerYearPercentage:    "The expected amount of relative cost improvements of electric vehicles as compared to conventional cars powered by oil based fuel for each year.",
          setupChargeStation:                     "The cost of setting up a charging station at your home (or work) to charge your electric car. If your home has a garage with a plug then the cost could be zero.",
          saleCostForCarInPercentage:             "The cost of selling a vehicle. Included are advertising costs, commissions, auction fees, government registration fees, etc... This is basically the difference between the buy and sell price of a car (i.e. the profit of the car sales person).",
@@ -2437,10 +2437,10 @@ EVC.DefaultData = {
 
     /* other assumptions */
     amountOfCurrentCarAsLoan:                0,
-    minimumCostElectricVehicle:          18000,
+    minimumCostElectricVehicle:          14000,
     maximumCostElectricVehicle:         200000,
-    upgradeCostToGoElectric:                30,
-    EVValueImprovementPerYearPercentage:    20,
+    upgradeCostToGoElectric:                60,
+    EVValueImprovementPerYearPercentage:    15,
     setupChargeStation:                    300,
     saleCostForCarInPercentage:              7,
     purchaseCostForCarInPercentage:          3,
@@ -2452,12 +2452,12 @@ EVC.DefaultData = {
     fuelEfficiencyEV:                        5,
     fuelEfficiencyRentalCar:                12,
     insuranceBaseCost:                     200,
-    insuranceCostPerThousand:               50,
+    insuranceCostPerThousand:               20,
     averageKmsPerTyre:                   40000,
-    tyreCostCV:                            100,
-    tyreCostEV:                            100,
+    tyreCostCV:                            120,
+    tyreCostEV:                            120,
     licenseWOFCostCVPerYear:               250,
-    licenseWOFCostEVPerYear:               350,
+    licenseWOFCostEVPerYear:               250,
     maintenanceCVPerTenThousandKm:         400,
     maintenanceEVPerTenThousandKm:          50,
     repairKMDivider:                     15000,
@@ -2465,7 +2465,7 @@ EVC.DefaultData = {
     exponentialGrowthFactorForRepairs:     1.7,
     valueDividerForRepairCalculation:      100,
     depreciationRatePerYearCV:              27,
-    depreciationRatePerYearEV:              27,
+    depreciationRatePerYearEV:              32,
     costPerDayRentalCar:                    70,
     kilometresPerDayForLongTrips:          300,
     subsidyPaymentFixed:                     0,
