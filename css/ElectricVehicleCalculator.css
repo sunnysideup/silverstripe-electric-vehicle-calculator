@@ -603,8 +603,12 @@
     body.not-ready form#start-up-screen h1 {
 
     }
-
-    #EVCWrapper #start-up-screen p.question {
+    body.not-ready footer a,
+    #EVCWrapper #start-up-screen a  {
+        border-bottom: 1px solid #833052;
+    }
+    #EVCWrapper #start-up-screen p.question,
+    #EVCWrapper #start-up-screen p.question a  {
         color: #00A260;
     }
     #EVCWrapper #start-up-screen p.question,
@@ -630,6 +634,8 @@
         width: 100%;
         display: block;
         padding: 5px;
+        color: #833052;
+        font-size: 1em;
     }
 
     #EVCWrapper #start-up-screen .field .middleColumn {
@@ -654,6 +660,7 @@
         display: block;
         color: #fff;
     }
+    #EVCWrapper #start-up-screen .button {color: #000!important;}
 }
 
 @media screen and (min-width: 480px) {
