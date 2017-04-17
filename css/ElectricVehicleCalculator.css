@@ -1,5 +1,6 @@
 /*
     green: 00A260
+purple: #833052
 */
 
 @media screen and (min-width: 0px) {
@@ -11,9 +12,17 @@
         margin: 0px;
         padding: 0px;
         font-family: Montserrat;
-        font-size: 0.7em;
-        color: #333;
-        background-color: rgba(255, 255, 255, 1);
+        font-size: 14px;
+        color: #555;
+        background-color: #000;
+    }
+
+    input, .calcVal, td, .middleColumn{
+        font-family: 'Cutive Mono', monospace;
+    }
+
+    body.ready {
+        background-color: #fff;
     }
 
     .loading-screen {
@@ -57,7 +66,7 @@
     a {
         border-bottom: 1px solid #ccc;
         text-decoration: none;
-        color: black;
+        color: #555;
     }
 
     a:hover {
@@ -158,15 +167,14 @@
         width: auto;
     }
 
-    label, input {
+    label,
+    input {
         font-size: 12px;
     }
 
     label strong {
         font-weight: 400;
-        color: #999;
         cursor: pointer;
-        color: #000;
     }
 
     label span.desc {
@@ -364,7 +372,7 @@
 
     tr.detail th, tr.detail td {
         padding-top: 0;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #ccc;
         font-size: 0.9em;
     }
 
@@ -422,7 +430,7 @@
     }
 
     /* not ready */
-    .notReady .mainDetailedSections {
+    .not-ready .mainDetailedSections {
         display: none;
     }
 
@@ -477,8 +485,8 @@
         bottom: 0;
     }
 
-    #ProfitAndLoss.full-screen p, #ProfitAndLoss.full-screen span {
-        font-size: 20px;
+    #ProfitAndLoss.full-screen p,
+    #ProfitAndLoss.full-screen span {
     }
 
     #ProfitAndLoss ul.actions {
@@ -526,7 +534,6 @@
         width: 100%;
         clear: both;
         border-radius: 5px;
-        font-size: 12px;
     }
 
     .influence span {
@@ -556,6 +563,8 @@
         margin-left: auto;
         margin-right: auto;
         display: block;
+        padding-top: 1em;
+        clear: both;
     }
 
     figure figcaption {
@@ -584,16 +593,18 @@
         display: block;
     }
 
-    #EVCWrapper.notReady form#start-up-screen {
-        padding-top: 1em;
+    body.not-ready form#start-up-screen {
+        padding-top: 1vh;
     }
 
-    #EVCWrapper #start-up-screen p.question {
+    #EVCWrapper #start-up-screen p.question,
+    #EVCWrapper #start-up-screen h2
+    {
         font-size: 24px;
     }
 
     #EVCWrapper #start-up-screen p.question span {
-        color: #FF5D9F;
+        color: #833052;
     }
 
     #EVCWrapper #start-up-screen .field {
@@ -634,8 +645,8 @@
 }
 
 @media screen and (min-width: 480px) {
-    #EVCWrapper.notReady form#start-up-screen {
-        padding-top: 3em;
+    body.not-ready form#start-up-screen {
+        padding-top: 2vh;
     }
 
     body.loading .loading-screen span,
@@ -710,8 +721,8 @@
 }
 
 @media screen and (min-width: 700px) {
-    #EVCWrapper.notReady form#start-up-screen {
-        padding-top: 7em;
+    body.not-ready form#start-up-screen {
+        padding-top: 3vh;
     }
 
     body.loading .loading-screen span,

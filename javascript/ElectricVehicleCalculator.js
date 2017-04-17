@@ -429,7 +429,9 @@ var EVCfx = function(
     };
 
     this.replacementSaving = function(carType) {
-        return 100;
+        var a = this.valueStartOfTheYear('f') - this.valueAtTheEndOfTheYear('f');
+        var b = this.valueStartOfTheYear('e') - this.valueAtTheEndOfTheYear('e');
+        return Math.round((a + b) / 2)
     }
 
     /**
@@ -814,7 +816,7 @@ EVC.HTMLInteraction = {
     },
 
     clear: function(){
-        jQuery("#EVCWrapper").addClass("notReady");
+        jQuery("body").addClass("not-ready");
         jQuery("#KeyAssupmptions").html("");
         jQuery("#PlayAroundAssumptions").html("");
         jQuery("#OtherAssumptions").html("");
@@ -1445,10 +1447,10 @@ EVC.HTMLInteraction = {
         this.updateLinks();
         EVC.scenarios.checkInfluence();
         if(EVC.isReadyToCalculate()) {
-            jQuery("#EVCWrapper").removeClass("notReady").addClass("ready");
+            jQuery("body").removeClass("not-ready").addClass("ready");
         }
         else {
-            jQuery("#EVCWrapper").removeClass("ready").addClass("notReady");
+            jQuery("body").removeClass("ready").addClass("not-ready");
         }
         jQuery("#ProfitAndLoss").addClass("fixed");
         if(this.isTouchScreenTest()) {
@@ -2120,6 +2122,22 @@ EVC.scenarios = {
         return html;
     },
 
+    totalCostPerYear: function()
+    {
+        var now = new Date();
+        var startYear = now.getFullYear() + EVC.ActualData.yearsBeforeSwitch;
+        var yearsAfterSwitch = EVC.ActualData.yearsAfterSwitch;
+        var i = 0;
+        var currentYear = startYear;
+        var html = '';
+        for(i = 0; i < 5; i++) {
+            currentYear = startYear + i;
+            var cssClas = (i === yearsAfterSwitch) ? 'current' : 'link';
+            html += '<li><a href="#financial-years" onclick="return EVC.HTMLInteraction.setValue(\'yearsAfterSwitch\', '+i+', true);" class="'+cssClas+'">'+currentYear+'</a></li>';
+        }
+        return html;        
+    }
+
 }
 
 EVC.serverInteraction = {
@@ -2223,7 +2241,7 @@ Number.prototype.formatPercentage = function(){
 
 Number.prototype.kmPerYearFormat = function(){
     var n = this;
-    return n + "km (="+parseFloat(n*365).formatNumber()+"km. per year)";
+    return n + "km ("+parseFloat(n*365).formatNumber()+"km. per year)";
 };
 
 Number.prototype.formatNumber = function() {

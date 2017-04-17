@@ -14,6 +14,7 @@
     <![endif]-->
     <link rel="shortcut icon" href="$ThemeDir/images/favicon.ico" />
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Cutive+Mono' rel='stylesheet' type='text/css' />
 
     <meta property="og:url"           content="$AbsoluteLink" />
     <meta property="og:type"          content="website" />
@@ -34,10 +35,14 @@
     </div>
     <% else %>
     <form id="start-up-screen">
+        <h2>Can you reduce climate change and save money doing it?</h2>
         <p class="question">
-            If you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
+            Imagine you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
             similar car) for an <strong>Electric Vehicle</strong> equivalent
-            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>) &#8212; what will it cost you?
+            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>)
+            &#8212; will you save money?
+            <br />
+            <br />
             <span>
                 Answer the two questions below and we will tell you ...
                 you might be suprised, it will not cost the earth:
@@ -45,7 +50,7 @@
         </p>
 
         <div class="field">
-            <label for="startup-car-value">What is the value of your current car (in NZD)?</label>
+            <label for="startup-car-value">What is the value of car today (in NZ\$)?</label>
             <div class="middleColumn">
                 <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
             </div>
@@ -90,6 +95,57 @@
             </ul>
 
         </div>
+
+
+        <fieldset id="SummaryResultHolder" class="mainSummarySection">
+            <h2>
+                total cost
+            </h2>
+
+            <table>
+                <thead>
+                    <tr class="header summary">
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col">Current Car</th>
+                        <th scope="col">Electric Car</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr class="superSummary summary" data-fx="totalCombined">
+                        <th scope="row" class="superTotalHeader totalHeader">TOTAL COST</th>
+                        <td class="total superTotal" data-type="f"></td>
+                        <td class="total superTotal" data-type="e"></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr class="summary" data-fx="totalCostYear1">
+                        <th scope="row" class="totalHeader" id="totalCostYear1">Year 1</th>
+                        <td class="total" data-type="f"></td>
+                        <td class="total" data-type="e"></td>
+                    </tr>
+                    <tr class="summary" data-fx="totalCostYear2">
+                        <th scope="row" class="totalHeader" id="totalCostYear2">Year 1</th>
+                        <td class="total" data-type="f"></td>
+                        <td class="total" data-type="e"></td>
+                    </tr>
+                    <tr class="summary" data-fx="totalCostYear3">
+                        <th scope="row" class="totalHeader" id="totalCostYear3">Year 1</th>
+                        <td class="total" data-type="f"></td>
+                        <td class="total" data-type="e"></td>
+                    </tr>
+                    <tr class="summary" data-fx="totalCostYear4">
+                        <th scope="row" class="totalHeader" id="totalCostYear4">Year 1</th>
+                        <td class="total" data-type="f"></td>
+                        <td class="total" data-type="e"></td>
+                    </tr>
+                    <tr class="summary" data-fx="totalCostYear5">
+                        <th scope="row" class="totalHeader" id="totalCostYear5">Year 1</th>
+                        <td class="total" data-type="f"></td>
+                        <td class="total" data-type="e"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
 
         <fieldset id="ResultTableHolder" class="mainDetailedSections">
             <h2>
@@ -152,6 +208,21 @@
                         <td class="total" data-type="f"></td>
                         <td class="total" data-type="e"></td>
                     </tr>
+                    <tr class="detail includedInTotal" data-fx="interest">
+                        <th scope="row" class="detailHeader">interest</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
+                    <tr class="detail includedInTotal" data-fx="principalRepayment">
+                        <th scope="row" class="detailHeader">loan repayments</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
+                    <tr class="detail includedInTotal" data-fx="replacementSaving">
+                        <th scope="row" class="detailHeader">saving for eventual replacement</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
                     <tr class="detail excludedFromTotal" data-fx="valueStartOfTheYear">
                         <th scope="row" class="detailHeader">value at the start of the year</th>
                         <td class="detail" data-type="f"></td>
@@ -169,21 +240,6 @@
                     </tr>
                     <tr class="detail excludedFromTotal" data-fx="amountBorrowedAtStartOfTheYear">
                         <th scope="row" class="detailHeader">loan at start of the year</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
-                    </tr>
-                    <tr class="detail includedInTotal" data-fx="interest">
-                        <th scope="row" class="detailHeader">interest</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
-                    </tr>
-                    <tr class="detail includedInTotal" data-fx="principalRepayment">
-                        <th scope="row" class="detailHeader">loan repayments</th>
-                        <td class="detail" data-type="f"></td>
-                        <td class="detail" data-type="e"></td>
-                    </tr>
-                    <tr class="detail includedInTotal" data-fx="replacementSaving">
-                        <th scope="row" class="detailHeader">saving for eventual replacement</th>
                         <td class="detail" data-type="f"></td>
                         <td class="detail" data-type="e"></td>
                     </tr>
@@ -244,6 +300,11 @@
                     </tr>
                     <tr class="detail excludedFromTotal" data-fx="actualAnnualKms">
                         <th scope="row" class="detailHeader">actual KMs driven per year</th>
+                        <td class="detail" data-type="f"></td>
+                        <td class="detail" data-type="e"></td>
+                    </tr>
+                    <tr class="detail excludedFromTotal" data-fx="actualAnnualKmsPerDay">
+                        <th scope="row" class="detailHeader">actual KMs driven per day</th>
                         <td class="detail" data-type="f"></td>
                         <td class="detail" data-type="e"></td>
                     </tr>
