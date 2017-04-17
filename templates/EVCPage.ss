@@ -409,13 +409,17 @@
                 Thank you.
             </p>
 
-            <h2>links</h2>
+            <h2>key links</h2>
+            <ul>
+                <li><a href="http://www.electricheaven.nz/">Electric Heaven: PDF with detailed Information on Electric Cars in New Zealand</a></li>
+                <li><a href="http://www.leadingthecharge.org.nz">Leading the Charge: EV enthusiasts</a></li>
+                <li><a href="http://flipthefleet.org/">Flip The Fleet: NZ Electric Vehicle Data</a></li>
+            </ul>
+            <h2>other links</h2>
             <ul>
                 <li><a href="http://www.stuff.co.nz/national/9204870/Car-running-costs-lurch-ahead-for-Kiwi-drivers">NZ Car Running Cost</a></li>
-                <li><a href="http://www.electricheaven.nz/">Information on Electric Cars in New Zealand</a></li>
                 <li><a href="https://www.energywise.govt.nz/tools/fuel-economy/">EECA: Fuel Economy</a></li>
                 <li><a href="https://www.energywise.govt.nz/on-the-road/electric-vehicles/">EECA: Electric Vehicles</a></li>
-                <li><a href="http://www.leadingthecharge.org.nz">Leading the Charge</a></li>
             </ul>
 
             <h2>disclaimer</h2>
@@ -424,14 +428,6 @@
                 This tool is meant to be used as an indicative guide only.
                 Please seek professional advice for any decisions you may make and do not make any decisions based on what is presented to you in this tool.
             </p>
-            <p style="background-color: red; color: white; padding: 1em; border-radius: 10px;">ALPHA VERSION ... this page is for testing only ... stay tuned for the first release ... if you have any questions then please contact modules [at] sunnysideup.co.nz </p>
-
-            <h2>to do</h2>
-            <ul>
-                <li>review: https://www.quora.com/What-are-some-APIs-for-retrieving-car-value-data, http://www.programmableweb.com/api/kelley-blue-book-infodriver, http://developer.edmunds.com/faq.html#faq-2, https://developer.ibm.com/apimanagement/2014/10/31/whats-driving-apis-automotive/, http://www3.epa.gov/otaq/tcldata.htm, https://www.carvoyant.com/</li>
-                <li>make it easier to understand save methods</li>
-                <li>make a list of links for each assumption / variable</li>
-            </ul>
         </div>
     </form>
     <% end_if %>
