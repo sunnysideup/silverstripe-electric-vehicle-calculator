@@ -6,7 +6,7 @@
 
 @media screen and (min-width: 0px) {
     html {
-        background-color: #000;
+        background-color: #833052;
     }
     /* general */
     body {
@@ -15,7 +15,7 @@
         font-family: Montserrat;
         font-size: 14px;
         color: #555;
-        background-color: #000;
+        background-color: #833052;
     }
 
     input, .calcVal, td, .middleColumn{
@@ -603,24 +603,35 @@
     body.not-ready form#start-up-screen h1 {
 
     }
+    body.not-ready footer {
+        color: #fff;
+        border-top: 1px solid #fff;
+    }
     body.not-ready footer a,
     #EVCWrapper #start-up-screen a  {
-        border-bottom: 1px solid #833052;
+        border-bottom: 1px solid #fff;
+        color: #fff;
+    }
+    #EVCWrapper #start-up-screen h1,
+    #EVCWrapper #start-up-screen h2 {
+        color: #FF5D9F;
+        font-size: 23px;
     }
     #EVCWrapper #start-up-screen p.question,
     #EVCWrapper #start-up-screen p.question a  {
-        color: #00A260;
+        color: #fff;
+        line-height: 1.5;
+        font-size: 17px;
     }
     #EVCWrapper #start-up-screen p.question,
     #EVCWrapper #start-up-screen h1
     {
         margin-top: 0;
         padding-top: 0;
-        font-size: 24px;
     }
 
     #EVCWrapper #start-up-screen p.question span {
-        color: #833052;
+        color: #fff;
     }
 
     #EVCWrapper #start-up-screen .field {
@@ -634,7 +645,7 @@
         width: 100%;
         display: block;
         padding: 5px;
-        color: #833052;
+        color: #fff;
         font-size: 1em;
     }
 
@@ -660,8 +671,12 @@
         display: block;
         color: #fff;
     }
-    #EVCWrapper #start-up-screen .button {color: #833052!important;}
-    #EVCWrapper #start-up-screen .button:hover {color: #000!important;}
+    #EVCWrapper #start-up-screen .button {
+        color: #fff!important;
+    }
+    #EVCWrapper #start-up-screen .button:hover {
+        color: #000!important;
+    }
 }
 
 @media screen and (min-width: 480px) {
