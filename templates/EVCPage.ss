@@ -24,7 +24,7 @@
 
 </head>
 
-<body>
+<body class="not-ready">
     <div class='loading-screen'><span>calculating your results ... </span></div>
 <div id="EVCWrapper">
 
@@ -35,36 +35,52 @@
     </div>
     <% else %>
     <form id="start-up-screen">
-        <h1>Can you reduce climate change and save money doing it?</h1>
-        <p class="question">
-            You might be able to do so if you trade-in your current <strong>run-around car</strong> (e.g. a Honda Civic, Toyota Yaris, or any
-            similar car) for an <strong>Electric Vehicle</strong> equivalent
-            (e.g. a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>).
-            <br />
-            <br />
-            <span>
-                Answer the two questions below and we will tell you ...
-                you might be suprised, it will not cost the earth:
-            </span>
-        </p>
 
-        <div class="field">
-            <label for="startup-car-value">What is the value of car today (in NZ\$)?</label>
-            <div class="middleColumn">
-                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
+        <h1>A polar bear or a penguin?</h1>
+        <p class="question">
+            To me, what made the difference is to learn that after 150 years of development
+            the combustion engine turns around 25% of its petrol into forward motion.
+            All the other energy is turned into heat.
+            Meanwhile, a much simpler electric engine easily turns 80% of its electricity into forward motion.
+        </p>
+        <p class="question">
+            Add to this that here in New Zealand, we generate most of our electricity using running water while we import oil from questionnable regimes
+            and you have the easiest and cheapest way you can stop polar bears from becoming penguins.
+        </p>
+        <p class="question">
+            In other words: switching to an electric car is by far the best thing you can do to slow down climate change.
+            If you drive a fair amount each day then it will also save you money.
+            Not to mention the better driving experience.
+        </p>
+        <p class="question">
+            To give you some idea about the cost savings, I have built this small calculator.
+            It works out how much you could safe if you traded-in our <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
+            for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
+        </p>
+        <div id="start-up-form-inner">
+            <p class="question">
+                If you own a run-around car right now and like to know how much you can save by going electric then answer the questions below ...
+                you might be suprised, it will not cost the earth.
+            </p>
+            <div class="field">
+                <label for="startup-car-value">What is the value of car today (in NZ\$)?</label>
+                <div class="middleColumn">
+                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label for="petrol-spent-per-week">How much do you spend on petrol per week?</label>
-            <div class="middleColumn">
-                <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
+            <div class="field">
+                <label for="petrol-spent-per-week">How much do you spend on petrol per week?</label>
+                <div class="middleColumn">
+                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
+                </div>
             </div>
+            <ul class="actions">
+                <li id="HowMuchDoWeSave" class="buttonWrapper">
+                    <a href="#ProfitAndLoss" class="button">Calculate Savings</a>
+                </li>
+            </ul>
         </div>
-        <ul class="actions">
-            <li id="HowMuchDoWeSave" class="buttonWrapper">
-                <a href="#ProfitAndLoss" class="button">View Answer</a>
-            </li>
-        </ul>
+
 
         <div id="startup-form-result"></div>
     </form>
@@ -367,6 +383,11 @@
             <fieldset id="OtherAssumptions"></fieldset>
 
         </div>
+
+        <h2>Tell me more about the Nissan Leaf</h2>
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/WpKK72SBxvc" frameborder="0" allowfullscreen></iframe>
+
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/DMXlV-PV3wI" frameborder="0" allowfullscreen></iframe>
 
 
         <div id="RightCol" class="mainDetailedSections">

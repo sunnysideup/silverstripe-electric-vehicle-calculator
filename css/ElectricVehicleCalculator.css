@@ -7,6 +7,8 @@
 @media screen and (min-width: 0px) {
     html {
         background-color: #833052;
+        background-size: cover;
+        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
     }
     /* general */
     body {
@@ -16,6 +18,8 @@
         font-size: 14px;
         color: #555;
         background-color: #833052;
+        background-size: cover;
+        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
     }
 
     input, .calcVal, td, .middleColumn{
@@ -24,6 +28,7 @@
 
     body.ready {
         background-color: #fff;
+        background-image: none;
     }
 
     .loading-screen {
@@ -427,10 +432,39 @@
         font-weight: 700;
     }
 
+    .not-ready #EVCWrapper {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        bottom: 0;
+        overflow: auto;
+        min-width: calc(320px - 4em);
+        width: calc(33.3% - 4em);
+        background-color: #833052;
+        padding: 2em;
+        opacity: 0.77;
+    }
+    .not-ready form#start-up-screen {
+        padding-top: 0vh;
+    }
+
+    .not-ready #EVCWrapper #start-up-form-inner{
+
+    }
+    .not-ready #EVCWrapper #start-up-form-inner .middleColumn{
+        position: static!important;
+        float:none;
+    }
+    .not-ready #EVCWrapper #start-up-form-inner .middleColumn input{
+        float:none;
+        color: #FF5D9F;
+        font-weight: bold;
+    }
     /* not ready */
     .not-ready .mainDetailedSections {
         display: none;
     }
+
 
     /* calcVals */
     .calcVal {
@@ -593,7 +627,7 @@
     }
 
     body.not-ready form#start-up-screen {
-        padding-top: 1vh;
+        padding-top: 0;
     }
 
     body.ready form#start-up-screen  {
@@ -636,7 +670,7 @@
 
     #EVCWrapper #start-up-screen .field {
         clear: both;
-        height: 90px;
+        min-height: auto;
         position: relative;
     }
 
@@ -677,11 +711,15 @@
     #EVCWrapper #start-up-screen .button:hover {
         color: #000!important;
     }
+    iframe {
+        margin-top: 3em;
+        margin-bottom: 3em;
+    }
 }
 
 @media screen and (min-width: 480px) {
     body.not-ready form#start-up-screen {
-        padding-top: 4vh;
+        padding-top: 0vh;
     }
 
     body.loading .loading-screen span,
@@ -757,7 +795,7 @@
 
 @media screen and (min-width: 700px) {
     body.not-ready form#start-up-screen {
-        padding-top: 8vh;
+        padding-top: 1vh;
     }
 
     body.loading .loading-screen span,
@@ -802,6 +840,29 @@
 @media screen and (min-width: 1100px) {
     body {
         font-size: 0.9em;
+    }
+    #start-up-form-inner {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        width: calc(66.6% - 4em);
+        color: yellow;
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 2em;
+        overflow: auto;
+    }
+    #start-up-form-inner .field{
+        width: 49%;
+        float: left;
+        clear: none!important;
+    }
+    #start-up-form-inner .actions{
+        clear: both!important;
+    }
+    #start-up-form-inner .actions li,
+    #start-up-form-inner .actions li a{
+        margin: 30px 0!important;
     }
 }
 
