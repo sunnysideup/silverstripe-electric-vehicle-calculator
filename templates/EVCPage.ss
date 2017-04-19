@@ -49,7 +49,7 @@
         </p>
         <p class="question">
             In other words: switching to an electric car is one of the best things you can do to slow down climate change
-            with cramping your lifestyle.
+            without cramping your lifestyle.
             If you drive a fair amount each day tn it will also save you money.
             Not to mention the better driving experience.
         </p>
