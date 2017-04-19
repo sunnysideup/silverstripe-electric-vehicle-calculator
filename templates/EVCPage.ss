@@ -55,7 +55,7 @@
         </p>
         <p class="question">
             To give you some idea about the cost savings, I have built this small calculator.
-            It works out how much you could safe if you trade-in our <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
+            It works out how much you could save if you were to trade-in your <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
         </p>
         <div id="start-up-form-inner">
