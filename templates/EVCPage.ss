@@ -64,13 +64,13 @@
                 you might be suprised, it will not cost the earth.
             </p>
             <div class="field">
-                <label for="startup-car-value">What is the value of car today (in NZ\$)?</label>
+                <label for="startup-car-value">1. What is the value of car today (in NZ\$)?</label>
                 <div class="middleColumn">
                     <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
                 </div>
             </div>
             <div class="field">
-                <label for="petrol-spent-per-week">How much do you spend on petrol per week?</label>
+                <label for="petrol-spent-per-week">2. How much do you spend on petrol per week?</label>
                 <div class="middleColumn">
                     <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
                 </div>

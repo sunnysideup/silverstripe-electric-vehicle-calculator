@@ -851,6 +851,7 @@
         background-color: rgba(0, 0, 0, 0.3);
         padding: 2em;
         overflow: auto;
+        padding-top: 3em;
     }
     #start-up-form-inner .field{
         width: 49%;
