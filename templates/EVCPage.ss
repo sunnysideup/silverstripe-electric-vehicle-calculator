@@ -82,7 +82,22 @@
                 </li>
             </ul>
         </div>
-
+        <h1>Sounds great but you can't be bothered?</h1>
+        <p>
+            If you prefer, I can provide a personalised, professional service that will take care of all the hassles involved with:
+        </p>
+        <ul>
+            <li>finding the most suitable electric vehicle,</li>
+            <li>finding the best place to buy it,</li>
+            <li>purchasing the car,</li>
+            <li>selling your old car, if required, and</li>
+            <li>installating any charging equipment in your home - as you see fit</li>
+        </ul>
+        <p>
+            In short - once we know what suits you best, we can provide a turn-key solution.
+            We will never take any commission or back-handers from any suppliers so you can be assured of independent and frank advice.
+            If you are interested in this service then please contact nicolaas@evs.nz for a obligation-free quote.
+        </p>
 
         <div id="startup-form-result"></div>
     </form>
