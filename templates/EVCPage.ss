@@ -36,7 +36,7 @@
     <% else %>
     <form id="start-up-screen">
         <div id="start-up-form-inner">
-            <h1>How much can you save by switching to an Electric Car?</h1>
+            <h1>How much can you save by switching to an electric car?</h1>
             <p class="question">
                 If you own a petrol or diesel car right now and like to know how much you can save by trading it in for an electric one then answer the questions below ...
             </p>
@@ -61,7 +61,7 @@
 
         <h1>A polar bear or a penguin?</h1>
         <p class="question">
-            To me, what made the difference is to learn that after 150 years of development
+            To me, what made the difference was to learn that after 150 years of development
             the combustion engine turns around 25% of its petrol into forward motion.
             All the other energy is turned into heat.
             Meanwhile, a much simpler electric engine easily turns 80% of its electricity into forward motion.
