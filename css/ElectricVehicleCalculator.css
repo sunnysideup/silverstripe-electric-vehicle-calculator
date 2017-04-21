@@ -6,12 +6,13 @@
 
 @media screen and (min-width: 0px) {
     html {
+        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
         background-color: #833052;
         background-size: cover;
-        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
     }
     /* general */
     body {
+        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
         margin: 0px;
         padding: 0px;
         font-family: Montserrat;
@@ -19,7 +20,6 @@
         color: #555;
         background-color: #833052;
         background-size: cover;
-        background-image: url(../images/apolarbearisnotapenguin_v2.jpg);
     }
 
     input, .calcVal, td, .middleColumn{
@@ -438,8 +438,8 @@
         right: 0px;
         bottom: 0;
         overflow: auto;
-        min-width: calc(320px - 4em);
-        width: calc(33.3% - 4em);
+        min-width: auto;
+        width: auto;
         background-color: #833052;
         padding: 2em;
         opacity: 0.77;
@@ -697,10 +697,12 @@
         width: auto;
     }
 
+    #EVCWrapper #start-up-screen #HowMuchDoWeSave {
+        margin: 20px auto 20px auto;
+    }
     #EVCWrapper #start-up-screen #HowMuchDoWeSave,
     #EVCWrapper #start-up-screen #HowMuchDoWeSave a {
         padding: 0;
-        margin: 40px auto 0 auto;
         float: none;
         display: block;
         color: #fff;
@@ -718,6 +720,7 @@
 }
 
 @media screen and (min-width: 480px) {
+
     body.not-ready form#start-up-screen {
         padding-top: 0vh;
     }
@@ -797,7 +800,10 @@
     body.not-ready form#start-up-screen {
         padding-top: 1vh;
     }
-
+    .not-ready #EVCWrapper {
+        min-width: calc(320px - 4em);
+        width: calc(33.3% - 4em);
+    }
     body.loading .loading-screen span,
     #ProfitAndLoss.full-screen p,
     #ProfitAndLoss.full-screen span {
