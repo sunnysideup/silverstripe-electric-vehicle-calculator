@@ -76,10 +76,13 @@ class EVCPage_Controller extends Page_Controller
         $this->evcDataSet = EVCDataSet::find_or_create($code, false);
         if ($this->evcDataSet && $this->evcDataSet->exists()) {
             Requirements::javascript('electric-vehicle-calculator/javascript/ElectricVehicleCalculator.js');
-
+            $link = $this->Link();
+            if($link === '/') {
+                $link = '/home/';
+            }
             //Requirements::javascript("assets/evc/translations.js");
             Requirements::customScript("
-                EVC.serverInteraction.baseLink = '".$this->AbsoluteLink()."';
+                EVC.serverInteraction.baseLink = '".$link."';
                 EVC.serverInteraction.serverKey = '".$this->evcDataSet->Code."';
             ", "EVCSetBasics");
             Requirements::customScript($this->evcDataSet->returnValuesAsJS(), "EVCreturnValuesAsJS");
