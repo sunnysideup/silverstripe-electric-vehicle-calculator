@@ -35,6 +35,29 @@
     </div>
     <% else %>
     <form id="start-up-screen">
+        <div id="start-up-form-inner">
+            <h1>How much can you save by switching to an Electric Car?</h1>
+            <p class="question">
+                If you own a petrol or diesel car right now and like to know how much you can save by trading it in for an electric one then answer the questions below ...
+            </p>
+            <div class="field">
+                <label for="startup-car-value">1. What is the value of car today (in NZ\$)?</label>
+                <div class="middleColumn">
+                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
+                </div>
+            </div>
+            <div class="field">
+                <label for="petrol-spent-per-week">2. How much do you spend on petrol per week?</label>
+                <div class="middleColumn">
+                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
+                </div>
+            </div>
+            <ul class="actions">
+                <li id="HowMuchDoWeSave" class="buttonWrapper">
+                    <a href="#ProfitAndLoss" class="button">Calculate Savings</a>
+                </li>
+            </ul>
+        </div>
 
         <h1>A polar bear or a penguin?</h1>
         <p class="question">
@@ -57,46 +80,7 @@
             To give you some idea about the cost savings, I have built this small calculator.
             It works out how much you could save if you were to trade-in your <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
-        </p>
-        <div id="start-up-form-inner">
-            <h1>How much can you save by switching to an Electric Car?</h1>
-            <p class="question">
-                If you own a run-around car right now and like to know how much you can save by going electric then answer the questions below ...
-                you might be suprised, it will not cost the earth.
-            </p>
-            <div class="field">
-                <label for="startup-car-value">1. What is the value of car today (in NZ\$)?</label>
-                <div class="middleColumn">
-                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
-                </div>
-            </div>
-            <div class="field">
-                <label for="petrol-spent-per-week">2. How much do you spend on petrol per week?</label>
-                <div class="middleColumn">
-                    <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
-                </div>
-            </div>
-            <ul class="actions">
-                <li id="HowMuchDoWeSave" class="buttonWrapper">
-                    <a href="#ProfitAndLoss" class="button">Calculate Savings</a>
-                </li>
-            </ul>
-        </div>
-        <h1>Sounds great but you can't be bothered?</h1>
-        <p>
-            If you prefer, I can provide a personalised, professional service that will take care of all the hassles involved with:
-        </p>
-        <ul>
-            <li>finding the most suitable electric vehicle,</li>
-            <li>finding the best place to buy it,</li>
-            <li>purchasing the car,</li>
-            <li>selling your old car, if required, and</li>
-            <li>installating any charging equipment in your home - as you see fit</li>
-        </ul>
-        <p>
-            In short - once we know what suits you best, we can provide a turn-key solution.
-            We will never take any commission or back-handers from any suppliers so you can be assured of independent and frank advice.
-            If you are interested in this service then please contact nicolaas@evs.nz for a obligation-free quote.
+            You might be suprised, it will not cost the earth.
         </p>
 
         <div id="startup-form-result"></div>

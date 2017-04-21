@@ -1094,12 +1094,12 @@ EVC.HTMLInteraction = {
                 return false;
             }
         );
-        window.setTimeout(
-            function(){
-                jQuery('input[name="startup-car-value"]').focus();
-            },
-            300
-        );
+        // window.setTimeout(
+        //     function(){
+        //         jQuery('input[name="startup-car-value"]').focus();
+        //     },
+        //     300
+        // );
     },
 
     transitionFromStartupToResults: function() {
