@@ -429,7 +429,11 @@ var EVCfx = function(
     };
 
     this.replacementSaving = function(carType) {
-        return Math.round(EVC.ActualData.CVValueToday * (this.depreciationRate(carType)/150));
+        return Math.round(
+            EVC.ActualData.CVValueToday *
+            (this.depreciationRate(carType)/150) *
+            (EVC.ActualData.kmDrivenPerDay * 365 / 20000)
+        );
     }
 
     /**

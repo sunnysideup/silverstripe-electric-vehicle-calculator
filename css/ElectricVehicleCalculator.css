@@ -442,6 +442,7 @@
         width: auto;
         background-color: #833052;
         padding: 2em;
+        padding-top: 6vh;
         opacity: 0.77;
     }
     .not-ready form#start-up-screen {
@@ -797,9 +798,9 @@
 }
 
 @media screen and (min-width: 700px) {
-    body.not-ready form#start-up-screen {
+    /*body.not-ready form#start-up-screen {
         padding-top: 1vh;
-    }
+    }*/
     .not-ready #EVCWrapper {
         min-width: calc(320px - 4em);
         width: calc(33.3% - 4em);
@@ -856,6 +857,7 @@
         color: yellow;
         background-color: rgba(0, 0, 0, 0.5);
         padding: 2em;
+        padding-top: 6vh;
         overflow: auto;
     }
     #start-up-form-inner .field{

@@ -61,7 +61,8 @@
 
         <h1>A polar bear or a penguin?</h1>
         <p class="question">
-            To me, what made the difference was to learn that after 150 years of development
+            To me, what made the difference was to learn that,
+            after 150 years of development,
             the combustion engine turns around 25% of its petrol into forward motion.
             All the other energy is turned into heat.
             Meanwhile, a much simpler electric engine easily turns 80% of its electricity into forward motion.
