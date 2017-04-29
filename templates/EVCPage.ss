@@ -83,12 +83,12 @@
             Meanwhile, a much simpler electric engine easily turns at least 80% of its energy into forward motion.
         </p>
         <p class="question">
-            Add to this that, here in New Zealand, we generate most of our electricity using running water while we import oil from questionnable regimes
+            Add to this that, here in New Zealand, we generate most of our electricity using running water while we import oil from questionable regimes
             and you have found the best thing you can do to slow down climate change - by far;
             without cramping your lifestyle.
         </p>
         <p class="question">
-            Going electric will slash your green-house gas emissions by at least 80%.
+            Going electric will slash your greenhouse gas emissions by at least 80%.
             If you drive a fair amount each day then it will also save you money.
             Not to mention the better driving experience.
         </p>
@@ -96,7 +96,7 @@
             To give you some idea about the cost savings, I have built this small calculator.
             It works out how much you could save if you were to trade-in your <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
-            You might be suprised, it will not cost the earth.
+            You might be surprised, it will not cost the earth.
         </p>
         <p class="question">
             Credits:
