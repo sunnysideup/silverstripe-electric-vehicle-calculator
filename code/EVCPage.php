@@ -47,6 +47,15 @@ class EVCPage_Controller extends Page_Controller
         return $this->redirect($this->evcDataSet->MyLink($this, "show"));
     }
 
+    function BackgroundImage()
+    {
+        if(rand(0,1) == 1) {
+            return '/electric-vehicle-calculator/images/nz-road1.jpg';
+        } else {
+            return '/electric-vehicle-calculator/images/nz-road2.jpg';
+        }
+    }
+
     public function HasCustomTitle()
     {
         if ($this->evcDataSet && $this->evcDataSet->Title) {

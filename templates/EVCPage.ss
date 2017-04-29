@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--[if !IE]><!-->
-<html lang="$ContentLocale">
+<html lang="$ContentLocale" style="background-image: url($BackgroundImage);">
 <!--<![endif]-->
 <head>
     <% base_tag %>
@@ -24,7 +24,7 @@
 
 </head>
 
-<body class="not-ready">
+<body class="not-ready" style="background-image: url($BackgroundImage);">
     <div class='loading-screen'><span>calculating your results ... </span></div>
 <div id="EVCWrapper">
 
@@ -59,7 +59,7 @@
             </ul>
         </div>
 
-        <h1>A polar bear or a penguin?</h1>
+        <h1>Why electric?</h1>
         <p class="question">
             To me, what made the difference was to learn that,
             after 150 years of development,
@@ -68,12 +68,12 @@
             Meanwhile, a much simpler electric engine easily turns 80% of its electricity into forward motion.
         </p>
         <p class="question">
-            Add to this that here in New Zealand, we generate most of our electricity using running water while we import oil from questionnable regimes
-            and you have the easiest and cheapest way you can stop polar bears from becoming penguins.
+            Add to this that, here in New Zealand, we generate most of our electricity using running water while we import oil from questionnable regimes
+            and you have found the best thing you can do to slow down climate change - by far;
+            without cramping your lifestyle.
         </p>
         <p class="question">
-            In other words: switching to an electric car is one of the best things you can do to slow down climate change
-            without cramping your lifestyle.
+            Going electric will slash you green-house gas emissions by at least 80%.
             If you drive a fair amount each day then it will also save you money.
             Not to mention the better driving experience.
         </p>
@@ -82,6 +82,9 @@
             It works out how much you could save if you were to trade-in your <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
             You might be suprised, it will not cost the earth.
+        </p>
+        <p class="question">
+            Photo Credit: <a href="https://www.flickr.com/photos/chris_gin/2197585153/">Chris Gin</a>.
         </p>
 
         <div id="startup-form-result"></div>
