@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--[if !IE]><!-->
-<html lang="$ContentLocale" style="background-image: url($BackgroundImage);">
+<html lang="$ContentLocale">
 <!--<![endif]-->
 <head>
     <% base_tag %>
