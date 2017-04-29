@@ -61,7 +61,7 @@
 
         <h1>Why electric?</h1>
         <p class="question">
-            Petrol engines may sound grunty or smell like grimey workhorses - they are highly inefficient.
+            Petrol engines may sound grunty or smell like workhorses - fact is, they are highly inefficient.
             After a century of continuous development, the combustion engine only turns around 25% of its fuel into forward motion.
             All the other energy is turned into heat.
             Meanwhile, a much simpler electric engine easily turns at least 80% of its energy into forward motion.
