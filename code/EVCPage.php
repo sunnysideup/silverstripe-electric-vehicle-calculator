@@ -50,10 +50,14 @@ class EVCPage_Controller extends Page_Controller
     function BackgroundImage()
     {
         if(rand(0,1) == 1) {
-            return '/electric-vehicle-calculator/images/nz-road1.jpg';
+            $v =  '/electric-vehicle-calculator/images/nz-road1.jpg';
         } else {
-            return '/electric-vehicle-calculator/images/nz-road2.jpg';
+            $v = '/electric-vehicle-calculator/images/nz-road2.jpg';
         }
+        return Controller::join_links (
+            Director::absoluteBaseURL(),
+            $v
+        );
     }
 
     public function HasCustomTitle()

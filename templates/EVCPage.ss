@@ -20,7 +20,7 @@
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="$SiteConfig.Title" />
     <meta property="og:description"   content="$Title" />
-    <meta property="og:image"         content="$AbsoluteLink(facebookimage)" />
+    <meta property="og:image"         content="$BackgroundImage" />
 
 </head>
 
