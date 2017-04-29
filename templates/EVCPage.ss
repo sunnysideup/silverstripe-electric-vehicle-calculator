@@ -88,7 +88,7 @@
             without cramping your lifestyle.
         </p>
         <p class="question">
-            Going electric will slash you green-house gas emissions by at least 80%.
+            Going electric will slash your green-house gas emissions by at least 80%.
             If you drive a fair amount each day then it will also save you money.
             Not to mention the better driving experience.
         </p>
@@ -406,7 +406,7 @@
 
         </div>
 
-        <h2>Tell me more about the Nissan Leaf</h2>
+        <h2 id="more-info-about-nissan-leaf">Tell me more about the Nissan Leaf</h2>
         <iframe width="100%" height="315" src="https://www.youtube.com/embed/WpKK72SBxvc" frameborder="0" allowfullscreen></iframe>
 
         <iframe width="100%" height="315" src="https://www.youtube.com/embed/DMXlV-PV3wI" frameborder="0" allowfullscreen></iframe>
