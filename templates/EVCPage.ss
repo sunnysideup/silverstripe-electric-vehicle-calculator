@@ -84,7 +84,9 @@
             You might be suprised, it will not cost the earth.
         </p>
         <p class="question">
-            Photo Credit: <a href="https://www.flickr.com/photos/chris_gin/2197585153/">Chris Gin</a>.
+            Photo Credit:
+            night - <a href="https://www.flickr.com/photos/chris_gin/2197585153/">Chris Gin</a> and
+            day: <a href="https://www.flickr.com/photos/anupshah/13462145935/">Anup Shah</a>
         </p>
 
         <div id="startup-form-result"></div>
