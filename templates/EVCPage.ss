@@ -80,7 +80,7 @@
             Petrol engines may sound grunty or smell like workhorses - fact is, they are highly inefficient.
             After a century of continuous development, the combustion engine only turns around 25% of its fuel into forward motion.
             All the other energy is turned into heat.
-            Meanwhile, a much simpler electric engine easily turns at least 80% of its energy into forward motion.
+            Meanwhile, a much simpler electric engine easily turns 80% of its energy into forward motion.
         </p>
         <p class="question">
             Add to this that, here in New Zealand, we generate most of our electricity using running water while we import oil from questionable regimes
