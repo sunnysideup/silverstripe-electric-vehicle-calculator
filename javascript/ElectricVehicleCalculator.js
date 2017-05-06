@@ -797,12 +797,16 @@ EVC.HTMLInteraction = {
 
     init: function(){
         this.clear();
+
+        //touch screen test
         this.isTouchScreen = this.isTouchScreenTest();
         if(this.isTouchScreen) {
             this.hasRangeSlider = true;
         } else {
             this.hasRangeSlider = false;
         }
+
+        //build stuff
         this.buildKeyAssumptionForm();
         this.buildPlayAroundAssumptionForm();
         this.buildOtherAssumptionsForm();
@@ -813,6 +817,8 @@ EVC.HTMLInteraction = {
         this.populateLinks();
         this.setupShowAndHideResultRows();
         this.inlineExpandListener();
+
+        //conditional settings
         if(this.hasRangeSlider) {
 
         }
@@ -824,6 +830,8 @@ EVC.HTMLInteraction = {
             this.selectFirstInput();
         } else {
             this.hideDetails();
+
+            //if it is ready to calculate then do this now ....
             window.setTimeout(
                 function(){
                     if( EVC.isReadyToCalculate()) {
@@ -985,7 +993,8 @@ EVC.HTMLInteraction = {
                 }
             }
         );
-        jQuery(".saveLink").click(
+        jQuery(".saveLink").on(
+            'click',
             function(event){
                 var el = this;
                 var newLink = "";
@@ -1231,7 +1240,6 @@ EVC.HTMLInteraction = {
         return html;
     },
 
-
     getValueFromDefaultsOrSession: function(key, formatted){
         //todo - get from session here ...
         var value = EVC.ActualData[key];
@@ -1433,6 +1441,7 @@ EVC.HTMLInteraction = {
         );
         if(jQuery(currentEl).hasClass("infocus")) {
             //do nothing
+            // jQuery("#"+key+"Holder").find('.graphShower').hide();
         }
         else {
             currentEl.addClass("infocus");
@@ -1446,7 +1455,6 @@ EVC.HTMLInteraction = {
                     500,
                     function() {
                         jQuery("#"+key+"Holder").find('input[type="number"]').focus();
-                        jQuery("#"+key+"Holder").find('.graphShower').show();
                     }
                 );
             }

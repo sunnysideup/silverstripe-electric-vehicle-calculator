@@ -29,8 +29,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/electric-vehicle-calculator/images/icons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
-    <link href='https://fonts.googleapis.com/css?family=Cutive+Mono' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700|family=Cutive+Mono' rel='stylesheet' type='text/css' />
 
     <meta property="og:url"           content="$AbsoluteLink" />
     <meta property="og:type"          content="website" />
@@ -54,7 +53,7 @@
         <div id="start-up-form-inner">
             <h1>How much can you save by switching to an electric car?</h1>
             <p class="question">
-                If you own a petrol or diesel car right now and like to know how much you can save by trading it in for an electric one then answer the questions below ...
+                If you drive a petrol or diesel car then find out how much you can save by switching to an electric vehicle - without the need for any upfront payments for a new car.
             </p>
             <div class="field">
                 <label for="startup-car-value">1. What is the value of car today (in NZ\$)?</label>
@@ -63,7 +62,7 @@
                 </div>
             </div>
             <div class="field">
-                <label for="petrol-spent-per-week">2. How much do you spend on petrol per week?</label>
+                <label for="petrol-spent-per-week">2. How much do you spend on fuel per week?</label>
                 <div class="middleColumn">
                     <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="50000" name="petrol-spent-per-week" />
                 </div>
@@ -77,26 +76,31 @@
 
         <h1>Why electric?</h1>
         <p class="question">
-            Petrol engines may sound grunty or smell like workhorses - fact is, they are highly inefficient.
+            Petrol engines may sound grunty or smell like workhorses — fact is, they are highly inefficient.
             After a century of continuous development, the combustion engine only turns around 25% of its fuel into forward motion.
             All the other energy is turned into heat.
             Meanwhile, a much simpler electric engine easily turns 80% of its energy into forward motion.
         </p>
         <p class="question">
-            Add to this that, here in New Zealand, we generate most of our electricity using running water while we import oil from questionable regimes
-            and you have found the best thing you can do to slow down climate change - by far;
+            What is more, here in New Zealand, we generate most of our electricity using hydro schemes — i.e. falling water.
+            In short, an electric vehicle is the best thing you can do to slow down climate change — by far;
             without cramping your lifestyle.
         </p>
         <p class="question">
-            Going electric will slash your greenhouse gas emissions by at least 80%.
-            If you drive a fair amount each day then it will also save you money.
+            The marvelous thing is that, while going electric will slash your impact on climate change by around 80%,
+            going electric may also save you money (the more you drive, the more you save).
             Not to mention the better driving experience.
         </p>
         <p class="question">
-            To give you some idea about the cost savings, I have built this small calculator.
-            It works out how much you could save if you were to trade-in your <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
-            for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>.
-            You might be surprised, it will not cost the earth.
+            I was curious to find out how much you could save
+            if I were to trade-in our <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
+            for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>
+            without paying anything for the new car upfront.
+            You can now find out for yourself: it will not cost the earth.
+        </p>
+        <p class="question">
+            Got questions? Feel free to contact me, <a href="mailto:&#110;&#105;&#99;&#111;&#108;&#97;&#97;&#115;&#64;&#101;&#118;&#115;&#46;&#110;&#122;">Nicolaas</a>, I welcome your feedback.
+            Thank you for using this site.
         </p>
         <p class="question">
             Credits:
