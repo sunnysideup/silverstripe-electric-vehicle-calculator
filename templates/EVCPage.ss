@@ -29,7 +29,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/electric-vehicle-calculator/images/icons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700|family=Cutive+Mono' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:100,400,700|Cutive+Mono&amp;subset=latin-ext' rel='stylesheet' type='text/css' />
 
     <meta property="og:url"           content="$AbsoluteLink" />
     <meta property="og:type"          content="website" />
@@ -53,10 +53,10 @@
         <div id="start-up-form-inner">
             <h1>How much can you save by switching to an electric car?</h1>
             <p class="question">
-                If you drive a petrol or diesel car then find out how much you can save by switching to an electric vehicle - without the need for any upfront payments for a new car.
+                If you drive a petrol or diesel car then now is the time to find out how much you can save by switching to an electric vehicle.
             </p>
             <div class="field">
-                <label for="startup-car-value">1. What is the value of car today (in NZ\$)?</label>
+                <label for="startup-car-value">1. What is the \$\$ value of your car right now?</label>
                 <div class="middleColumn">
                     <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
                 </div>
@@ -463,6 +463,7 @@
                 <li><a href="http://www.stuff.co.nz/national/9204870/Car-running-costs-lurch-ahead-for-Kiwi-drivers">NZ Car Running Cost</a></li>
                 <li><a href="https://www.energywise.govt.nz/tools/fuel-economy/">EECA: Fuel Economy</a></li>
                 <li><a href="https://www.energywise.govt.nz/on-the-road/electric-vehicles/">EECA: Electric Vehicles</a></li>
+                <li><a href="http://www.afdc.energy.gov/calc/cost_calculator_methodology.html">Detailed Calculations</a></li>
             </ul>
 
             <h2>disclaimer</h2>

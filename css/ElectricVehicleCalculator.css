@@ -12,7 +12,7 @@
     body {
         margin: 0px;
         padding: 0px;
-        font-family: Montserrat;
+        font-family: 'Montserrat';
         font-size: 14px;
         color: #555;
         background-color: #833052;
@@ -22,7 +22,7 @@
     }
 
     input, .calcVal, td, .middleColumn{
-        font-family: 'Cutive Mono', monospace;
+        font-family: 'Cutive Mono', monospace!important;
     }
 
     body.ready {
@@ -275,8 +275,11 @@
     }
 
     .fieldHolder.infocus input[type=range] {
-        margin-right: 10px;
+        margin-right: 0px;
         margin-top: 10px;
+        padding: 1px;
+        margin-bottom: 20px;
+        width: 100%;
     }
 
     .fieldHolder.infocus a.displayValue {
@@ -480,7 +483,6 @@
         font-size: 21px;
         width: 100%;
         text-align: right;
-        font-weight: 700;
     }
 
     .calcVal .negativeNumber {
@@ -555,9 +557,6 @@
 
     #ProfitAndLoss .switch-year {
         font-size: 10px!important;
-        display: block;
-        position: absolute;
-        width: calc(100% - 10em);
     }
 
 
@@ -778,6 +777,7 @@
         margin-top: 0!important;
         padding-bottom: 2em;
         height: 3px!important;
+        width: 147px!important;
     }
 
     #KeyAssupmptions input {
@@ -914,11 +914,11 @@ input[type=range] {
     /*fix for FF unable to apply focus style bug */
     border: 1px solid white;
     /*required for proper track sizing in FF*/
-    width: 100%px;
+    width: 100%;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
-    width: 100%px;
+    width: 100%;
     height: 5px;
     background: #ddd;
     border: none;
@@ -931,7 +931,7 @@ input[type=range]::-webkit-slider-thumb {
     height: 26px;
     width: 26px;
     border-radius: 50%;
-    background: blue;
+    background: #833052;
     margin-top: -9px;
 }
 
@@ -1053,7 +1053,8 @@ a.button {
     display: block;
     width: 175px;
     height: 35px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Monserrat', sans-serif;
+    font-weight: bold;
     font-size: 14px;
     text-align: center;
     line-height: 34px;
@@ -1063,7 +1064,6 @@ a.button {
     -o-border-radius: 50px;
     -khtml-border-radius: 50px;
     border-radius: 50px;
-    font-weight: bold;
     background: #FF5D9F;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5D9F', endColorstr='#FF0080');
     background: -webkit-gradient(linear, left top, left bottom, from(#FF5D9F), to(#FF0080));
