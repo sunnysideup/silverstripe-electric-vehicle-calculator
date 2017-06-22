@@ -83,20 +83,19 @@
         </p>
         <p class="question">
             What is more, here in New Zealand, we generate most of our electricity using hydro schemes — i.e. falling water.
-            In short, an electric vehicle is the best thing you can do to slow down climate change — by far;
-            without cramping your lifestyle.
+            In short, switching to an electric vehicle is one of the best things you can do to slow down climate change;
         </p>
         <p class="question">
-            The marvelous thing is that, while going electric will slash your impact on climate change by around 80%,
+            The marvelous thing is that, while going electric will slash your impact on greenhouse gases by around 80%,
             going electric may also save you money (the more you drive, the more you save).
             Not to mention the better driving experience.
         </p>
         <p class="question">
-            I was curious to find out how much you could save
-            if I were to trade-in our <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
+            If you are curious to find out how much you could save
+            if you were to trade-in our <strong>run-around car</strong> car like a Honda Civic or Toyota Yaris
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>
-            without paying anything for the new car upfront.
-            You can now find out for yourself: it will not cost the earth.
+            without paying anything for the new car upfront then this website will tell you.
+            You may be surprised, t will not cost the earth.
         </p>
         <p class="question">
             Got questions? Feel free to contact me, <a href="mailto:&#110;&#105;&#99;&#111;&#108;&#97;&#97;&#115;&#64;&#101;&#118;&#115;&#46;&#110;&#122;">Nicolaas</a>, I welcome your feedback.
