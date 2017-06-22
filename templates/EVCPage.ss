@@ -56,7 +56,7 @@
                 If you drive a petrol or diesel car then now is the time to find out how much you can save by switching to an electric vehicle.
             </p>
             <div class="field">
-                <label for="startup-car-value">1. What is the \$\$ value of your car right now?</label>
+                <label for="startup-car-value">1. What is todays value of your current car?</label>
                 <div class="middleColumn">
                     <input type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" max="40000" name="startup-car-value"   />
                 </div>
