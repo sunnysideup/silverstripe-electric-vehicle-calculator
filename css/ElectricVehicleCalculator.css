@@ -868,7 +868,7 @@
         top: 0px;
         left: 0px;
         bottom: 0px;
-        width: calc(66.6% - 4em);
+        width: calc(66.6667% - 4em);
         color: yellow;
         background-color: rgba(0, 0, 0, 0.5);
         padding: 2em;
