@@ -77,25 +77,32 @@
         <h1>Why electric?</h1>
         <p class="question">
             Petrol engines may sound grunty or smell like workhorses — fact is, they are highly inefficient.
-            After a century of continuous development, the combustion engine only turns around 25% of its fuel into forward motion.
+            After a century of development, the combustion engine only turns around 25% of its fuel into forward motion.
             All the other energy is turned into heat.
-            Meanwhile, a much simpler electric engine easily turns 80% of its energy into forward motion.
+            Meanwhile, an electric engine easily turns 80% of its energy into forward motion.
         </p>
         <p class="question">
-            What is more, here in New Zealand, we generate most of our electricity using hydro schemes — i.e. falling water.
+            What is more, New Zealand generates most of our electricity using hydro schemes — i.e. falling water.
             In short, switching to an electric vehicle is one of the best things you can do to slow down climate change.
         </p>
         <p class="question">
-            The marvelous thing is that, while going electric will slash your impact on greenhouse gases by around 80%,
+            While going electric will slash your impact on greenhouse gases by around 80%,
             going electric may also save you money (the more you drive, the more you save).
-            Not to mention the better driving experience.
+            And, did you know, electric vehicles offer a much better driving experience.
         </p>
         <p class="question">
-            If you are curious to find out how much you could save
-            if you were to trade-in our <strong>run-around car</strong> car, like a Honda Civic or Toyota Yaris,
-            for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>
-            without paying anything for the new car upfront then this website will tell you.
+            So what is not to like? Electric Vehicles take longer to <em>refuel</em> and
+            you need to refuel more often. That is an issue when you are driving from Wellington to Auckland,
+            but most EV owners recharge their cars overnight, at home - at very low cost. Just like their mobile phones.
+            Imagine you had to recharge your mobile phone at a petrol station!
+        </p>
+        <p class="question">
+            Do you know how much you could save
+            by trading-in your <strong>run-around car</strong> car, like a Honda Civic or Toyota Yaris,
+            for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>;
+            <strong>without paying anything upfront?</strong>
             You may be surprised, it will not cost the earth.
+            Answer two questions and find the answer. 
         </p>
         <p class="question">
             Got questions? Feel free to contact me, <a href="mailto:&#110;&#105;&#99;&#111;&#108;&#97;&#97;&#115;&#64;&#101;&#118;&#115;&#46;&#110;&#122;">Nicolaas</a>, I welcome your feedback.
