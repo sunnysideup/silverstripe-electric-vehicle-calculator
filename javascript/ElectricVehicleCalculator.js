@@ -1166,6 +1166,7 @@ EVC.HTMLInteraction = {
     },
 
     transitionFromResultsToDetails: function() {
+        jQuery('body').addClass('results-ready');
         jQuery('#ViewDetailsNow').remove();
         jQuery('#ProfitAndLoss').removeClass('full-screen');
         return false;
@@ -1320,109 +1321,122 @@ EVC.HTMLInteraction = {
             //do nothing
         }
         else {
-            this.updateInProgress = true;
-            var fieldID = key + "Field";
-            var rangeFieldID = key + "FieldRange";
-            var displayFieldID = key + "Display";
-            var holderSelector = "#"+key+"Holder";
-            var labelSelector = "#"+key+"Holder label strong";
-            var defaultValue = EVC.DefaultData[key];
-            var currentID = "";
-            var updateScreen = false;
-            //does it need cleaning?
-            if(isNaN(elOrValue)) {
-                EVC.isChanged = true;
-                updateScreen = true;
-                var value = jQuery(elOrValue).val();
-                //remove comma and $ ...
-                value = parseFloat(value.replace(/\$|,/g, ''));
-                if(isNaN(value)) {
-                    value = EVC.ActualData[key];
-                    if(isNaN(value)) {
-                        value = defaultValue;
+            jQuery('body').addClass('loading');
+            delay = 0;
+            if(jQuery('body').hasClass('results-ready')) {
+                delay = 50;
+            }
+            window.setTimeout(
+                function() {
+                    this.updateInProgress = true;
+                    var fieldID = key + "Field";
+                    var rangeFieldID = key + "FieldRange";
+                    var displayFieldID = key + "Display";
+                    var holderSelector = "#"+key+"Holder";
+                    var labelSelector = "#"+key+"Holder label strong";
+                    var defaultValue = EVC.DefaultData[key];
+                    var currentID = "";
+                    var updateScreen = false;
+                    //does it need cleaning?
+                    if(isNaN(elOrValue)) {
+                        EVC.isChanged = true;
+                        updateScreen = true;
+                        var value = jQuery(elOrValue).val();
+                        //remove comma and $ ...
+                        value = parseFloat(value.replace(/\$|,/g, ''));
+                        if(isNaN(value)) {
+                            value = EVC.ActualData[key];
+                            if(isNaN(value)) {
+                                value = defaultValue;
+                            }
+                        }
+                        else {
+                            var currentID = jQuery(elOrValue).attr("id");
+                        }
                     }
-                }
-                else {
-                    var currentID = jQuery(elOrValue).attr("id");
-                }
-            }
-            else {
-                if(forceUpdate) {
-                    EVC.isChanged = true;
-                    updateScreen = true;
-                }
-                var value = elOrValue;
-            }
-            //generic rounding ...
-            value = Math.round(value * 100) / 100;
-            var labelValue = EVC.DataDescription.labels[key];
-            if(value != defaultValue) {
-                if(defaultValue > 0) {
-                    jQuery(labelSelector).text(labelValue+" (default = "+this.formatValue(key, defaultValue)+")");
-                }
-                else {
-                    jQuery(labelSelector).text(labelValue);
-                }
-                jQuery(holderSelector).addClass("changed");
-            }
-            else {
-                jQuery(labelSelector).text(labelValue);
-                jQuery(holderSelector).removeClass("changed");
-            }
-            //smart numbers
-            if(key == "kmDrivenPerDay") {
-                if((value / 365) > 3) {
-                    value = Math.round(value / 365);
-                    currentID = "";
-                }
-            }
-            //update fields
-            if(fieldID != currentID) {
-                jQuery("#"+fieldID).val(value);
-            }
-            if(rangeFieldID != currentID) {
-                jQuery("#"+rangeFieldID).val(value);
-            }
-            var formattedValue = this.formatValue(key, value);
-            jQuery("#"+displayFieldID).text(formattedValue);
-            //send to server
-            if(EVC.serverInteraction.workableLinks()) {
-                jQuery.ajax({
-                    method: "GET",
-                    url: EVC.serverInteraction.saveLink(),
-                    data: { key: key, value: value },
-                    cache: false
-                })
-                .done(function( returnKey ) {
-                    if(returnKey) {
-                        EVC.isLocked = false;
-                        EVC.serverKey = returnKey;
+                    else {
+                        if(forceUpdate) {
+                            EVC.isChanged = true;
+                            updateScreen = true;
+                        }
+                        var value = elOrValue;
                     }
-                })
-                .fail(function( jqXHR, textStatus ) {
-                    alert( "Data could not be saved: " + textStatus );
-                });
-                //save locally...
-            }
-            //set data ...
-            EVC.ActualData[key] = value;
-            //special exception ..
-            if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
-                if(key == "kmDrivenPerDay") {
-                    EVC.myData.updateKmDrivenPerDay(value);
-                }
-                else if(key == "yearsBeforeSwitch") {
-                    EVC.myData.updateYearsBeforeSwitch(value);
-                }
-                else if(key == "yearsAfterSwitch"){
-                    EVC.myData.updateYearsAfterSwitch(value);
-                }
-            }
-            //update HTML
-            if(updateScreen) {
-                this.updateScreen(key);
-            }
-            this.updateInProgress = false;
+                    //generic rounding ...
+                    value = Math.round(value * 100) / 100;
+                    var labelValue = EVC.DataDescription.labels[key];
+                    if(value != defaultValue) {
+                        if(defaultValue > 0) {
+                            jQuery(labelSelector).text(labelValue+" (default = "+EVC.HTMLInteraction.formatValue(key, defaultValue)+")");
+                        }
+                        else {
+                            jQuery(labelSelector).text(labelValue);
+                        }
+                        jQuery(holderSelector).addClass("changed");
+                    }
+                    else {
+                        jQuery(labelSelector).text(labelValue);
+                        jQuery(holderSelector).removeClass("changed");
+                    }
+                    //smart numbers
+                    if(key == "kmDrivenPerDay") {
+                        if((value / 365) > 3) {
+                            value = Math.round(value / 365);
+                            currentID = "";
+                        }
+                    }
+                    //update fields
+                    if(fieldID != currentID) {
+                        jQuery("#"+fieldID).val(value);
+                    }
+                    if(rangeFieldID != currentID) {
+                        jQuery("#"+rangeFieldID).val(value);
+                    }
+                    var formattedValue = EVC.HTMLInteraction.formatValue(key, value);
+                    jQuery("#"+displayFieldID).text(formattedValue);
+                    //send to server
+                    if(EVC.serverInteraction.workableLinks()) {
+                        jQuery.ajax({
+                            method: "GET",
+                            url: EVC.serverInteraction.saveLink(),
+                            data: { key: key, value: value },
+                            cache: false
+                        })
+                        .done(function( returnKey ) {
+                            if(returnKey) {
+                                EVC.isLocked = false;
+                                EVC.serverKey = returnKey;
+                            }
+                        })
+                        .fail(function( jqXHR, textStatus ) {
+                            alert( "Data could not be saved: " + textStatus );
+                        });
+                        //save locally...
+                    }
+                    //set data ...
+                    EVC.ActualData[key] = value;
+                    //special exception ..
+                    if(key == "kmDrivenPerDay" || key == "yearsBeforeSwitch" || key == "yearsAfterSwitch") {
+                        if(key == "kmDrivenPerDay") {
+                            EVC.myData.updateKmDrivenPerDay(value);
+                        }
+                        else if(key == "yearsBeforeSwitch") {
+                            EVC.myData.updateYearsBeforeSwitch(value);
+                        }
+                        else if(key == "yearsAfterSwitch"){
+                            EVC.myData.updateYearsAfterSwitch(value);
+                        }
+                    }
+                    //update HTML
+                    if(updateScreen) {
+                        EVC.HTMLInteraction.updateScreen(key);
+                    }
+                    EVC.HTMLInteraction.updateInProgress = false;
+                    if(delay > 0) {
+                        jQuery('body').removeClass('loading');
+                    }
+                },
+                delay
+            );
             return false;
         }
     },
