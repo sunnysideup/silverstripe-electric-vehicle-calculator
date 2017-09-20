@@ -102,7 +102,7 @@
             for an <strong>Electric Vehicle</strong> equivalent like a <a href="//www.trademe.co.nz/Browse/SearchResults.aspx?searchString=nissan+leaf">Nissan Leaf</a>;
             <strong>without paying anything upfront?</strong>
             You may be surprised, it will not cost the earth.
-            Answer two questions and find the answer. 
+            Answer two questions and we will show you all the details.
         </p>
         <p class="question">
             Got questions? Feel free to contact me, <a href="mailto:&#110;&#105;&#99;&#111;&#108;&#97;&#97;&#115;&#64;&#101;&#118;&#115;&#46;&#110;&#122;">Nicolaas</a>, I welcome your feedback.
