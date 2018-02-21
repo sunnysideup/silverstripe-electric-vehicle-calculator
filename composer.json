@@ -13,7 +13,7 @@
         "clean",
         "javascript"
     ],
-    "license": "Not available for public use yet",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Nicolaas Francken",
